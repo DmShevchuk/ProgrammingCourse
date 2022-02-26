@@ -7,7 +7,7 @@ import annotations.NotNull;
 
 import java.time.LocalDate;
 
-public class Dragon {
+public class Dragon implements Comparable<Dragon> {
     @NotNull
     @GreaterThan
     private final Integer id; //Поле не может быть null, Значение поля должно быть больше 0,
@@ -106,9 +106,26 @@ public class Dragon {
     }
 
     @Override
+    public int compareTo(Dragon o) {
+        return this.name.compareTo(o.getName());
+    }
+
+    @Override
     public String toString() {
         return String.format("Dragon {id = %d, name = %s, coordinates = %s, creationDate = %s," +
                         "age = %d, weight = %d, speaking = %s, type = %s, head = %s}",
                 id, name, coordinates, creationDate, age, weight, speaking, type, head.getSize());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Dragon d)) return false;
+        if (this == o) return true;
+        return this.getId().equals(d.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 }

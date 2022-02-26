@@ -2,7 +2,7 @@ package collection;
 
 import annotations.GreaterThan;
 
-public class DragonHead {
+public class DragonHead{
     @GreaterThan
     private final long size;
 

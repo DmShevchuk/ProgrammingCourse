@@ -1,6 +1,8 @@
 package run;
+import commands.Help;
 import data.FileManager;
 import data.ParserJSON;
+import exceptions.AddingRepeatedCommandException;
 import exceptions.FieldValueException;
 import org.json.simple.parser.ParseException;
 import utils.CommandLine;
@@ -11,7 +13,7 @@ import java.io.IOException;
 public class App {
     private static String DEFAULT_FILENAME = "collection.json";
 
-    public static void main(String[] args) throws IOException, ParseException, NoSuchFieldException, FieldValueException, NoSuchMethodException {
+    public static void main(String[] args) throws IOException, ParseException, NoSuchFieldException, FieldValueException, NoSuchMethodException, AddingRepeatedCommandException {
         if(args.length == 1){
             DEFAULT_FILENAME = args[0];
         }
