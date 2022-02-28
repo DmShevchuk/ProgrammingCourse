@@ -6,7 +6,7 @@ import annotations.HasLength;
 import annotations.NotNull;
 
 import java.time.LocalDate;
-
+//TODO ImportIgnore
 public class Dragon implements Comparable<Dragon> {
     @NotNull
     @GreaterThan
@@ -18,6 +18,7 @@ public class Dragon implements Comparable<Dragon> {
     private final String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull
+    @GreaterThan
     private Coordinates coordinates; //Поле не может быть null
 
     @NotNull
@@ -107,7 +108,7 @@ public class Dragon implements Comparable<Dragon> {
 
     @Override
     public int compareTo(Dragon o) {
-        return this.name.compareTo(o.getName());
+        return this.id.compareTo(o.getId());
     }
 
     @Override

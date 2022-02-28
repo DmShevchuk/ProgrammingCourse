@@ -21,13 +21,13 @@ import utils.CommandLine;
 
 public class ParserJSON {
     private final static JSONParser PARSER = new JSONParser();
-    private final static HashMap<String, Function<Object, ?>> CONVERTER = new HashMap<>();
-    private static final CollectionManager MANAGER = new CollectionManager();
+    private final static HashMap<String, Function<Pair, Pair>> CHECKER = new HashMap<>();
     private final static int ALL_FIELDS_ADDED = 7;
 
 
-    public static void parse(String json) throws ParseException, NoSuchFieldException, FieldValueException, NoSuchMethodException {
+    public static void parse(String json) throws ParseException, NoSuchFieldException {
         mapInit();
+
         JSONObject rootJsonObject = (JSONObject) PARSER.parse(json);
         //Получение массива с драконами из JSON-файла
         JSONArray dragonJSONArray = (JSONArray) rootJsonObject.get("dragons");
@@ -53,29 +53,26 @@ public class ParserJSON {
                     Object xCoord = coordinates.get("x");
                     Object yCoord = coordinates.get("y");
 
-                    boolean answerX = FieldValidator.checkField(Coordinates.class.getDeclaredField("x"), xCoord);
-                    boolean answerY = FieldValidator.checkField(Coordinates.class.getDeclaredField("y"), yCoord);
+                    Pair<Boolean, ?> response = FieldChecker.
+                            checkCoordinates(new Pair<>(field, new Object[]{xCoord, yCoord}));
 
-                    if (answerX && answerY) {
-                        fieldValues.add(FieldConverter.parseCoordinate(xCoord, yCoord));
+                    if (response.getFirst()) {
+                        fieldValues.add(response.getSecond());
                     }
 
                 } else {
-                    Object value = d.get(fieldName);
-                    boolean result = FieldValidator.checkField(field, value);
+                    Object obj = d.get(fieldName);
+                    Function<Pair, Pair> func = CHECKER.get(fieldName);
+                    Pair<Boolean, ?> response = func.apply(new Pair(field, obj));
 
-                    if (result && value != null) {
-                        Function<Object, ?> func = CONVERTER.get(fieldName);
-                        fieldValues.add(func.apply(value));
-                    } else if (result) {
-                        fieldValues.add(null);
+                    if (response.getFirst()) {
+                        fieldValues.add(response.getSecond());
                     }
-
                 }
             }
 
             if (fieldValues.size() == ALL_FIELDS_ADDED) {
-                MANAGER.addDragon(fieldValues);
+                CollectionManager.addDragon(fieldValues);
             } else {
                 CommandLine.outLn("Дракон не добавлен в коллекцию!");
             }
@@ -84,11 +81,11 @@ public class ParserJSON {
     }
 
     private static void mapInit() {
-        CONVERTER.put("name", FieldConverter::parseName);
-        CONVERTER.put("age", FieldConverter::parseAge);
-        CONVERTER.put("weight", FieldConverter::parseWeight);
-        CONVERTER.put("speaking", FieldConverter::parseSpeaking);
-        CONVERTER.put("type", FieldConverter::parseType);
-        CONVERTER.put("head", FieldConverter::parseHead);
+        CHECKER.put("name", FieldChecker::checkName);
+        CHECKER.put("age", FieldChecker::checkAge);
+        CHECKER.put("weight", FieldChecker::checkWeight);
+        CHECKER.put("speaking", FieldChecker::checkSpeaking);
+        CHECKER.put("type", FieldChecker::checkType);
+        CHECKER.put("head", FieldChecker::checkHead);
     }
 }

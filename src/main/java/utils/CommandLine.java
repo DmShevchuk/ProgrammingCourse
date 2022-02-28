@@ -6,12 +6,12 @@ import exceptions.AddingRepeatedCommandException;
 import java.util.Scanner;
 
 public class CommandLine {
-    private final static String USER_COMMAND_PREFIX = ">>";
+    private static String USER_INPUT_PREFIX = ">>";
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    private static InputMode COMMAND_INPUT = InputMode.COMMAND;
+    private static InputMode INPUT_MODE = InputMode.COMMAND;
 
-    public void run() throws AddingRepeatedCommandException {
+    public void run() throws AddingRepeatedCommandException, NoSuchFieldException {
         String INPUT_COMMAND;
         CommandManager.addCommand(new Help());
         CommandManager.addCommand(new Show());
@@ -23,33 +23,52 @@ public class CommandLine {
         CommandManager.addCommand(new RemoveFirst());
         CommandManager.addCommand(new PrintFieldDescendingWeight());
         CommandManager.addCommand(new RemoveAllByHead());
+        CommandManager.addCommand(new Exit());
+        CommandManager.addCommand(new Save());
+        CommandManager.addCommand(new Add());
 
-        do {
+        while (true) {
             // Выводим в консоль >> для ввода пользователя
-            System.out.print(USER_COMMAND_PREFIX);
+            out(USER_INPUT_PREFIX);
 
             INPUT_COMMAND = SCANNER.nextLine().strip();
 
-            if (INPUT_COMMAND.length() == 0 && COMMAND_INPUT == InputMode.COMMAND) {
-                outLn("Введена пустая строка");
-                continue;
-            }
-
-            String[] userCommand = INPUT_COMMAND.split("\\s");
-
-            if (CommandManager.checkCommand(userCommand[0], userCommand.length)) {
-                if (userCommand.length == 2) {
-                    CommandManager.setARG(userCommand[1]);
+            if (INPUT_MODE == InputMode.COMMAND) {
+                if (INPUT_COMMAND.length() == 0) {
+                    outLn("Введена пустая строка");
+                    continue;
                 }
-                CommandManager.runCommand(userCommand[0]);
+
+                String[] userCommand = INPUT_COMMAND.split("\\s");
+
+                if (CommandManager.checkCommand(userCommand[0], userCommand.length)) {
+                    if (userCommand.length == 2) {
+                        CommandManager.setARG(userCommand[1]);
+                    }
+                    CommandManager.runCommand(userCommand[0]);
+                }
+
+            } else if (INPUT_MODE == InputMode.ELEMENT) {
+                Add.addValue(INPUT_COMMAND);
             }
+        }
 
-        } while (!INPUT_COMMAND.equals("exit"));
+    }
 
+    public static void setInputMode(InputMode mode) {
+        INPUT_MODE = mode;
+    }
+
+    public static void setUserInputPrefix(String prefix) {
+        USER_INPUT_PREFIX = prefix;
     }
 
     public static void outLn(String text) {
         System.out.println(text);
+    }
+
+    public static void out(String text) {
+        System.out.print(text);
     }
 //TODO цветной ввод
 }

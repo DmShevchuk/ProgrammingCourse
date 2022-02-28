@@ -13,7 +13,7 @@ import java.io.IOException;
 public class App {
     private static String DEFAULT_FILENAME = "collection.json";
 
-    public static void main(String[] args) throws IOException, ParseException, NoSuchFieldException, FieldValueException, NoSuchMethodException, AddingRepeatedCommandException {
+    public static void main(String[] args) throws IOException, ParseException, NoSuchFieldException, AddingRepeatedCommandException {
         if(args.length == 1){
             DEFAULT_FILENAME = args[0];
         }
@@ -21,7 +21,6 @@ public class App {
         FileManager reader = new FileManager();
         String jsonString = reader.read(DEFAULT_FILENAME);
         ParserJSON.parse(jsonString);
-
 
         CommandLine CMD = new CommandLine();
         CMD.run();

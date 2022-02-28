@@ -1,11 +1,8 @@
 package collection;
 
-import utils.CommandLine;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -17,15 +14,15 @@ public class CollectionManager {
     public CollectionManager() {
     }
 
-    private void nextID() {
+    private static void nextID() {
         currentID++;
     }
 
-    private void refreshDate() {
+    private static void refreshDate() {
         currentDate = LocalDate.now();
     }
 
-    public void addDragon(ArrayList<Object> fields) {
+    public static void addDragon(ArrayList<Object> fields) {
         nextID();
         refreshDate();
 
@@ -50,6 +47,7 @@ public class CollectionManager {
         DragonHead head = (DragonHead) fields.get(6);
 
         COLLECTION.add(new Dragon(id, name, coordinates, creationDate, age, weight, speaking, type, head));
+        sortCollection();
 
     }
 
@@ -58,8 +56,14 @@ public class CollectionManager {
                 COLLECTION.getClass(), Dragon.class, currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), COLLECTION.size());
     }
 
-    public LinkedList<Dragon> getCOLLECTION() {
-        return (LinkedList<Dragon>) COLLECTION.clone();
+    public static LinkedList<Dragon> getCOLLECTION() {
+        /** Коллекцию можно получить только из {@link commands.Save}*/
+        StackTraceElement[] tracer;
+        tracer = new Throwable().getStackTrace();
+        if (tracer[1].getClassName().equals("commands.Save")) {
+            return (LinkedList<Dragon>) COLLECTION.clone();
+        }
+        return null;
     }
 
     public static int getCollectionSize() {
@@ -80,6 +84,9 @@ public class CollectionManager {
         for (Dragon dragon : COLLECTION) {
             toReturn += String.format("%s: вес %d кг.\n", dragon.getName(), dragon.getWeight());
         }
+        // Приведение коллекцию к стандартному порядку (сортировка оп имени)
+        sortCollection();
+
         return toReturn.strip();
     }
 
@@ -130,7 +137,7 @@ public class CollectionManager {
     }
 
     // Сортировка коллекции по имени драконов
-    private void sortCollection() {
+    private static void sortCollection() {
         COLLECTION.sort(Comparator.naturalOrder());
     }
 

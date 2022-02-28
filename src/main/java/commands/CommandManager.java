@@ -43,10 +43,13 @@ public class CommandManager {
     public static void runCommand(String cmd) {
         try {
             commandHashMap.get(cmd).execute();
+
+            //Запись команды в историю
             STACK.push(cmd);
             if (STACK.size() == 11) {
                 STACK.remove(0);
             }
+
         } catch (Exception e) {
             CommandLine.outLn(String.format("Не удалось запустить команду <%s>! (См. help)", cmd));
         } finally {
