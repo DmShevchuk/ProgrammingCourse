@@ -9,7 +9,8 @@ public class CommandLine {
     private static String USER_INPUT_PREFIX = ">>";
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    private static InputMode INPUT_MODE = InputMode.COMMAND;
+    private static InputSource INPUT_SOURCE = InputSource.COMMAND;
+    private static ElementReadMode ELEMENT_MODE = ElementReadMode.STANDARD;
 
     public void run() throws AddingRepeatedCommandException, NoSuchFieldException {
         String INPUT_COMMAND;
@@ -28,16 +29,24 @@ public class CommandLine {
         CommandManager.addCommand(new Add());
         CommandManager.addCommand(new UpdateId());
         CommandManager.addCommand(new AddIfMax());
+        CommandManager.addCommand(new ExecuteScript());
 
         while (true) {
             // Выводим в консоль >> для ввода пользователя
             out(USER_INPUT_PREFIX);
 
-            INPUT_COMMAND = SCANNER.nextLine().strip();
+            INPUT_COMMAND = (INPUT_SOURCE == InputSource.COMMAND) ? SCANNER.nextLine().strip() :
+                    ExecuteScript.nextLine().strip();
 
-            if (INPUT_MODE == InputMode.COMMAND) {
+            if (INPUT_SOURCE == InputSource.SCRIPT) {
+                outLn(INPUT_COMMAND);
+            }
+
+            if (ELEMENT_MODE == ElementReadMode.STANDARD) {
                 if (INPUT_COMMAND.length() == 0) {
                     outLn("Введена пустая строка");
+                    continue;
+                }else if(INPUT_COMMAND.equals("_stop_script_")){
                     continue;
                 }
 
@@ -50,20 +59,23 @@ public class CommandLine {
                     CommandManager.runCommand(userCommand[0]);
                 }
 
-            } else if (INPUT_MODE == InputMode.ELEMENT_ADD || INPUT_MODE == InputMode.ELEMENT_UPDATE ||
-                    INPUT_MODE == InputMode.ELEMENT_COMPARE) {
+            } else {
                 Add.addValue(INPUT_COMMAND);
             }
         }
 
     }
 
-    public static void setInputMode(InputMode mode) {
-        INPUT_MODE = mode;
+    public static void setInputSource(InputSource mode) {
+        INPUT_SOURCE = mode;
     }
 
-    public static InputMode getInputMode(){
-        return INPUT_MODE;
+    public static void setElementMode(ElementReadMode mode) {
+        ELEMENT_MODE = mode;
+    }
+
+    public static ElementReadMode getElementMode() {
+        return ELEMENT_MODE;
     }
 
     public static void setUserInputPrefix(String prefix) {

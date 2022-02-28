@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-//TODO постоянная сортировка коллекции
+
 public class CollectionManager {
     private static LinkedList<Dragon> COLLECTION = new LinkedList<>();
     private static Integer currentID = 0;
@@ -82,6 +82,7 @@ public class CollectionManager {
 
     public static void removeByHead(DragonHead head) {
         COLLECTION.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
+        sortCollection();
     }
 
     public static String sortByWeight() {
@@ -100,7 +101,6 @@ public class CollectionManager {
     public static String clearCollection() {
         COLLECTION.clear();
         return "Коллекция успешно очищена!";
-
     }
 
     public static Dragon getMaxElement() {
@@ -128,6 +128,7 @@ public class CollectionManager {
                 break;
             }
         }
+        sortCollection();
     }
 
     public static Dragon getElementByID(Integer id) {
@@ -171,6 +172,7 @@ public class CollectionManager {
         }
 
         dragon.setHead((DragonHead) fields.get(6));
+        sortCollection();
     }
 
     // Сортировка коллекции по возрасту драконов

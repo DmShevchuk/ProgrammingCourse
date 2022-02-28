@@ -2,7 +2,7 @@ package commands;
 
 import collection.CollectionManager;
 import utils.CommandLine;
-import utils.InputMode;
+import utils.ElementReadMode;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class UpdateId extends Command {
                 CommandLine.outLn("Обновление элемента коллекции:\n"
                         + CollectionManager.getElementByID(currentId).toString());
                 CommandLine.outLn("Для ввода null используйте пустую строчку.");
-                CommandLine.setInputMode(InputMode.ELEMENT_UPDATE);
+                CommandLine.setElementMode(ElementReadMode.ELEMENT_UPDATE);
                 Add.addInit();
             }
         } catch (ClassCastException e) {

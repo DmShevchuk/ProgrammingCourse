@@ -2,6 +2,7 @@ package commands;
 import utils.CommandLine;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Help extends Command {
 
@@ -12,8 +13,8 @@ public class Help extends Command {
 
     @Override
     public void execute() {
-        String commandsInfo = "";
         ArrayList<String> lst = CommandManager.getCommandsInfo();
+        Collections.sort(lst);
         CommandLine.outLn(String.join("\n", lst));
     }
 

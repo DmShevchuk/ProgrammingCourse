@@ -3,7 +3,7 @@ package commands;
 import collection.CollectionManager;
 import collection.Dragon;
 import utils.CommandLine;
-import utils.InputMode;
+import utils.ElementReadMode;
 
 import java.util.ArrayList;
 
@@ -18,8 +18,10 @@ public class AddIfMax extends Command{
         if(CollectionManager.getCollectionSize() > 0){
             CommandLine.outLn("Введите элемент для сравнения:");
             CommandLine.outLn("Для ввода null используйте пустую строчку.");
-            CommandLine.setInputMode(InputMode.ELEMENT_COMPARE);
+            CommandLine.setElementMode(ElementReadMode.ELEMENT_COMPARE);
             Add.addInit();
+        }else{
+            CommandLine.outLn("Коллекция пуста! Воспользуйтесь командой <add> для добавления элементов!");
         }
     }
 

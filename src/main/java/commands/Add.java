@@ -5,7 +5,7 @@ import collection.Dragon;
 import data.FieldChecker;
 import data.Pair;
 import utils.CommandLine;
-import utils.InputMode;
+import utils.ElementReadMode;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -36,7 +36,7 @@ public class Add extends Command {
     @Override
     public void execute() {
         CommandLine.outLn("Добавление дракона в коллекцию (null == пустая строка)");
-        CommandLine.setInputMode(InputMode.ELEMENT_ADD);
+        CommandLine.setElementMode(ElementReadMode.ELEMENT_ADD);
         addInit();
     }
 
@@ -78,18 +78,18 @@ public class Add extends Command {
         }
 
         if (fieldValues.size() == ALL_FIELDS_ADDED) {
-            if (CommandLine.getInputMode() == InputMode.ELEMENT_ADD) {
+            if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
                 Dragon d = CollectionManager.createNewDragon(fieldValues);
                 CollectionManager.addDragon(d);
                 CommandLine.outLn("Дракон добавлен в коллекцию!");
-            } else if (CommandLine.getInputMode() == InputMode.ELEMENT_UPDATE) {
+            } else if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {
                 // InputMode.ELEMENT_UPDATE
                 UpdateId.update(fieldValues);
             } else {
                 AddIfMax.compare(fieldValues);
             }
             //Возвращение к стандартному пользовательскому вводу
-            CommandLine.setInputMode(InputMode.COMMAND);
+            CommandLine.setElementMode(ElementReadMode.STANDARD);
             CommandLine.setUserInputPrefix(">>");
             fieldValues.clear();
         }
