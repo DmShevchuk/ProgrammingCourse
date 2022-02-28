@@ -6,6 +6,7 @@ import annotations.HasLength;
 import annotations.NotNull;
 
 import java.time.LocalDate;
+
 //TODO ImportIgnore
 public class Dragon implements Comparable<Dragon> {
     @NotNull
@@ -15,7 +16,7 @@ public class Dragon implements Comparable<Dragon> {
 
     @NotNull
     @HasLength
-    private final String name; //Поле не может быть null, Строка не может быть пустой
+    private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull
     @GreaterThan
@@ -32,15 +33,15 @@ public class Dragon implements Comparable<Dragon> {
     private Long weight; //Значение поля должно быть больше 0, Поле не может быть null
 
     @NotNull
-    private final Boolean speaking; //Поле не может быть null
+    private Boolean speaking; //Поле не может быть null
 
     @NotNull
     @EnumType
-    private final DragonType type; //Поле может быть null
+    private DragonType type; //Поле может быть null
 
     @NotNull
     @GreaterThan
-    private final DragonHead head;
+    private DragonHead head;
 
     public Dragon(Integer id, String name, Coordinates coordinates, LocalDate creationDate,
                   Integer age, Long weight, Boolean speaking, DragonType type, DragonHead head) {
@@ -91,6 +92,34 @@ public class Dragon implements Comparable<Dragon> {
         return head;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setWeight(Long weight) {
+        this.weight = weight;
+    }
+
+    public void setSpeaking(Boolean speaking) {
+        this.speaking = speaking;
+    }
+
+    public void setType(DragonType type) {
+        this.type = type;
+    }
+
+    public void setHead(DragonHead head) {
+        this.head = head;
+    }
+
     public void changeCoordinates(Double deltaX, Double deltaY) {
         coordinates.changeX(deltaX);
         coordinates.changeY(deltaY);
@@ -108,7 +137,7 @@ public class Dragon implements Comparable<Dragon> {
 
     @Override
     public int compareTo(Dragon o) {
-        return this.id.compareTo(o.getId());
+        return this.age.compareTo(o.getAge());
     }
 
     @Override

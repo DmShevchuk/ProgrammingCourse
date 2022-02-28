@@ -26,6 +26,8 @@ public class CommandLine {
         CommandManager.addCommand(new Exit());
         CommandManager.addCommand(new Save());
         CommandManager.addCommand(new Add());
+        CommandManager.addCommand(new UpdateId());
+        CommandManager.addCommand(new AddIfMax());
 
         while (true) {
             // Выводим в консоль >> для ввода пользователя
@@ -48,7 +50,8 @@ public class CommandLine {
                     CommandManager.runCommand(userCommand[0]);
                 }
 
-            } else if (INPUT_MODE == InputMode.ELEMENT) {
+            } else if (INPUT_MODE == InputMode.ELEMENT_ADD || INPUT_MODE == InputMode.ELEMENT_UPDATE ||
+                    INPUT_MODE == InputMode.ELEMENT_COMPARE) {
                 Add.addValue(INPUT_COMMAND);
             }
         }
@@ -57,6 +60,10 @@ public class CommandLine {
 
     public static void setInputMode(InputMode mode) {
         INPUT_MODE = mode;
+    }
+
+    public static InputMode getInputMode(){
+        return INPUT_MODE;
     }
 
     public static void setUserInputPrefix(String prefix) {

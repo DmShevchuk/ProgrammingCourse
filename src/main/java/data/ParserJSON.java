@@ -72,7 +72,8 @@ public class ParserJSON {
             }
 
             if (fieldValues.size() == ALL_FIELDS_ADDED) {
-                CollectionManager.addDragon(fieldValues);
+                Dragon dr = CollectionManager.createNewDragon(fieldValues);
+                CollectionManager.addDragon(dr);
             } else {
                 CommandLine.outLn("Дракон не добавлен в коллекцию!");
             }

@@ -21,10 +21,7 @@ public class Add extends Command {
 
     public Add() {
         super("add {element} : добавить новый элемент в коллекцию", "add", 0);
-    }
 
-    @Override
-    public void execute() {
         prefixes.put("name", "Введите имя дракона:");
         prefixes.put("coordinates", "Укажите координаты дракона (пример - 10.5 15.9):");
         prefixes.put("age", "Введите возраст:");
@@ -34,10 +31,18 @@ public class Add extends Command {
         prefixes.put("head", "Введите размер головы дракона:");
 
         mapInit();
+    }
+
+    @Override
+    public void execute() {
+        CommandLine.outLn("Добавление дракона в коллекцию (null == пустая строка)");
+        CommandLine.setInputMode(InputMode.ELEMENT_ADD);
+        addInit();
+    }
+
+    public static void addInit() {
         fieldValues.clear();
         ITERATOR = prefixes.entrySet().iterator();
-        CommandLine.outLn("Добавление дракона в коллекцию (null == пустая строка)");
-        CommandLine.setInputMode(InputMode.ELEMENT);
         nextField();
     }
 
@@ -73,11 +78,20 @@ public class Add extends Command {
         }
 
         if (fieldValues.size() == ALL_FIELDS_ADDED) {
-            CollectionManager.addDragon(fieldValues);
-            CommandLine.outLn("Дракон добавлен в коллекцию!");
+            if (CommandLine.getInputMode() == InputMode.ELEMENT_ADD) {
+                Dragon d = CollectionManager.createNewDragon(fieldValues);
+                CollectionManager.addDragon(d);
+                CommandLine.outLn("Дракон добавлен в коллекцию!");
+            } else if (CommandLine.getInputMode() == InputMode.ELEMENT_UPDATE) {
+                // InputMode.ELEMENT_UPDATE
+                UpdateId.update(fieldValues);
+            } else {
+                AddIfMax.compare(fieldValues);
+            }
             //Возвращение к стандартному пользовательскому вводу
             CommandLine.setInputMode(InputMode.COMMAND);
             CommandLine.setUserInputPrefix(">>");
+            fieldValues.clear();
         }
 
     }

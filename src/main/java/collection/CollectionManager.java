@@ -1,11 +1,14 @@
 package collection;
 
+import utils.CommandLine;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+//TODO постоянная сортировка коллекции
 public class CollectionManager {
     private static LinkedList<Dragon> COLLECTION = new LinkedList<>();
     private static Integer currentID = 0;
@@ -22,7 +25,7 @@ public class CollectionManager {
         currentDate = LocalDate.now();
     }
 
-    public static void addDragon(ArrayList<Object> fields) {
+    public static Dragon createNewDragon(ArrayList<Object> fields) {
         nextID();
         refreshDate();
 
@@ -46,9 +49,12 @@ public class CollectionManager {
 
         DragonHead head = (DragonHead) fields.get(6);
 
-        COLLECTION.add(new Dragon(id, name, coordinates, creationDate, age, weight, speaking, type, head));
-        sortCollection();
+        return new Dragon(id, name, coordinates, creationDate, age, weight, speaking, type, head);
+    }
 
+    public static void addDragon(Dragon dragon) {
+        COLLECTION.add(dragon);
+        sortCollection();
     }
 
     public static String getInfo() {
@@ -97,12 +103,19 @@ public class CollectionManager {
 
     }
 
+    public static Dragon getMaxElement() {
+        sortCollection();
+        return COLLECTION.getLast();
+    }
+
     public static boolean checkExistingID(Integer id) {
         for (Dragon dragon : COLLECTION) {
             if (dragon.getId().equals(id)) {
                 return true;
             }
         }
+
+        CommandLine.outLn(String.format("Не существует id=%d!", id));
         return false;
     }
 
@@ -117,13 +130,13 @@ public class CollectionManager {
         }
     }
 
-    public static String getElementByID(Integer id) {
+    public static Dragon getElementByID(Integer id) {
         for (Dragon dragon : COLLECTION) {
             if (dragon.getId().equals(id)) {
-                return dragon.toString();
+                return dragon;
             }
         }
-        return "";
+        return null;
     }
 
     public static Integer getMinID() {
@@ -136,7 +149,31 @@ public class CollectionManager {
         return minID;
     }
 
-    // Сортировка коллекции по имени драконов
+    public static void updateElementById(Integer id, ArrayList<Object> fields) {
+        Dragon dragon = getElementByID(id);
+
+        dragon.setName((String) fields.get(0));
+        dragon.setCoordinates((Coordinates) fields.get(1));
+
+        if (fields.get(2) == null) {
+            dragon.setAge(null);
+        } else {
+            dragon.setAge((Integer) fields.get(2));
+        }
+
+        dragon.setWeight((Long) fields.get(3));
+        dragon.setSpeaking((Boolean) fields.get(4));
+
+        if (fields.get(5) == null) {
+            dragon.setType(null);
+        } else {
+            dragon.setType((DragonType) fields.get(5));
+        }
+
+        dragon.setHead((DragonHead) fields.get(6));
+    }
+
+    // Сортировка коллекции по возрасту драконов
     private static void sortCollection() {
         COLLECTION.sort(Comparator.naturalOrder());
     }

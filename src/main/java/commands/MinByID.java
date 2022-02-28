@@ -18,6 +18,6 @@ public class MinByID extends Command {
             return;
         }
 
-        CommandLine.outLn(CollectionManager.getElementByID(minID));
+        CommandLine.outLn(CollectionManager.getElementByID(minID).toString());
     }
 }
