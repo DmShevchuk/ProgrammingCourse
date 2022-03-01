@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-
+/**
+ * Класс для взаимодействия с коллекцией типа {@link collection.Dragon}
+ *
+ * */
 public class CollectionManager {
     private static LinkedList<Dragon> COLLECTION = new LinkedList<>();
     private static Integer currentID = 0;
@@ -25,6 +28,11 @@ public class CollectionManager {
         currentDate = LocalDate.now();
     }
 
+    /**
+     *Позволяет создать новый объект {@link collection.Dragon}
+     * @param fields ArrayList с полями {@link collection.Dragon}
+     * @return объект класса {@link collection.Dragon}
+     * */
     public static Dragon createNewDragon(ArrayList<Object> fields) {
         nextID();
         refreshDate();
@@ -57,13 +65,18 @@ public class CollectionManager {
         sortCollection();
     }
 
+    //Получить информацию о хранящейся коллекции
     public static String getInfo() {
         return String.format("Тип коллекции: %s\nВ коллекции содержаться объекты: %s\nДата инициализации: %s\nКоличество элементов: %d",
                 COLLECTION.getClass(), Dragon.class, currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), COLLECTION.size());
     }
 
+    /**
+     * Метод для возвращения КОПИИ хранимой коллекции
+     * КОПИЮ можно получить только из {@link commands.Save}
+     * @return LinkedList с объектами {@link collection.Dragon}
+     * */
     public static LinkedList<Dragon> getCOLLECTION() {
-        /** Коллекцию можно получить только из {@link commands.Save}*/
         StackTraceElement[] tracer;
         tracer = new Throwable().getStackTrace();
         if (tracer[1].getClassName().equals("commands.Save")) {
@@ -80,6 +93,7 @@ public class CollectionManager {
         COLLECTION.removeFirst();
     }
 
+    //Удалить из коллекции элементы с указанным размером головы
     public static void removeByHead(DragonHead head) {
         COLLECTION.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
         sortCollection();

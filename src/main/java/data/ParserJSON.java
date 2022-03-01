@@ -1,17 +1,13 @@
 package data;
 
 import collection.CollectionManager;
-import collection.Coordinates;
 import collection.Dragon;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
-import exceptions.FieldValueException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -75,7 +71,7 @@ public class ParserJSON {
                 Dragon dr = CollectionManager.createNewDragon(fieldValues);
                 CollectionManager.addDragon(dr);
             } else {
-                CommandLine.outLn("Дракон не добавлен в коллекцию!");
+                CommandLine.errorOut("Дракон не добавлен в коллекцию!");
             }
 
         }

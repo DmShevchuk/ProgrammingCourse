@@ -21,7 +21,7 @@ public class AddIfMax extends Command{
             CommandLine.setElementMode(ElementReadMode.ELEMENT_COMPARE);
             Add.addInit();
         }else{
-            CommandLine.outLn("Коллекция пуста! Воспользуйтесь командой <add> для добавления элементов!");
+            CommandLine.errorOut("Коллекция пуста! Воспользуйтесь командой <add> для добавления элементов!");
         }
     }
 
@@ -31,9 +31,9 @@ public class AddIfMax extends Command{
 
         if (dragon.compareTo(newDragon) < 0){
             CollectionManager.addDragon(newDragon);
-            CommandLine.outLn("Дракон добавлен в коллекцию!");
+            CommandLine.successOut("Дракон добавлен в коллекцию!");
         } else{
-            CommandLine.outLn("Дракон не добавлен в коллекцию!");
+            CommandLine.errorOut("Дракон не добавлен в коллекцию!");
         }
 
     }

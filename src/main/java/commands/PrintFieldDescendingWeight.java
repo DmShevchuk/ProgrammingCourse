@@ -15,6 +15,6 @@ public class PrintFieldDescendingWeight extends Command{
             CommandLine.outLn(CollectionManager.sortByWeight());
             return;
         }
-        CommandLine.outLn("Заполните коллекцию элементами для сортировки по весу!");
+        CommandLine.errorOut("Заполните коллекцию элементами для сортировки по весу!");
     }
 }

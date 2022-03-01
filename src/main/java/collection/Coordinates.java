@@ -2,7 +2,9 @@ package collection;
 
 import annotations.GreaterThan;
 import annotations.NotNull;
-
+/**
+ * Координаты являются полем {@link collection.Dragon}
+ * */
 public class Coordinates {
     @NotNull
     @GreaterThan(minValue = -972)

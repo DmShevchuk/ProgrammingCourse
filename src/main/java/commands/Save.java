@@ -1,6 +1,7 @@
 package commands;
 
 import collection.*;
+import data.FileManager;
 import utils.CommandLine;
 
 import java.io.File;
@@ -38,7 +39,12 @@ public class Save extends Command {
 
 
         if (CollectionManager.getCollectionSize() == 0) {
-            CommandLine.outLn("В коллекции нет элементов, её невозможно записать! ");
+            CommandLine.errorOut("В коллекции нет элементов, её невозможно записать!");
+            return;
+        }
+
+        if(!FileManager.canWrite(DEFAULT_FILE_NAME)){
+            CommandLine.errorOut("У текущего пользователя нет прав на запись в файл " + DEFAULT_FILE_NAME);
             return;
         }
 
@@ -91,9 +97,11 @@ public class Save extends Command {
 
             writer.write(json);
             writer.close();
-            CommandLine.outLn(String.format("Запись коллекции в файл %s была выполнена успешно!", DEFAULT_FILE_NAME));
+
+            CommandLine.successOut(String.format("Запись коллекции в файл %s была выполнена успешно!", DEFAULT_FILE_NAME));
+
         } catch (FileNotFoundException | InvocationTargetException | IllegalAccessException e) {
-            CommandLine.outLn("Невозможно записать коллекцию в файл " + DEFAULT_FILE_NAME);
+            CommandLine.errorOut("Невозможно записать коллекцию в файл " + DEFAULT_FILE_NAME);
         }
 
     }

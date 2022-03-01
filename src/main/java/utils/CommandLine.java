@@ -9,6 +9,8 @@ public class CommandLine {
     private static String USER_INPUT_PREFIX = ">>";
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    public static final String ANSI_RESET = "\u001B[0m";
+
     private static InputSource INPUT_SOURCE = InputSource.COMMAND;
     private static ElementReadMode ELEMENT_MODE = ElementReadMode.STANDARD;
 
@@ -84,6 +86,16 @@ public class CommandLine {
 
     public static void outLn(String text) {
         System.out.println(text);
+    }
+
+    public static void successOut(String text){
+        String ANSI_GREEN = "\u001B[32m";
+        System.out.println(ANSI_GREEN + text + ANSI_RESET);
+    }
+
+    public static void errorOut(String text){
+        String ANSI_RED = "\u001B[31m";
+        System.out.println(ANSI_RED + text + ANSI_RESET);
     }
 
     public static void out(String text) {

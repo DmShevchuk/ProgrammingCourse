@@ -7,7 +7,9 @@ import annotations.NotNull;
 
 import java.time.LocalDate;
 
-
+/**
+ * Главный класс, объекты которого хранятся в коллекции
+ * */
 public class Dragon implements Comparable<Dragon> {
     @NotNull
     @GreaterThan

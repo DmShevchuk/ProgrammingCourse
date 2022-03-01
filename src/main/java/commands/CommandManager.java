@@ -29,11 +29,11 @@ public class CommandManager {
 
     public static boolean checkCommand(String cmd, int argsSize) {
         if (!commandHashMap.containsKey(cmd)) {
-            CommandLine.outLn(String.format("Не удалось распознать команду <%s>!", cmd));
+            CommandLine.errorOut(String.format("Не удалось распознать команду <%s>!", cmd));
             return false;
         }
         if ((argsSize - 1) != commandHashMap.get(cmd).getArgQuantity()) {
-            CommandLine.outLn(String.format("Команда <%s> принимает аргументов: %d, подано аргументов: %d!",
+            CommandLine.errorOut(String.format("Команда <%s> принимает аргументов: %d, подано аргументов: %d!",
                     cmd, commandHashMap.get(cmd).getArgQuantity(), argsSize - 1));
             return false;
         }
@@ -51,7 +51,7 @@ public class CommandManager {
             }
 
         } catch (Exception e) {
-            CommandLine.outLn(String.format("Не удалось запустить команду <%s>! (См. help)", cmd));
+            CommandLine.errorOut(String.format("Не удалось запустить команду <%s>! (См. help)", cmd));
         } finally {
             resetArg();
         }

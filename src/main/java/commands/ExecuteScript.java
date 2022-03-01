@@ -25,40 +25,44 @@ public class ExecuteScript extends Command {
         CommandLine.setInputSource(InputSource.SCRIPT);
     }
 
-    public static void addInstructions(){
+    public static void addInstructions() {
         if (FileManager.canRead(CommandManager.getARG())) {
 
             String file = FileManager.read(CommandManager.getARG());
 
             if (file != null && file.length() > 0 && checkRecursion(file)) {
-                String[] commands =  file.split("\\n");
+                String[] commands = file.split("\\n");
 
-                for (int i = commands.length - 1; i > -1; i--){
+                for (int i = commands.length - 1; i > -1; i--) {
                     inputStream.addFirst(commands[i]);
                 }
             }
         }
     }
 
-    public static String nextLine(){
+    public static String nextLine() {
         try {
             return inputStream.removeFirst();
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             stopScript();
             return "_stop_script_";
         }
     }
 
-    public static void stopScript(){
+    public static void stopScript() {
         inputStream.clear();
         usedFiles.clear();
         CommandLine.setInputSource(InputSource.COMMAND);
     }
 
-    public static boolean checkRecursion(String file){
-        for (String f: usedFiles){
-            if(f.equals(file)){
-                CommandLine.outLn(String.format("Попытка создать коллизию, файл %s!", CommandManager.getARG()));
+    public static boolean checkRecursion(String file) {
+        if (usedFiles.size() > 0 && usedFiles.get(usedFiles.size() - 1).equals(file)) {
+            return true;
+        }
+
+        for (String f : usedFiles) {
+            if (f.equals(file)) {
+                CommandLine.errorOut(String.format("Попытка создать коллизию, файл %s!", CommandManager.getARG()));
                 return false;
             }
         }

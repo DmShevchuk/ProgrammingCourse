@@ -16,12 +16,12 @@ public class RemoveByID extends Command {
                 Integer id = Integer.parseInt(CommandManager.getARG());
                 if (CollectionManager.checkExistingID(id)) {
                     CollectionManager.deleteElementByID(id);
-                    CommandLine.outLn(String.format("Дракон с id=%d успешно удалён!", id));
+                    CommandLine.successOut(String.format("Дракон с id=%d успешно удалён!", id));
                 } else {
-                    CommandLine.outLn(String.format("id=%d не существует!", id));
+                    CommandLine.errorOut(String.format("id=%d не существует!", id));
                 }
             } catch (Exception e) {
-                CommandLine.outLn(String.format("Невозможно привести строку <%s> к Integer!", CommandManager.getARG()));
+                CommandLine.errorOut(String.format("Невозможно привести строку <%s> к Integer!", CommandManager.getARG()));
             }
         }
     }

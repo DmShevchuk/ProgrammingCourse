@@ -20,6 +20,6 @@ public class History extends Command {
             toReturn += cmd + "\n";
         }
 
-        CommandLine.outLn(size == 0 ? "Список команд пуст!" : toReturn.strip());
+        CommandLine.errorOut(size == 0 ? "Список команд пуст!" : toReturn.strip());
     }
 }

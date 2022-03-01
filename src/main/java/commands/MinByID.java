@@ -14,7 +14,7 @@ public class MinByID extends Command {
         Integer minID = CollectionManager.getMinID();
 
         if(minID.equals(Integer.MAX_VALUE)){
-            CommandLine.outLn("Коллекция пуста!");
+            CommandLine.errorOut("Коллекция пуста!");
             return;
         }
 

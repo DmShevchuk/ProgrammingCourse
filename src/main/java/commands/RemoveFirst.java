@@ -13,9 +13,9 @@ public class RemoveFirst extends Command{
     public void execute() {
         if(CollectionManager.getCollectionSize() > 0){
             CollectionManager.removeFirst();
-            CommandLine.outLn("Первый элемент коллекции успешно удалён!");
+            CommandLine.successOut("Первый элемент коллекции успешно удалён!");
             return;
         }
-        CommandLine.outLn("В коллекции нет элементов, удалять нечего!");
+        CommandLine.errorOut("В коллекции нет элементов, удалять нечего!");
     }
 }

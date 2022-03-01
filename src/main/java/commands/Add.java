@@ -74,14 +74,14 @@ public class Add extends Command {
                 nextField();
             }
         } else {
-            CommandLine.outLn(String.format("Невозможно получить значение поля %s из %s!", currentField, value));
+            CommandLine.errorOut(String.format("Невозможно получить значение поля %s из %s!", currentField, value));
         }
 
         if (fieldValues.size() == ALL_FIELDS_ADDED) {
             if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
                 Dragon d = CollectionManager.createNewDragon(fieldValues);
                 CollectionManager.addDragon(d);
-                CommandLine.outLn("Дракон добавлен в коллекцию!");
+                CommandLine.successOut("Дракон добавлен в коллекцию!");
             } else if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {
                 // InputMode.ELEMENT_UPDATE
                 UpdateId.update(fieldValues);

@@ -26,17 +26,17 @@ public class UpdateId extends Command {
                 Add.addInit();
             }
         } catch (ClassCastException e) {
-            CommandLine.outLn("Невозможно получить id=" + CommandManager.getARG());
+            CommandLine.errorOut("Невозможно получить id=" + CommandManager.getARG());
         }
     }
 
     public static void update(ArrayList<Object> fields) {
         try {
             CollectionManager.updateElementById(currentId, fields);
-            CommandLine.outLn(String.format("Элемент коллекции с id=%d успешно обновлён!", currentId));
+            CommandLine.successOut(String.format("Элемент коллекции с id=%d успешно обновлён!", currentId));
             currentId = null;
         } catch (Exception e) {
-            CommandLine.outLn("Не удалось обновить значение элемента!");
+            CommandLine.errorOut("Не удалось обновить значение элемента!");
         }
     }
 }

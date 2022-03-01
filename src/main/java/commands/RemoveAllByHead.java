@@ -17,14 +17,14 @@ public class RemoveAllByHead extends Command {
             try {
                 DragonHead head = new DragonHead((long) Long.parseLong(CommandManager.getARG()));
                 CollectionManager.removeByHead(head);
-                CommandLine.outLn(String.format("В коллекции не осталось драконов с размером головы = %s.",
+                CommandLine.successOut(String.format("В коллекции не осталось драконов с размером головы = %s.",
                         CommandManager.getARG()));
             } catch (ClassCastException e) {
-                CommandLine.outLn(String.format("Невозможно привести элемент %s %s к Long -> DragonHead.",
+                CommandLine.errorOut(String.format("Невозможно привести элемент %s %s к Long -> DragonHead.",
                         CommandManager.getARG().getClass(), CommandManager.getARG()));
             }
             return;
         }
-        CommandLine.outLn("Сейчас коллекция пуста, нам нечего удалять!");
+        CommandLine.errorOut("Сейчас коллекция пуста, нам нечего удалять!");
     }
 }

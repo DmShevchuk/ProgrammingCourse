@@ -1,5 +1,7 @@
 package collection;
-
+/**
+ * Каждый объект класса {@link collection.Dragon} имеет свой тип (WATER, UNDERGROUND, AIR, FIRE)
+ * */
 public enum DragonType {
     WATER("WATER"),
     UNDERGROUND("UNDERGROUND"),

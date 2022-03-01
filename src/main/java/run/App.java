@@ -6,7 +6,6 @@ import org.json.simple.parser.ParseException;
 import utils.CommandLine;
 
 
-//TODO проверка файла на возможность чтения, записи
 public class App {
     private static String DEFAULT_FILENAME = "collection.json";
 
@@ -15,11 +14,14 @@ public class App {
             DEFAULT_FILENAME = args[0];
         }
 
-        FileManager reader = new FileManager();
-        String jsonString = reader.read(DEFAULT_FILENAME);
-        ParserJSON.parse(jsonString);
+        if(FileManager.canRead(DEFAULT_FILENAME)){
+            String jsonString = FileManager.read(DEFAULT_FILENAME);
+            ParserJSON.parse(jsonString);
 
-        CommandLine CMD = new CommandLine();
-        CMD.run();
+            CommandLine CMD = new CommandLine();
+            CMD.run();
+        }else{
+            System.out.printf("Невозможно прочитать файл %s!", DEFAULT_FILENAME);
+        }
     }
 }
