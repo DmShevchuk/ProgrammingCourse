@@ -7,6 +7,7 @@ import utils.CommandLine;
 
 
 public class App {
+    //Необходимо указывать полный путь до файла!
     private static String DEFAULT_FILENAME = "collection.json";
 
     public static void main(String[] args) throws ParseException, NoSuchFieldException, AddingRepeatedCommandException {
@@ -21,7 +22,7 @@ public class App {
             CommandLine CMD = new CommandLine();
             CMD.run();
         }else{
-            System.out.printf("Невозможно прочитать файл %s!", DEFAULT_FILENAME);
+            System.out.println(String.format("Unable to read file %s!", DEFAULT_FILENAME));
         }
     }
 }

@@ -10,7 +10,7 @@ public class FileManager {
             File file = new File(fileName);
             return file.canRead();
         } catch (Exception e) {
-            CommandLine.errorOut(String.format("Невозможно прочитать файл %s!", fileName));
+            CommandLine.errorOut(String.format("Unable to read file %s!", fileName));
         }
         return false;
     }
@@ -20,7 +20,7 @@ public class FileManager {
             File file = new File(fileName);
             return file.canWrite();
         } catch (Exception e) {
-            CommandLine.errorOut(String.format("Невозможно записать данные в файл %s!", fileName));
+            CommandLine.errorOut(String.format("Unable to write data to file %s!", fileName));
         }
         return false;
     }
@@ -42,7 +42,7 @@ public class FileManager {
             inputStreamReader.close();
             return fileContent;
         }catch (IOException e){
-            CommandLine.errorOut(String.format("Проблемы с прочтением файла %s!", fileName));
+            CommandLine.errorOut(String.format("Problems reading the file %s!", fileName));
             return null;
         }
     }

@@ -71,7 +71,7 @@ public class ParserJSON {
                 Dragon dr = CollectionManager.createNewDragon(fieldValues);
                 CollectionManager.addDragon(dr);
             } else {
-                CommandLine.errorOut("Дракон не добавлен в коллекцию!");
+                CommandLine.errorOut("The dragon is not added to the collection!");
             }
 
         }

@@ -2,7 +2,7 @@ package commands;
 
 public class Exit extends Command {
     public Exit() {
-        super("exit : завершить программу (без сохранения в файл)", "exit", 0);
+        super("exit : terminate program (without saving to file)", "exit", 0);
     }
 
     @Override

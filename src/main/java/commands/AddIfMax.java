@@ -9,19 +9,19 @@ import java.util.ArrayList;
 
 public class AddIfMax extends Command{
     public AddIfMax() {
-        super("add_if_max {element} : добавить новый элемент в коллекцию, если его значение" +
-                " превышает значение наибольшего элемента этой коллекции", "add_if_max", 0);
+        super("add_if_max {element} : add a new element to the collection if its value" +
+                " exceeds the value of the largest element of this collection", "add_if_max", 0);
     }
 
     @Override
     public void execute() {
         if(CollectionManager.getCollectionSize() > 0){
-            CommandLine.outLn("Введите элемент для сравнения:");
-            CommandLine.outLn("Для ввода null используйте пустую строчку.");
+            CommandLine.outLn("Enter an item to compare:");
+            CommandLine.outLn("To enter null, use an empty string.");
             CommandLine.setElementMode(ElementReadMode.ELEMENT_COMPARE);
             Add.addInit();
         }else{
-            CommandLine.errorOut("Коллекция пуста! Воспользуйтесь командой <add> для добавления элементов!");
+            CommandLine.errorOut("The collection is empty! Use the <add> command to add elements!");
         }
     }
 
@@ -31,9 +31,9 @@ public class AddIfMax extends Command{
 
         if (dragon.compareTo(newDragon) < 0){
             CollectionManager.addDragon(newDragon);
-            CommandLine.successOut("Дракон добавлен в коллекцию!");
+            CommandLine.successOut("Dragon added to collection!");
         } else{
-            CommandLine.errorOut("Дракон не добавлен в коллекцию!");
+            CommandLine.errorOut("The dragon is not added to the collection!");
         }
 
     }

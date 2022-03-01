@@ -16,7 +16,7 @@ public class CommandManager {
         if (!commandHashMap.containsKey(command.getName())) {
             commandHashMap.put(command.getName(), command);
         } else {
-            throw new AddingRepeatedCommandException(String.format("Команда %s уже добавлена!", command.getName()));
+            throw new AddingRepeatedCommandException(String.format("Command %s already added!", command.getName()));
         }
     }
 
@@ -29,11 +29,11 @@ public class CommandManager {
 
     public static boolean checkCommand(String cmd, int argsSize) {
         if (!commandHashMap.containsKey(cmd)) {
-            CommandLine.errorOut(String.format("Не удалось распознать команду <%s>!", cmd));
+            CommandLine.errorOut(String.format("Failed to recognize command <%s>!", cmd));
             return false;
         }
         if ((argsSize - 1) != commandHashMap.get(cmd).getArgQuantity()) {
-            CommandLine.errorOut(String.format("Команда <%s> принимает аргументов: %d, подано аргументов: %d!",
+            CommandLine.errorOut(String.format("Command <%s> takes arguments: %d, arguments supplied: %d!",
                     cmd, commandHashMap.get(cmd).getArgQuantity(), argsSize - 1));
             return false;
         }
@@ -51,7 +51,7 @@ public class CommandManager {
             }
 
         } catch (Exception e) {
-            CommandLine.errorOut(String.format("Не удалось запустить команду <%s>! (См. help)", cmd));
+            CommandLine.errorOut(String.format("Failed to run command <%s>! (See help)", cmd));
         } finally {
             resetArg();
         }

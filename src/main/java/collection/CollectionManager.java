@@ -67,15 +67,15 @@ public class CollectionManager {
 
     //Получить информацию о хранящейся коллекции
     public static String getInfo() {
-        return String.format("Тип коллекции: %s\nВ коллекции содержаться объекты: %s\nДата инициализации: %s\nКоличество элементов: %d",
+        return String.format("""
+                        Collection type: %s
+                        The collection contains objects: %s
+                        Initialisation date: %s
+                        Amount of elements: %d""",
                 COLLECTION.getClass(), Dragon.class, currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), COLLECTION.size());
     }
 
-    /**
-     * Метод для возвращения КОПИИ хранимой коллекции
-     * КОПИЮ можно получить только из {@link commands.Save}
-     * @return LinkedList с объектами {@link collection.Dragon}
-     * */
+
     public static LinkedList<Dragon> getCOLLECTION() {
         StackTraceElement[] tracer;
         tracer = new Throwable().getStackTrace();
@@ -114,7 +114,7 @@ public class CollectionManager {
 
     public static String clearCollection() {
         COLLECTION.clear();
-        return "Коллекция успешно очищена!";
+        return "Collection successfully cleared!";
     }
 
     public static Dragon getMaxElement() {
@@ -129,7 +129,7 @@ public class CollectionManager {
             }
         }
 
-        CommandLine.outLn(String.format("Не существует id=%d!", id));
+        CommandLine.errorOut(String.format("Does not exist id=%d!", id));
         return false;
     }
 
@@ -199,7 +199,7 @@ public class CollectionManager {
         for (Dragon d : COLLECTION) {
             toReturn += d.toString() + "\n";
         }
-        return toReturn.strip().length() == 0 ? "Коллекция драконов пуста!" : toReturn.strip();
+        return toReturn.strip().length() == 0 ? "The dragon collection is empty!" : toReturn.strip();
     }
 
 }

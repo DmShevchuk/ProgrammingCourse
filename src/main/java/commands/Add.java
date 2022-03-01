@@ -20,22 +20,22 @@ public class Add extends Command {
     private final static HashMap<String, Function<Pair, Pair>> CHECKER = new HashMap<>();
 
     public Add() {
-        super("add {element} : добавить новый элемент в коллекцию", "add", 0);
+        super("add {element} : add a new element to the collection", "add", 0);
 
-        prefixes.put("name", "Введите имя дракона:");
-        prefixes.put("coordinates", "Укажите координаты дракона (пример - 10.5 15.9):");
-        prefixes.put("age", "Введите возраст:");
-        prefixes.put("weight", "Введите вес дракона:");
-        prefixes.put("speaking", "Дракон говорит? (true/false):");
-        prefixes.put("type", "Введите тип дракона (WATER, UNDERGROUND, AIR, FIRE):");
-        prefixes.put("head", "Введите размер головы дракона:");
+        prefixes.put("name", "Enter dragon name:");
+        prefixes.put("coordinates", "Specify the coordinates of the dragon (ex. - 10.5 15.9):");
+        prefixes.put("age", "Enter age:");
+        prefixes.put("weight", "Enter the weight of the dragon:");
+        prefixes.put("speaking", "The dragon speaks? (true/false):");
+        prefixes.put("type", "Enter dragon type (WATER, UNDERGROUND, AIR, FIRE):");
+        prefixes.put("head", "Enter the size of the dragon's head:");
 
         mapInit();
     }
 
     @Override
     public void execute() {
-        CommandLine.outLn("Добавление дракона в коллекцию (null == пустая строка)");
+        CommandLine.outLn("Adding a dragon to the collection (null == empty string)");
         CommandLine.setElementMode(ElementReadMode.ELEMENT_ADD);
         addInit();
     }
@@ -74,14 +74,14 @@ public class Add extends Command {
                 nextField();
             }
         } else {
-            CommandLine.errorOut(String.format("Невозможно получить значение поля %s из %s!", currentField, value));
+            CommandLine.errorOut(String.format("Unable to get field value %s from %s!", currentField, value));
         }
 
         if (fieldValues.size() == ALL_FIELDS_ADDED) {
             if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
                 Dragon d = CollectionManager.createNewDragon(fieldValues);
                 CollectionManager.addDragon(d);
-                CommandLine.successOut("Дракон добавлен в коллекцию!");
+                CommandLine.successOut("Dragon added to collection!");
             } else if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {
                 // InputMode.ELEMENT_UPDATE
                 UpdateId.update(fieldValues);

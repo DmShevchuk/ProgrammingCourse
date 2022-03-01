@@ -5,7 +5,7 @@ import utils.CommandLine;
 
 public class Show extends Command{
     public Show() {
-        super("show : вывести все элементы коллекции в строковом представлении", "show", 0);
+        super("show : display all elements of the collection in string representation", "show", 0);
     }
 
     @Override

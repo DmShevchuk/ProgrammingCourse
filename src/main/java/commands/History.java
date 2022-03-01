@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class History extends Command {
     public History() {
-        super("history : вывести последние 10 команд (без их аргументов)", "history", 0);
+        super("history : print the last 10 commands (without their arguments)", "history", 0);
     }
 
     @Override
@@ -14,12 +14,12 @@ public class History extends Command {
         Stack<String> commands = CommandManager.getStack();
         int size = commands.size();
 
-        String toReturn = String.format("Последние команды (%d):\n", size);
+        String toReturn = String.format("Latest commands (%d):\n", size);
 
         for (String cmd : commands) {
             toReturn += cmd + "\n";
         }
 
-        CommandLine.errorOut(size == 0 ? "Список команд пуст!" : toReturn.strip());
+        CommandLine.errorOut(size == 0 ? "Command list is empty!" : toReturn.strip());
     }
 }

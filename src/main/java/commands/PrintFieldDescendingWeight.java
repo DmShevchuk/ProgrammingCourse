@@ -5,7 +5,7 @@ import utils.CommandLine;
 
 public class PrintFieldDescendingWeight extends Command{
     public PrintFieldDescendingWeight() {
-        super("print_field_descending_weight : вывести значения поля weight всех элементов в порядке убывания",
+        super("print_field_descending_weight : display the values of the weight field of all elements",
                 "print_field_descending_weight", 0);
     }
 
@@ -15,6 +15,6 @@ public class PrintFieldDescendingWeight extends Command{
             CommandLine.outLn(CollectionManager.sortByWeight());
             return;
         }
-        CommandLine.errorOut("Заполните коллекцию элементами для сортировки по весу!");
+        CommandLine.errorOut("Populate a collection with items to sort by weight!");
     }
 }

@@ -7,8 +7,8 @@ import utils.CommandLine;
 public class RemoveAllByHead extends Command {
 
     public RemoveAllByHead() {
-        super("remove_all_by_head head : удалить из коллекции все элементы," +
-                " значение поля head которого эквивалентно заданному", "remove_all_by_head", 1);
+        super("remove_all_by_head head : remove all elements from the collection," +
+                " whose head field value is equivalent to the given one", "remove_all_by_head", 1);
     }
 
     @Override
@@ -17,14 +17,15 @@ public class RemoveAllByHead extends Command {
             try {
                 DragonHead head = new DragonHead((long) Long.parseLong(CommandManager.getARG()));
                 CollectionManager.removeByHead(head);
-                CommandLine.successOut(String.format("В коллекции не осталось драконов с размером головы = %s.",
+                CommandLine.successOut(String.format("There are no dragons with a head size left in the" +
+                                " collection = %s.",
                         CommandManager.getARG()));
             } catch (ClassCastException e) {
-                CommandLine.errorOut(String.format("Невозможно привести элемент %s %s к Long -> DragonHead.",
+                CommandLine.errorOut(String.format("Cannot cast element %s %s to Long -> DragonHead.",
                         CommandManager.getARG().getClass(), CommandManager.getARG()));
             }
             return;
         }
-        CommandLine.errorOut("Сейчас коллекция пуста, нам нечего удалять!");
+        CommandLine.errorOut("Now the collection is empty, we have nothing to delete!");
     }
 }

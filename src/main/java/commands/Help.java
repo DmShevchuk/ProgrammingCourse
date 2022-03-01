@@ -7,7 +7,7 @@ import java.util.Collections;
 public class Help extends Command {
 
     public Help() {
-        super("help : вывод информации по всем доступным командам", "help", 0);
+        super("help : displaying information on all available commands", "help", 0);
 
     }
 

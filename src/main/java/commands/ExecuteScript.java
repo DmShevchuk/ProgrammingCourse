@@ -15,7 +15,7 @@ public class ExecuteScript extends Command {
     private static List<String> usedFiles = new ArrayList<String>();
 
     public ExecuteScript() {
-        super("execute_script file_name : считать и исполнить скрипт из указанного файла",
+        super("execute_script file_name : read and execute a script from the specified file",
                 "execute_script", 1);
     }
 
@@ -62,7 +62,7 @@ public class ExecuteScript extends Command {
 
         for (String f : usedFiles) {
             if (f.equals(file)) {
-                CommandLine.errorOut(String.format("Попытка создать коллизию, файл %s!", CommandManager.getARG()));
+                CommandLine.errorOut(String.format("Attempt to create a collision, file %s!", CommandManager.getARG()));
                 return false;
             }
         }

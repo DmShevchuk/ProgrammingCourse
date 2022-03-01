@@ -15,10 +15,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Save extends Command {
+    //Необходимо указывать полный путь до файла!
     private final String DEFAULT_FILE_NAME = "collection-out.json";
 
     public Save() {
-        super("save : сохранить коллекцию в файл", "save", 0);
+        super("save : save collection to file", "save", 0);
     }
 
     @Override
@@ -39,12 +40,13 @@ public class Save extends Command {
 
 
         if (CollectionManager.getCollectionSize() == 0) {
-            CommandLine.errorOut("В коллекции нет элементов, её невозможно записать!");
+            CommandLine.errorOut("The collection has no elements, it cannot be written to!");
             return;
         }
 
         if(!FileManager.canWrite(DEFAULT_FILE_NAME)){
-            CommandLine.errorOut("У текущего пользователя нет прав на запись в файл " + DEFAULT_FILE_NAME);
+            CommandLine.errorOut("The current user does not have permission to write to the file "
+                    + DEFAULT_FILE_NAME);
             return;
         }
 
@@ -98,10 +100,10 @@ public class Save extends Command {
             writer.write(json);
             writer.close();
 
-            CommandLine.successOut(String.format("Запись коллекции в файл %s была выполнена успешно!", DEFAULT_FILE_NAME));
+            CommandLine.successOut(String.format("Write collection to file %s was successful!", DEFAULT_FILE_NAME));
 
         } catch (FileNotFoundException | InvocationTargetException | IllegalAccessException e) {
-            CommandLine.errorOut("Невозможно записать коллекцию в файл " + DEFAULT_FILE_NAME);
+            CommandLine.errorOut("Cannot write collection to file " + DEFAULT_FILE_NAME);
         }
 
     }

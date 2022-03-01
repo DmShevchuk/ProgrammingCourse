@@ -46,7 +46,7 @@ public class CommandLine {
 
             if (ELEMENT_MODE == ElementReadMode.STANDARD) {
                 if (INPUT_COMMAND.length() == 0) {
-                    outLn("Введена пустая строка");
+                    outLn("Empty string entered");
                     continue;
                 }else if(INPUT_COMMAND.equals("_stop_script_")){
                     continue;

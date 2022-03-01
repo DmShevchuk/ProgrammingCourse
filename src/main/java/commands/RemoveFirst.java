@@ -5,7 +5,7 @@ import utils.CommandLine;
 
 public class RemoveFirst extends Command{
     public RemoveFirst() {
-        super("remove_first : удалить первый элемент из коллекции",
+        super("remove_first : remove the first element from the collection",
                 "remove_first", 0);
     }
 
@@ -13,9 +13,9 @@ public class RemoveFirst extends Command{
     public void execute() {
         if(CollectionManager.getCollectionSize() > 0){
             CollectionManager.removeFirst();
-            CommandLine.successOut("Первый элемент коллекции успешно удалён!");
+            CommandLine.successOut("The first element of the collection was successfully removed!");
             return;
         }
-        CommandLine.errorOut("В коллекции нет элементов, удалять нечего!");
+        CommandLine.errorOut("There are no elements in the collection, there is nothing to remove!");
     }
 }

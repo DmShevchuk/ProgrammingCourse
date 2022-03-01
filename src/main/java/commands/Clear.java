@@ -5,7 +5,7 @@ import utils.CommandLine;
 
 public class Clear extends Command {
     public Clear() {
-        super("clear : очистить коллекцию", "clear", 0);
+        super("clear : clear the collection", "clear", 0);
     }
 
     @Override

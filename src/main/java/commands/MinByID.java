@@ -5,7 +5,7 @@ import utils.CommandLine;
 
 public class MinByID extends Command {
     public MinByID() {
-        super("min_by_id : вывести любой объект из коллекции, значение поля id которого является минимальным",
+        super("min_by_id : display any object from the collection whose id field value is the minimum",
                 "min_by_id", 0);
     }
 
@@ -14,7 +14,7 @@ public class MinByID extends Command {
         Integer minID = CollectionManager.getMinID();
 
         if(minID.equals(Integer.MAX_VALUE)){
-            CommandLine.errorOut("Коллекция пуста!");
+            CommandLine.errorOut("Collection is empty!");
             return;
         }
 

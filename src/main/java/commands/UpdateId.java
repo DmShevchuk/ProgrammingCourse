@@ -10,7 +10,7 @@ public class UpdateId extends Command {
     private static Integer currentId;
 
     public UpdateId() {
-        super("update id {element} : обновить значение элемента коллекции, id которого равен заданному",
+        super("update id {element} : update the value of the collection element whose id is equal to the given one",
                 "update", 1);
     }
 
@@ -19,24 +19,24 @@ public class UpdateId extends Command {
         try {
             currentId = Integer.parseInt(CommandManager.getARG());
             if (CollectionManager.checkExistingID(currentId)) {
-                CommandLine.outLn("Обновление элемента коллекции:\n"
+                CommandLine.outLn("Updating a collection item:\n"
                         + CollectionManager.getElementByID(currentId).toString());
-                CommandLine.outLn("Для ввода null используйте пустую строчку.");
+                CommandLine.outLn("To enter null, use an empty string.");
                 CommandLine.setElementMode(ElementReadMode.ELEMENT_UPDATE);
                 Add.addInit();
             }
         } catch (ClassCastException e) {
-            CommandLine.errorOut("Невозможно получить id=" + CommandManager.getARG());
+            CommandLine.errorOut("Impossible to get id=" + CommandManager.getARG());
         }
     }
 
     public static void update(ArrayList<Object> fields) {
         try {
             CollectionManager.updateElementById(currentId, fields);
-            CommandLine.successOut(String.format("Элемент коллекции с id=%d успешно обновлён!", currentId));
+            CommandLine.successOut(String.format("Collection element with id=%d was successfully updated!", currentId));
             currentId = null;
         } catch (Exception e) {
-            CommandLine.errorOut("Не удалось обновить значение элемента!");
+            CommandLine.errorOut("Failed to update element value!");
         }
     }
 }

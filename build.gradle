@@ -1,6 +1,7 @@
 // /mnt/c/Users/dmitr/IdeaProjects/lab_prog/build/libs
-// git pull origin lab5
+
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
