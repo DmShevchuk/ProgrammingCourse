@@ -1,0 +1,46 @@
+{
+  "dragons": [
+    {
+      "id": 1,
+      "name": "Визерис",
+      "coordinates": {
+        "x": 100.1,
+        "y": 15.2
+      },
+      "creationDate": "2022-02-20",
+      "age": 30,
+      "weight": 1700,
+      "speaking": true,
+      "type": "WATER",
+      "head": 500
+    },
+    {
+      "id": 2,
+      "name": "Дрогон",
+      "coordinates": {
+        "x": 1.1,
+        "y": 2.2
+      },
+      "creationDate": "2022-02-20",
+      "age": 35,
+      "weight": 1200,
+      "speaking": true,
+      "type": "UNDERGROUND",
+      "head": 300
+    },
+    {
+      "id": 3,
+      "name": "Рейегаль",
+      "coordinates": {
+        "x": 3.1,
+        "y": 23.2
+      },
+      "creationDate": "2022-02-20",
+      "age": 15,
+      "weight": 1000,
+      "speaking": true,
+      "type": "FIRE",
+      "head": 100
+    }
+  ]
+}
