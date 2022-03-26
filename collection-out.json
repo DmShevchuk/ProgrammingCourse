@@ -2,6 +2,20 @@
   "initializationDate": "2022-02-20",
   "dragons": [
     {
+      "id": 3,
+      "name": "Rayegal",
+      "coordinates": [
+        3.1,
+        23.2
+      ],
+      "creationDate": "2022-02-20",
+      "age": 15,
+      "weight": 1000,
+      "speaking": true,
+      "type": "FIRE",
+      "head": 100
+    },
+    {
       "id": 1,
       "name": "Viserius",
       "coordinates": [
@@ -24,24 +38,10 @@
       ],
       "creationDate": "2022-02-20",
       "age": 35,
-      "weight": "1200",
+      "weight": 1200,
       "speaking": true,
       "type": "UNDERGROUND",
       "head": 300
-    },
-    {
-      "id": 3,
-      "name": "Rayegal",
-      "coordinates": [
-        3.1,
-        23.2
-      ],
-      "creationDate": "2022-02-20",
-      "age": 15,
-      "weight": 1000,
-      "speaking": true,
-      "type": "FIRE",
-      "head": 100
     }
   ]
 }

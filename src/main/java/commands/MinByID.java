@@ -3,21 +3,22 @@ package commands;
 import collection.CollectionManager;
 import utils.CommandLine;
 
-public class MinByID extends Command {
-    public MinByID() {
-        super("min_by_id : display any object from the collection whose id field value is the minimum",
-                "min_by_id", 0);
+public class MinByID extends Command implements UsesCollectionManager {
+    public MinByID(CommandLine commandLine) {
+        super("min_by_id",
+                "|| display any object from the collection whose id field value is the minimum",
+                0, commandLine);
     }
 
     @Override
     public void execute() {
-        Integer minID = CollectionManager.getMinID();
+        Integer minID = collectionManager.getMinID();
 
-        if(minID.equals(Integer.MAX_VALUE)){
-            CommandLine.errorOut("Collection is empty!");
+        if (minID.equals(Integer.MAX_VALUE)) {
+            commandLine.errorOut("Collection is empty!");
             return;
         }
 
-        CommandLine.outLn(CollectionManager.getElementByID(minID).toString());
+        commandLine.outLn(collectionManager.getElementByID(minID).toString());
     }
 }

@@ -1,26 +1,32 @@
 package commands;
 
-import collection.CollectionManager;
+import collection.Coordinates;
 import collection.Dragon;
+import collection.DragonHead;
+import collection.DragonType;
 import data.FieldChecker;
 import data.Pair;
 import utils.CommandLine;
 import utils.ElementReadMode;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Function;
 
-public class Add extends Command {
-    private static final LinkedHashMap<String, String> prefixes = new LinkedHashMap<>();
-    private static Iterator<Map.Entry<String, String>> ITERATOR;
-    private static String currentField;
-    private static ArrayList<Object> fieldValues = new ArrayList<>();
-    private final static int ALL_FIELDS_ADDED = 7;
-    private final static HashMap<String, Function<Pair, Pair>> CHECKER = new HashMap<>();
+public class Add extends Command implements UsesCollectionManager {
+    private final Map<String, String> prefixes = new LinkedHashMap<>();
+    private Iterator<Map.Entry<String, String>> ITERATOR;
+    private String currentField;
 
-    public Add() {
-        super("add {element} : add a new element to the collection", "add", 0);
+    // Пользователь может устанавливать все поля, за исключением id, creationDate
+    private int ALL_FIELDS_ADDED;
+    private final Map<String, Function<Object, Pair>> CHECKER = new HashMap<>();
+    private final FieldChecker fieldChecker = new FieldChecker();
+    private Dragon.Builder currentDragon;
+    private final CommandManager commandManager;
+
+    public Add(CommandLine commandLine, CommandManager commandManager) {
+        super("add", "|| add a new element to the collection", 0, commandLine);
+        this.commandManager = commandManager;
 
         prefixes.put("name", "Enter dragon name:");
         prefixes.put("coordinates", "Specify the coordinates of the dragon (ex. - 10.5 15.9):");
@@ -35,78 +41,70 @@ public class Add extends Command {
 
     @Override
     public void execute() {
-        CommandLine.outLn("Adding a dragon to the collection (null == empty string)");
-        CommandLine.setElementMode(ElementReadMode.ELEMENT_ADD);
+        commandLine.outLn("Adding a dragon to the collection (empty string -> null)");
+        commandLine.setElementMode(ElementReadMode.ELEMENT_ADD);
         addInit();
     }
 
-    public static void addInit() {
-        fieldValues.clear();
+    public void addInit() {
+        currentDragon = new Dragon.Builder();
         ITERATOR = prefixes.entrySet().iterator();
+        ALL_FIELDS_ADDED = Dragon.class.getDeclaredFields().length - 2;
         nextField();
     }
 
-    public static void addValue(String value) throws NoSuchFieldException {
-        Field field = Dragon.class.getDeclaredField(currentField);
+    public void addValue(String value) {
 
         if (value.equals("")) {
             value = null;
         }
 
-        Pair<Boolean, ?> response = new Pair<>(Boolean.FALSE, null);
-
-        if (currentField.equals("coordinates")) {
-            try {
-                String[] coords = value.split("\\s");
-                if (coords.length == 2) {
-                    response = FieldChecker.checkCoordinates(new Pair(field, new Object[]{coords[0], coords[1]}));
-                }
-            } catch (Exception ignored) {
-            }
-        } else {
-            Function<Pair, Pair> func = CHECKER.get(currentField);
-            response = func.apply(new Pair(field, value));
-        }
+        Function<Object, Pair> func = CHECKER.get(currentField);
+        Pair<Boolean, ?> response = func.apply(value);
 
         if (response.getFirst()) {
-            fieldValues.add(response.getSecond());
-            if (fieldValues.size() != ALL_FIELDS_ADDED) {
-                nextField();
+            switch (currentField) {
+                case "name" -> currentDragon.setName((String) response.getSecond());
+                case "coordinates" -> currentDragon.setCoordinates((Coordinates) response.getSecond());
+                case "age" -> currentDragon.setAge((Integer) response.getSecond());
+                case "weight" -> currentDragon.setWeight((Long) response.getSecond());
+                case "speaking" -> currentDragon.setSpeaking((Boolean) response.getSecond());
+                case "type" -> currentDragon.setType((DragonType) response.getSecond());
+                case "head" -> currentDragon.setHead((DragonHead) response.getSecond());
             }
+            ALL_FIELDS_ADDED -= 1;
+            if (ALL_FIELDS_ADDED != 0) nextField();
         } else {
-            CommandLine.errorOut(String.format("Unable to get field value %s from %s!", currentField, value));
+            commandLine.errorOut(String.format("Unable to get %s from %s!", currentField, value));
         }
 
-        if (fieldValues.size() == ALL_FIELDS_ADDED) {
-            if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
-                Dragon d = CollectionManager.createNewDragon(fieldValues);
-                CollectionManager.addDragon(d);
-                CommandLine.successOut("Dragon added to collection!");
-            } else if (CommandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {
-                // InputMode.ELEMENT_UPDATE
-                UpdateId.update(fieldValues);
+        if (ALL_FIELDS_ADDED == 0) {
+            if (commandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
+                collectionManager.addDragon(currentDragon);
+                commandLine.successOut("Dragon added to collection!");
+            } else if (commandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {
+                ((UpdateId)commandManager.getCommand("update_id")).update(currentDragon.build());
             } else {
-                AddIfMax.compare(fieldValues);
+                ((AddIfMax)commandManager.getCommand("add_if_max")).compare(currentDragon);
             }
             //Возвращение к стандартному пользовательскому вводу
-            CommandLine.setElementMode(ElementReadMode.STANDARD);
-            CommandLine.setUserInputPrefix(">>");
-            fieldValues.clear();
+            commandLine.setElementMode(ElementReadMode.STANDARD);
+            commandLine.setUserInputPrefix(">>");
         }
-
     }
 
-    private static void nextField() {
+    private void nextField() {
         currentField = ITERATOR.next().getKey();
-        CommandLine.setUserInputPrefix(prefixes.get(currentField));
+        commandLine.setUserInputPrefix(prefixes.get(currentField));
     }
 
-    private static void mapInit() {
-        CHECKER.put("name", FieldChecker::checkName);
-        CHECKER.put("age", FieldChecker::checkAge);
-        CHECKER.put("weight", FieldChecker::checkWeight);
-        CHECKER.put("speaking", FieldChecker::checkSpeaking);
-        CHECKER.put("type", FieldChecker::checkType);
-        CHECKER.put("head", FieldChecker::checkHead);
+    private void mapInit() {
+        CHECKER.put("name", fieldChecker::checkName);
+        CHECKER.put("coordinates", fieldChecker::checkCoordinates);
+        CHECKER.put("age", fieldChecker::checkAge);
+        CHECKER.put("weight", fieldChecker::checkWeight);
+        CHECKER.put("speaking", fieldChecker::checkSpeaking);
+        CHECKER.put("type", fieldChecker::checkType);
+        CHECKER.put("head", fieldChecker::checkHead);
     }
 }

@@ -1,42 +1,48 @@
 package commands;
 
-import collection.CollectionManager;
+import collection.Dragon;
 import utils.CommandLine;
 import utils.ElementReadMode;
 
-import java.util.ArrayList;
 
-public class UpdateId extends Command {
-    private static Integer currentId;
+public class UpdateId extends Command implements UsesCollectionManager {
+    private Integer currentId;
+    private CommandManager commandManager;
 
-    public UpdateId() {
-        super("update id {element} : update the value of the collection element whose id is equal to the given one",
-                "update", 1);
+    public UpdateId(CommandLine commandLine, CommandManager commandManager) {
+        super("update",
+                "||{id}  update the value of the collection element whose id is equal to the given one",
+                1, commandLine);
+        this.commandManager = commandManager;
     }
 
     @Override
     public void execute() {
         try {
-            currentId = Integer.parseInt(CommandManager.getARG());
-            if (CollectionManager.checkExistingID(currentId)) {
-                CommandLine.outLn("Updating a collection item:\n"
-                        + CollectionManager.getElementByID(currentId).toString());
-                CommandLine.outLn("To enter null, use an empty string.");
-                CommandLine.setElementMode(ElementReadMode.ELEMENT_UPDATE);
-                Add.addInit();
+            currentId = Integer.parseInt(commandManager.getARG());
+            if (collectionManager.checkExistingID(currentId)) {
+                commandLine.outLn("Updating a collection item:\n"
+                        + collectionManager.getElementByID(currentId).toString());
+                commandLine.outLn("To enter null, use an empty string.");
+                commandLine.setElementMode(ElementReadMode.ELEMENT_UPDATE);
+
+                ((Add)commandManager.getCommand("add")).addInit();
+            }
+            else{
+                commandLine.errorOut("Не удалось найти значение id=" + commandManager.getARG());
             }
         } catch (ClassCastException e) {
-            CommandLine.errorOut("Impossible to get id=" + CommandManager.getARG());
+            commandLine.errorOut("Impossible to get id=" + commandManager.getARG());
         }
     }
 
-    public static void update(ArrayList<Object> fields) {
+    public void update(Dragon dragon) {
         try {
-            CollectionManager.updateElementById(currentId, fields);
-            CommandLine.successOut(String.format("Collection element with id=%d was successfully updated!", currentId));
+            collectionManager.updateElementById(currentId, dragon);
+            commandLine.successOut(String.format("Collection element with id=%d was successfully updated!", currentId));
             currentId = null;
         } catch (Exception e) {
-            CommandLine.errorOut("Failed to update element value!");
+            commandLine.errorOut("Failed to update element value!");
         }
     }
 }

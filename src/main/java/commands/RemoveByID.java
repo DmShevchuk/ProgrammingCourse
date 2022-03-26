@@ -4,24 +4,27 @@ import collection.CollectionManager;
 import exceptions.AddingRepeatedCommandException;
 import utils.CommandLine;
 
-public class RemoveByID extends Command {
-    public RemoveByID() {
-        super("remove_by_id id : remove element from collection by its id", "remove_by_id", 1);
+public class RemoveByID extends Command implements UsesCollectionManager {
+    private final CommandManager commandManager;
+    public RemoveByID(CommandLine commandLine, CommandManager commandManager) {
+        super("remove_by_id",
+                "||{id}  remove element from collection by its id", 1, commandLine);
+        this.commandManager = commandManager;
     }
 
     @Override
     public void execute() {
-        if (CommandManager.getARG() != null) {
+        if (commandManager.getARG() != null) {
             try {
-                Integer id = Integer.parseInt(CommandManager.getARG());
-                if (CollectionManager.checkExistingID(id)) {
-                    CollectionManager.deleteElementByID(id);
-                    CommandLine.successOut(String.format("Dragon with id=%d was successfully removed!", id));
+                Integer id = Integer.parseInt(commandManager.getARG());
+                if (collectionManager.checkExistingID(id)) {
+                    collectionManager.deleteElementByID(id);
+                    commandLine.successOut(String.format("Dragon with id=%d was successfully removed!", id));
                 } else {
-                    CommandLine.errorOut(String.format("id=%d does not exist!", id));
+                    commandLine.errorOut(String.format("id=%d does not exist!", id));
                 }
             } catch (Exception e) {
-                CommandLine.errorOut(String.format("Cannot cast string <%s> to Integer!", CommandManager.getARG()));
+                commandLine.errorOut(String.format("Cannot cast string <%s> to Integer!", commandManager.getARG()));
             }
         }
     }

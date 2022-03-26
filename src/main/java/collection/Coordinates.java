@@ -6,12 +6,8 @@ import annotations.NotNull;
  * Координаты являются полем {@link collection.Dragon}
  * */
 public class Coordinates {
-    @NotNull
-    @GreaterThan(minValue = -972)
     private Double x; //Значение поля должно быть больше -972, Поле не может быть null
 
-    @NotNull
-    @GreaterThan(minValue = -290)
     private Double y; //Значение поля должно быть больше -290, Поле не может быть null
 
     public Coordinates(Double x, Double y){
@@ -37,6 +33,6 @@ public class Coordinates {
 
     @Override
     public String toString(){
-        return "(" + x + "," + y + ")";
+        return  x + " " + y;
     }
 }

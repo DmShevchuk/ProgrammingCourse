@@ -3,13 +3,13 @@ package commands;
 import collection.CollectionManager;
 import utils.CommandLine;
 
-public class Show extends Command{
-    public Show() {
-        super("show : display all elements of the collection in string representation", "show", 0);
+public class Show extends Command implements UsesCollectionManager {
+    public Show(CommandLine commandLine) {
+        super("show", "|| display all elements of the collection in string representation", 0, commandLine);
     }
 
     @Override
     public void execute() {
-        CommandLine.outLn(CollectionManager.collectionToString());
+        commandLine.outLn(collectionManager.collectionToString());
     }
 }

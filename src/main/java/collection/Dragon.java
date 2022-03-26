@@ -6,43 +6,20 @@ import annotations.HasLength;
 import annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Главный класс, объекты которого хранятся в коллекции
- * */
+ */
 public class Dragon implements Comparable<Dragon> {
-    @NotNull
-    @GreaterThan
-    private final Integer id; //Поле не может быть null, Значение поля должно быть больше 0,
-    // Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-
-    @NotNull
-    @HasLength
+    private final Integer id; //Поле не может быть null, Значение поля должно быть больше 0, уникальное, генерируется авт
     private String name; //Поле не может быть null, Строка не может быть пустой
-
-    @NotNull
-    @GreaterThan
     private Coordinates coordinates; //Поле не может быть null
-
-    @NotNull
     private final LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-
-    @GreaterThan
     private Integer age; //Значение поля должно быть больше 0, Поле может быть null
-
-    @NotNull
-    @GreaterThan
     private Long weight; //Значение поля должно быть больше 0, Поле не может быть null
-
-    @NotNull
     private Boolean speaking; //Поле не может быть null
-
-    @NotNull
-    @EnumType
     private DragonType type; //Поле может быть null
-
-    @NotNull
-    @GreaterThan
     private DragonHead head;
 
     public Dragon(Integer id, String name, Coordinates coordinates, LocalDate creationDate,
@@ -56,6 +33,18 @@ public class Dragon implements Comparable<Dragon> {
         this.speaking = speaking;
         this.type = type;
         this.head = head;
+    }
+
+    private Dragon(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.coordinates = builder.coordinates;
+        this.creationDate = builder.creationDate;
+        this.age = builder.age;
+        this.weight = builder.weight;
+        this.speaking = builder.speaking;
+        this.type = builder.type;
+        this.head = builder.head;
     }
 
     public Integer getId() {
@@ -122,21 +111,6 @@ public class Dragon implements Comparable<Dragon> {
         this.head = head;
     }
 
-    public void changeCoordinates(Double deltaX, Double deltaY) {
-        coordinates.changeX(deltaX);
-        coordinates.changeY(deltaY);
-    }
-
-    public void increaseAge() {
-        age++;
-    }
-
-    public void increaseWeight(Long delta) {
-        if (delta > 0 || (delta < 0 && weight - delta > 0)) {
-            weight += delta;
-        }
-    }
-
     @Override
     public int compareTo(Dragon o) {
         return this.age.compareTo(o.getAge());
@@ -144,9 +118,11 @@ public class Dragon implements Comparable<Dragon> {
 
     @Override
     public String toString() {
-        return String.format("Dragon {id = %d, name = %s, coordinates = %s, creationDate = %s," +
-                        "age = %d, weight = %d, speaking = %s, type = %s, head = %s}",
-                id, name, coordinates, creationDate, age, weight, speaking, type, head.getSize());
+        return String.format("Dragon {id=%d, name=%s, coordinates=(%s, %s), creationDate=%s, " +
+                        "age=%d, weight=%d, speaking=%s, type=%s, head=%s}",
+                id, name, coordinates.getX(), coordinates.getY(),
+                creationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+                age, weight, speaking, type, head.getSize());
     }
 
     @Override
@@ -159,5 +135,70 @@ public class Dragon implements Comparable<Dragon> {
     @Override
     public int hashCode() {
         return this.id;
+    }
+
+    public static class Builder {
+        private Integer id = 0;
+        private String name = "";
+        private Coordinates coordinates = new Coordinates(10.5, 20.5);
+        private LocalDate creationDate = LocalDate.now();
+        private Integer age;
+        private Long weight = 1000L;
+        private Boolean speaking = Boolean.TRUE;
+        private DragonType type;
+        private DragonHead head = new DragonHead(500);
+
+
+        public Builder() {
+        }
+
+        public Builder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setCoordinates(Coordinates coords) {
+            this.coordinates = coords;
+            return this;
+        }
+
+        public Builder setCreationDate(LocalDate date) {
+            this.creationDate = date;
+            return this;
+        }
+
+        public Builder setAge(Integer age) {
+            this.age = age;
+            return this;
+        }
+
+        public Builder setWeight(Long weight) {
+            this.weight = weight;
+            return this;
+        }
+
+        public Builder setSpeaking(Boolean speaking) {
+            this.speaking = speaking;
+            return this;
+        }
+
+        public Builder setType(DragonType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setHead(DragonHead head) {
+            this.head = head;
+            return this;
+        }
+
+        public Dragon build() {
+            return new Dragon(this);
+        }
     }
 }

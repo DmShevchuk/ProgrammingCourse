@@ -14,6 +14,16 @@ public enum DragonType {
         this.stringEq = stringEq;
     }
 
+    public static DragonType getTypeByString(String title){
+        return switch (title) {
+            case ("WATER") -> DragonType.WATER;
+            case ("UNDERGROUND") -> DragonType.UNDERGROUND;
+            case ("AIR") -> DragonType.AIR;
+            case ("FIRE") -> DragonType.FIRE;
+            default -> null;
+        };
+    }
+
     @Override
     public String toString(){
         return stringEq;

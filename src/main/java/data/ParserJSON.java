@@ -1,88 +1,72 @@
 package data;
 
-import collection.CollectionManager;
 import collection.Dragon;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Function;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import commands.UsesCollectionManager;
 import utils.CommandLine;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
-public class ParserJSON {
-    private final static JSONParser PARSER = new JSONParser();
-    private final static HashMap<String, Function<Pair, Pair>> CHECKER = new HashMap<>();
-    private final static int ALL_FIELDS_ADDED = 7;
 
+public class ParserJSON implements UsesCollectionManager {
+    private final CommandLine commandLine;
 
-    public static void parse(String json) throws ParseException, NoSuchFieldException {
-        mapInit();
-
-        JSONObject rootJsonObject = (JSONObject) PARSER.parse(json);
-        //Получение массива с драконами из JSON-файла
-        JSONArray dragonJSONArray = (JSONArray) rootJsonObject.get("dragons");
-
-        Field[] dragonFields = Dragon.class.getDeclaredFields();
-
-        for (Object dragon : dragonJSONArray) {
-            ArrayList<Object> fieldValues = new ArrayList<>();
-
-            //JSON-объект, который хранит значение полей дракона
-            JSONObject d = (JSONObject) dragon;
-
-            for (Field field : dragonFields) {
-                String fieldName = field.getName();
-
-                if (fieldName.equals("id") || fieldName.equals("creationDate")) {
-                    continue;
-                }
-
-                if (fieldName.equals("coordinates")) {
-                    JSONObject coordinates = (JSONObject) d.get(field.getName());
-
-                    Object xCoord = coordinates.get("x");
-                    Object yCoord = coordinates.get("y");
-
-                    Pair<Boolean, ?> response = FieldChecker.
-                            checkCoordinates(new Pair<>(field, new Object[]{xCoord, yCoord}));
-
-                    if (response.getFirst()) {
-                        fieldValues.add(response.getSecond());
-                    }
-
-                } else {
-                    Object obj = d.get(fieldName);
-                    Function<Pair, Pair> func = CHECKER.get(fieldName);
-                    Pair<Boolean, ?> response = func.apply(new Pair(field, obj));
-
-                    if (response.getFirst()) {
-                        fieldValues.add(response.getSecond());
-                    }
-                }
-            }
-
-            if (fieldValues.size() == ALL_FIELDS_ADDED) {
-                Dragon dr = CollectionManager.createNewDragon(fieldValues);
-                CollectionManager.addDragon(dr);
-            } else {
-                CommandLine.errorOut("The dragon is not added to the collection!");
-            }
-
-        }
+    public ParserJSON(CommandLine commandLine){
+        this.commandLine = commandLine;
     }
 
-    private static void mapInit() {
-        CHECKER.put("name", FieldChecker::checkName);
-        CHECKER.put("age", FieldChecker::checkAge);
-        CHECKER.put("weight", FieldChecker::checkWeight);
-        CHECKER.put("speaking", FieldChecker::checkSpeaking);
-        CHECKER.put("type", FieldChecker::checkType);
-        CHECKER.put("head", FieldChecker::checkHead);
+    public void parse(String jsonFile) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNodeRoot = objectMapper.readTree(jsonFile);
+
+
+        JsonNode jsonNodeDate = jsonNodeRoot.get("initializationDate");
+        LocalDate collectionInitDate = LocalDate.parse(jsonNodeDate.asText());
+
+        System.out.println(collectionInitDate.toString());
+
+        JsonNode jsonNodeDragons = jsonNodeRoot.get("dragons");
+
+        SimpleModule module =
+                new SimpleModule("CustomDragonDeserializer",
+                        new Version(1, 0, 0, null, null, null));
+        module.addDeserializer(Dragon.class, new CustomDragonDeserializer());
+        objectMapper.registerModule(module);
+
+        FieldChecker fieldChecker = new FieldChecker();
+
+        List<Dragon> dragonList = new LinkedList<>();
+
+        for (int i = 0; i < jsonNodeDragons.size(); i++) {
+            String dr = jsonNodeDragons.get(i).toString();
+
+            try {
+                Dragon dragon = objectMapper.readValue(dr, Dragon.class);
+
+                if (fieldChecker.checkId(dragon.getId()).getFirst() &&
+                        fieldChecker.checkName(dragon.getName()).getFirst() &&
+                        fieldChecker.checkCoordinates(dragon.getCoordinates().toString()).getFirst() &&
+                        fieldChecker.checkAge(dragon.getAge()).getFirst() &&
+                        fieldChecker.checkWeight(dragon.getWeight()).getFirst() &&
+                        fieldChecker.checkSpeaking(dragon.getSpeaking()).getFirst() &&
+                        fieldChecker.checkType(dragon.getType()).getFirst() &&
+                        fieldChecker.checkHead(dragon.getHead()).getFirst()
+                ) {
+                    dragonList.add(dragon);
+                } else {
+                    commandLine.errorOut("Не был добавлен в коллекцию:" + dragon);
+                }
+            } catch (NullPointerException | IOException e) {
+                commandLine.errorOut(e.getMessage());
+            }
+        }
+
+        collectionManager.collectionInit(collectionInitDate, dragonList);
     }
 }

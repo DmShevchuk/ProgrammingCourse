@@ -5,27 +5,33 @@ import utils.CommandLine;
 import java.io.*;
 
 public class FileManager {
-    public static boolean canRead(String fileName) {
+    private final CommandLine commandLine;
+
+    public FileManager(CommandLine commandLine){
+        this.commandLine = commandLine;
+    }
+
+    public boolean canRead(String fileName) {
         try {
             File file = new File(fileName);
             return file.canRead();
         } catch (Exception e) {
-            CommandLine.errorOut(String.format("Unable to read file %s!", fileName));
+            commandLine.errorOut(String.format("Unable to read file %s!", fileName));
         }
         return false;
     }
 
-    public static boolean canWrite(String fileName) {
+    public boolean canWrite(String fileName) {
         try {
             File file = new File(fileName);
             return file.canWrite();
         } catch (Exception e) {
-            CommandLine.errorOut(String.format("Unable to write data to file %s!", fileName));
+            commandLine.errorOut(String.format("Unable to write data to file %s!", fileName));
         }
         return false;
     }
 
-    public static String read(String fileName){
+    public String read(String fileName){
         String fileContent = "";
         try {
             InputStream inputStream = new FileInputStream(fileName);
@@ -42,7 +48,7 @@ public class FileManager {
             inputStreamReader.close();
             return fileContent;
         }catch (IOException e){
-            CommandLine.errorOut(String.format("Problems reading the file %s!", fileName));
+            commandLine.errorOut(String.format("Problems reading the file %s!", fileName));
             return null;
         }
     }

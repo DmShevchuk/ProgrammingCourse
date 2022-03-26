@@ -1,15 +1,14 @@
 package commands;
 
-import collection.CollectionManager;
 import utils.CommandLine;
 
-public class Clear extends Command {
-    public Clear() {
-        super("clear : clear the collection", "clear", 0);
+public class Clear extends Command implements UsesCollectionManager {
+    public Clear(CommandLine commandLine) {
+        super("clear", "|| clear the collection", 0, commandLine);
     }
 
     @Override
     public void execute() {
-        CommandLine.outLn(CollectionManager.clearCollection());
+        commandLine.successOut(collectionManager.clearCollection());
     }
 }

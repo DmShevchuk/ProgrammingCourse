@@ -13,22 +13,26 @@ import java.util.NoSuchElementException;
 public class ExecuteScript extends Command {
     private static ArrayDeque<String> inputStream = new ArrayDeque<String>();
     private static List<String> usedFiles = new ArrayList<String>();
+    private final CommandManager commandManager;
 
-    public ExecuteScript() {
-        super("execute_script file_name : read and execute a script from the specified file",
-                "execute_script", 1);
+    public ExecuteScript(CommandLine commandLine, CommandManager commandManager) {
+        super("execute_script",
+                "||{file_name}  read and execute a script from the specified file", 1, commandLine);
+        this.commandManager = commandManager;
     }
 
     @Override
     public void execute() {
         addInstructions();
-        CommandLine.setInputSource(InputSource.SCRIPT);
+        commandLine.setInputSource(InputSource.SCRIPT);
     }
 
-    public static void addInstructions() {
-        if (FileManager.canRead(CommandManager.getARG())) {
+    public void addInstructions() {
+        FileManager fileManager = new FileManager(commandLine);
 
-            String file = FileManager.read(CommandManager.getARG());
+        if (fileManager.canRead(commandManager.getARG())) {
+
+            String file = fileManager.read(commandManager.getARG());
 
             if (file != null && file.length() > 0 && checkRecursion(file)) {
                 String[] commands = file.split("\\n");
@@ -40,7 +44,7 @@ public class ExecuteScript extends Command {
         }
     }
 
-    public static String nextLine() {
+    public String nextLine() {
         try {
             return inputStream.removeFirst();
         } catch (NoSuchElementException e) {
@@ -49,20 +53,20 @@ public class ExecuteScript extends Command {
         }
     }
 
-    public static void stopScript() {
+    public void stopScript() {
         inputStream.clear();
         usedFiles.clear();
-        CommandLine.setInputSource(InputSource.COMMAND);
+        commandLine.setInputSource(InputSource.COMMAND);
     }
 
-    public static boolean checkRecursion(String file) {
+    public boolean checkRecursion(String file) {
         if (usedFiles.size() > 0 && usedFiles.get(usedFiles.size() - 1).equals(file)) {
             return true;
         }
 
         for (String f : usedFiles) {
             if (f.equals(file)) {
-                CommandLine.errorOut(String.format("Attempt to create a collision, file %s!", CommandManager.getARG()));
+                commandLine.errorOut(String.format("Attempt to create a collision, file %s!", commandManager.getARG()));
                 return false;
             }
         }

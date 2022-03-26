@@ -5,13 +5,16 @@ import utils.CommandLine;
 import java.util.Stack;
 
 public class History extends Command {
-    public History() {
-        super("history : print the last 10 commands (without their arguments)", "history", 0);
+    private final CommandManager commandManager;
+    public History(CommandLine commandLine, CommandManager commandManager) {
+        super("history",
+                "|| print the last 10 commands (without their arguments)", 0, commandLine);
+        this.commandManager = commandManager;
     }
 
     @Override
     public void execute() {
-        Stack<String> commands = CommandManager.getStack();
+        Stack<String> commands = commandManager.getStack();
         int size = commands.size();
 
         String toReturn = String.format("Latest commands (%d):\n", size);
@@ -20,6 +23,6 @@ public class History extends Command {
             toReturn += cmd + "\n";
         }
 
-        CommandLine.errorOut(size == 0 ? "Command list is empty!" : toReturn.strip());
+        commandLine.errorOut(size == 0 ? "Command list is empty!" : toReturn.strip());
     }
 }

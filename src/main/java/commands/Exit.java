@@ -1,8 +1,10 @@
 package commands;
 
+import utils.CommandLine;
+
 public class Exit extends Command {
-    public Exit() {
-        super("exit : terminate program (without saving to file)", "exit", 0);
+    public Exit(CommandLine commandLine) {
+        super("exit", "|| terminate program (without saving to file)", 0, commandLine);
     }
 
     @Override

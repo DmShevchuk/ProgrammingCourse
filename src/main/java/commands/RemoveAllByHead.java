@@ -4,28 +4,31 @@ import collection.CollectionManager;
 import collection.DragonHead;
 import utils.CommandLine;
 
-public class RemoveAllByHead extends Command {
+public class RemoveAllByHead extends Command implements UsesCollectionManager {
+    private final CommandManager commandManager;
 
-    public RemoveAllByHead() {
-        super("remove_all_by_head head : remove all elements from the collection," +
-                " whose head field value is equivalent to the given one", "remove_all_by_head", 1);
+    public RemoveAllByHead(CommandLine commandLine, CommandManager commandManager) {
+        super("remove_all_by_head",
+                "||{head}  remove all elements from the collection," +
+                        " whose head field value is equivalent to the given one", 1, commandLine);
+        this.commandManager = commandManager;
     }
 
     @Override
     public void execute() {
-        if (CollectionManager.getCollectionSize() > 0) {
+        if (collectionManager.getCollectionSize() > 0) {
             try {
-                DragonHead head = new DragonHead((long) Long.parseLong(CommandManager.getARG()));
-                CollectionManager.removeByHead(head);
-                CommandLine.successOut(String.format("There are no dragons with a head size left in the" +
+                DragonHead head = new DragonHead((long) Long.parseLong(commandManager.getARG()));
+                collectionManager.removeByHead(head);
+                commandLine.successOut(String.format("There are no dragons with a head size left in the" +
                                 " collection = %s.",
-                        CommandManager.getARG()));
+                        commandManager.getARG()));
             } catch (ClassCastException e) {
-                CommandLine.errorOut(String.format("Cannot cast element %s %s to Long -> DragonHead.",
-                        CommandManager.getARG().getClass(), CommandManager.getARG()));
+                commandLine.errorOut(String.format("Cannot cast element %s %s to Long -> DragonHead.",
+                        commandManager.getARG().getClass(), commandManager.getARG()));
             }
             return;
         }
-        CommandLine.errorOut("Now the collection is empty, we have nothing to delete!");
+        commandLine.errorOut("Now the collection is empty, we have nothing to delete!");
     }
 }
