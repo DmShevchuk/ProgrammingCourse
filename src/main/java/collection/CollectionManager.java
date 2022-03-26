@@ -43,39 +43,6 @@ public class CollectionManager {
         currentDate = LocalDate.now();
     }
 
-    /**
-     * Позволяет создать новый объект {@link collection.Dragon}
-     *
-     * @param fields ArrayList с полями {@link collection.Dragon}
-     * @return объект класса {@link collection.Dragon}
-     */
-    public Dragon createNewDragon(ArrayList<Object> fields) {
-        nextID();
-        refreshDate();
-
-        Integer id = currentID;
-        String name = (String) fields.get(0);
-        Coordinates coordinates = (Coordinates) fields.get(1);
-        LocalDate creationDate = currentDate;
-
-        Integer age = null;
-        if (fields.get(2) != null) {
-            age = (Integer) fields.get(2);
-        }
-
-        Long weight = (Long) fields.get(3);
-        Boolean speaking = (Boolean) fields.get(4);
-
-        DragonType type = null;
-        if (fields.get(5) != null) {
-            type = (DragonType) fields.get(5);
-        }
-
-        DragonHead head = (DragonHead) fields.get(6);
-
-        return new Dragon(id, name, coordinates, creationDate, age, weight, speaking, type, head);
-    }
-
     public void addDragon(Dragon dragon) {
         COLLECTION.add(dragon);
         sortCollection();

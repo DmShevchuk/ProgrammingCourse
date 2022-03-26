@@ -23,14 +23,6 @@ public class Coordinates {
         return y;
     }
 
-    public void changeX(Double delta){
-        x += delta;
-    }
-
-    public void changeY(Double delta){
-        y += delta;
-    }
-
     @Override
     public String toString(){
         return  x + " " + y;
