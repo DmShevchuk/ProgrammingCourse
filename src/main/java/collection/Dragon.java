@@ -1,9 +1,5 @@
 package collection;
 
-import annotations.EnumType;
-import annotations.GreaterThan;
-import annotations.HasLength;
-import annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

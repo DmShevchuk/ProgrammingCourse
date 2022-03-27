@@ -29,8 +29,6 @@ public class ParserJSON implements UsesCollectionManager {
         JsonNode jsonNodeDate = jsonNodeRoot.get("initializationDate");
         LocalDate collectionInitDate = LocalDate.parse(jsonNodeDate.asText());
 
-        System.out.println(collectionInitDate.toString());
-
         JsonNode jsonNodeDragons = jsonNodeRoot.get("dragons");
 
         SimpleModule module =

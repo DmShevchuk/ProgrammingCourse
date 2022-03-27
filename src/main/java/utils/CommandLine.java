@@ -37,6 +37,8 @@ public class CommandLine {
             // Выводим в консоль >> для ввода пользователя
             out(USER_INPUT_PREFIX);
 
+            if(!SCANNER.hasNext()) ((Exit)commandManager.getCommand("exit")).execute();
+
             INPUT_COMMAND = (INPUT_SOURCE == InputSource.COMMAND) ? SCANNER.nextLine().strip() :
                     ((ExecuteScript)commandManager.getCommand("execute_script")).nextLine().strip();
 
