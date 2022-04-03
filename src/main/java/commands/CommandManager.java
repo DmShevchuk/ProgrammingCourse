@@ -1,10 +1,7 @@
 package commands;
-
-import exceptions.AddingRepeatedCommandException;
 import utils.CommandLine;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
@@ -18,11 +15,9 @@ public class CommandManager {
         this.commandLine = commandLine;
     }
 
-    public void addCommand(Command command) throws AddingRepeatedCommandException {
+    public void addCommand(Command command){
         if (!commandHashMap.containsKey(command.getName())) {
             commandHashMap.put(command.getName(), command);
-        } else {
-            throw new AddingRepeatedCommandException(String.format("Command %s already added!", command.getName()));
         }
     }
 

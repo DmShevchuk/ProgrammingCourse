@@ -1,7 +1,6 @@
 package utils;
 
 import commands.*;
-import exceptions.AddingRepeatedCommandException;
 
 import java.util.Scanner;
 
@@ -12,7 +11,7 @@ public class CommandLine {
     private InputSource INPUT_SOURCE = InputSource.COMMAND;
     private ElementReadMode ELEMENT_MODE = ElementReadMode.STANDARD;
 
-    public void run() throws AddingRepeatedCommandException{
+    public void run(){
         String INPUT_COMMAND;
         CommandManager commandManager = new CommandManager(this);
 

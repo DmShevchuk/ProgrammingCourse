@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import commands.UsesCollectionManager;
+import exceptions.NoInitializationDateException;
 import utils.CommandLine;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,12 +23,14 @@ public class ParserJSON implements UsesCollectionManager {
         this.commandLine = commandLine;
     }
 
-    public void parse(String jsonFile) throws IOException {
+    public void parse(String jsonFile) throws IOException, NoInitializationDateException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNodeRoot = objectMapper.readTree(jsonFile);
 
 
         JsonNode jsonNodeDate = jsonNodeRoot.get("initializationDate");
+        if (jsonNodeDate == null) throw new
+                NoInitializationDateException("В файле не указана дата инициализации коллекции!");
         LocalDate collectionInitDate = LocalDate.parse(jsonNodeDate.asText());
 
         JsonNode jsonNodeDragons = jsonNodeRoot.get("dragons");
@@ -60,7 +64,7 @@ public class ParserJSON implements UsesCollectionManager {
                 } else {
                     commandLine.errorOut("Не был добавлен в коллекцию:" + dragon);
                 }
-            } catch (NullPointerException | IOException e) {
+            } catch (NullPointerException | IOException | DateTimeException e) {
                 commandLine.errorOut(e.getMessage());
             }
         }

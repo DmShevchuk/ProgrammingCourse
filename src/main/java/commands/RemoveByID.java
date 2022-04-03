@@ -1,7 +1,4 @@
 package commands;
-
-import collection.CollectionManager;
-import exceptions.AddingRepeatedCommandException;
 import utils.CommandLine;
 
 public class RemoveByID extends Command implements UsesCollectionManager {
