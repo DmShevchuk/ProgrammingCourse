@@ -2,6 +2,7 @@ package collection;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -10,7 +11,7 @@ import java.util.*;
  */
 public class CollectionManager {
     private static CollectionManager instance;
-    private LocalDate initializationDate = LocalDate.now();
+    private final LocalDate initializationDate = LocalDate.now();
     private LinkedList<Dragon> COLLECTION = new LinkedList<>();
     private Integer currentID = 1;
 
@@ -85,22 +86,14 @@ public class CollectionManager {
         sortCollection();
     }
 
-    public String sortByWeight() {
-        COLLECTION.sort(Comparator.comparing(Dragon::getWeight).reversed());
-        String toReturn = "";
-        for (Dragon dragon : COLLECTION) {
-            toReturn += String.format("%s: вес %d кг.\n", dragon.getName(), dragon.getWeight());
-        }
-        // Приведение коллекцию к стандартному порядку (сортировка оп имени)
-        sortCollection();
-
-        return toReturn.strip();
+    public LinkedList<Dragon> sortByWeight() {
+        return COLLECTION.stream().
+                sorted(Comparator.comparing(Dragon::getWeight)).
+                collect(Collectors.toCollection(LinkedList::new));
     }
 
-
-    public String clearCollection() {
+    public void clearCollection() {
         COLLECTION.clear();
-        return "Collection successfully cleared!";
     }
 
     public Dragon getMaxElement() {
@@ -109,45 +102,27 @@ public class CollectionManager {
     }
 
     public boolean checkExistingID(Integer id) {
-        for (Dragon dragon : COLLECTION) {
-            if (dragon.getId().equals(id)) {
-                return true;
-            }
-        }
-
-        //CommandLine.errorOut(String.format("Does not exist id=%d!", id));
-        return false;
+        return COLLECTION.stream()
+                .filter(dragon -> id.equals(dragon.getId()))
+                .findAny()
+                .orElse(null) != null;
     }
 
     public void deleteElementByID(Integer id) {
-        int idx;
-        for (Dragon dragon : COLLECTION) {
-            if (dragon.getId().equals(id)) {
-                idx = COLLECTION.indexOf(dragon);
-                COLLECTION.remove(idx);
-                break;
-            }
-        }
-        sortCollection();
+        COLLECTION.removeIf(dragon -> id.equals(dragon.getId()));
     }
 
     public Dragon getElementByID(Integer id) {
-        for (Dragon dragon : COLLECTION) {
-            if (dragon.getId().equals(id)) {
-                return dragon;
-            }
-        }
-        return null;
+        return COLLECTION.stream()
+                .filter(dragon -> id.equals(dragon.getId()))
+                .findAny()
+                .orElse(null);
     }
 
-    public Integer getMinID() {
-        int minID = Integer.MAX_VALUE;
-        for (Dragon dragon : COLLECTION) {
-            if (dragon.getId() < minID) {
-                minID = dragon.getId();
-            }
-        }
-        return minID;
+    public Dragon getMinById() {
+        return COLLECTION.stream().
+                min(Comparator.comparing(Dragon::getId)).
+                orElse(null);
     }
 
     public void updateElementById(Integer id, Dragon d) {
@@ -164,16 +139,6 @@ public class CollectionManager {
         sortCollection();
     }
 
-    public LocalDate getInitializationDate() {
-        return initializationDate;
-    }
-
-    public Dragon getElementByIndex(int idx) {
-        if (idx < COLLECTION.size()) return COLLECTION.get(idx);
-        return null;
-    }
-
-
     // Сортировка коллекции по возрасту драконов
     public void sortCollection() {
         COLLECTION.sort(Comparator.naturalOrder());
@@ -181,6 +146,7 @@ public class CollectionManager {
 
     public String collectionToString() {
         String toReturn = "";
+
         for (Dragon d : COLLECTION) {
             toReturn += d.toString() + "\n";
         }

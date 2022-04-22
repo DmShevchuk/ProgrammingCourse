@@ -16,6 +16,6 @@ public class Show extends Command {
 
     @Override
     public Response execute(Request request) {
-        return new Response(ResponseStatus.INFO, collectionManager.getCOLLECTION().toString());
+        return new Response(ResponseStatus.INFO, collectionManager.getCOLLECTION());
     }
 }

@@ -33,7 +33,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("Exception : " + e);
+            e.printStackTrace();
         } finally {
             if (serverSocket != null)
                 serverSocket.close();

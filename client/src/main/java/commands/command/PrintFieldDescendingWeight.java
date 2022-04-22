@@ -1,5 +1,6 @@
 package commands.command;
 
+import collection.Dragon;
 import commands.Command;
 import commands.UsesCollectionManager;
 import interaction.Request;
@@ -9,6 +10,8 @@ import run.ResponseReceiver;
 import utils.CommandLine;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrintFieldDescendingWeight extends Command implements UsesCollectionManager {
     public PrintFieldDescendingWeight(CommandLine commandLine) {
@@ -23,7 +26,14 @@ public class PrintFieldDescendingWeight extends Command implements UsesCollectio
             client.send(new Request.Builder().setCommandName(this.getName()).build());
             Response response = new ResponseReceiver().getResponse(client, commandLine);
             if (response != null) {
-                commandLine.outLn(response.getResult());
+                LinkedList<Dragon> dragonLinkedList = response.getDragonList();
+
+                AtomicInteger index = new AtomicInteger();
+                dragonLinkedList.
+                        forEach(dragon ->
+                                commandLine.outLn
+                                        (String.format("%d) %s - %d кг", index.incrementAndGet(), dragon.getName(),
+                                                dragon.getWeight())));
             }
         } catch (IOException e) {
             e.printStackTrace();

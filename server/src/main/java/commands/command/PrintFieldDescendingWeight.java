@@ -7,6 +7,8 @@ import interaction.Request;
 import interaction.Response;
 import interaction.ResponseStatus;
 
+import java.util.LinkedList;
+
 public class PrintFieldDescendingWeight extends Command{
     private final CollectionManager collectionManager;
 
@@ -20,7 +22,6 @@ public class PrintFieldDescendingWeight extends Command{
         if (collectionManager.getCollectionSize() == 0){
             return new Response(ResponseStatus.FAIL, "В коллекции нет элементов!");
         }
-        // TODO: Stream API сортировка по весу
-        return new Response(ResponseStatus.INFO, collectionManager.getCOLLECTION().toString());
+        return new Response(ResponseStatus.INFO, collectionManager.sortByWeight());
     }
 }

@@ -1,6 +1,6 @@
 package commands.command;
 
-import collection.CollectionManager;
+import collection.Dragon;
 import commands.Command;
 import commands.UsesCollectionManager;
 import interaction.Request;
@@ -10,6 +10,7 @@ import run.ResponseReceiver;
 import utils.CommandLine;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Show extends Command implements UsesCollectionManager {
     public Show(CommandLine commandLine) {
@@ -22,7 +23,9 @@ public class Show extends Command implements UsesCollectionManager {
             client.send(new Request.Builder().setCommandName(this.getName()).build());
             Response response = new ResponseReceiver().getResponse(client, commandLine);
             if (response != null) {
-                commandLine.outLn(response.getResult());
+                LinkedList<Dragon> dragonLinkedList = response.getDragonList();
+                dragonLinkedList.
+                        forEach(dragon -> commandLine.outLn(dragon.toString()));
             }
         } catch (IOException e) {
             commandLine.errorOut(e.getMessage());

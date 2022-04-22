@@ -18,6 +18,6 @@ public class MinByID extends Command {
         if (collectionManager.getCollectionSize() == 0){
             return new Response(ResponseStatus.FAIL, "В коллекции нет элементов!");
         }
-        return new Response(ResponseStatus.INFO, collectionManager.getElementByID(collectionManager.getMinID()));
+        return new Response(ResponseStatus.INFO, collectionManager.getMinById());
     }
 }
