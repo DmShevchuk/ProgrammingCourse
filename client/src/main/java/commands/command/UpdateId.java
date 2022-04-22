@@ -3,9 +3,7 @@ package commands.command;
 import collection.Dragon;
 import commands.Command;
 import commands.CommandManager;
-import commands.UsesCollectionManager;
 import interaction.Request;
-import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
 import utils.CommandLine;
@@ -14,9 +12,9 @@ import utils.ElementReadMode;
 import java.io.IOException;
 
 
-public class UpdateId extends Command implements UsesCollectionManager {
+public class UpdateId extends Command{
     private Integer currentId;
-    private CommandManager commandManager;
+    private final CommandManager commandManager;
     private Client client;
 
     public UpdateId(CommandLine commandLine, CommandManager commandManager) {
@@ -43,7 +41,11 @@ public class UpdateId extends Command implements UsesCollectionManager {
 
     public void update(Dragon.Builder dragon) {
         try {
-            client.send(new Request.Builder().setCommandName(this.getName()).setDragonBuild(dragon).build());
+            client.send(new Request.Builder().
+                    setCommandName(this.getName()).
+                    setArgs(currentId.toString()).
+                    setDragonBuild(dragon).
+                    build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (IOException e) {
             commandLine.errorOut(e.getMessage());

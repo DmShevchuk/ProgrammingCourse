@@ -3,7 +3,6 @@ package commands.command;
 import collection.Dragon;
 import commands.Command;
 import commands.CommandManager;
-import commands.UsesCollectionManager;
 import interaction.Request;
 import run.Client;
 import run.ResponseReceiver;

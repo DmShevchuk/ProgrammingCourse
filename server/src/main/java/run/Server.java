@@ -4,7 +4,6 @@ import collection.CollectionManager;
 import commands.command.*;
 import interaction.Request;
 import interaction.Response;
-import interaction.ResponseStatus;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,7 +26,6 @@ public class Server{
                 // Ожидание сообщения от клиента
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 Request request = (Request) objectInputStream.readObject();
-                System.out.println(request.getCommandName() + request.getArgs() + request.getDragonBuild());
                 send(runCommand(request), socket);
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -55,7 +53,9 @@ public class Server{
     public void send(Response response, Socket socket) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+
         objectOutputStream.writeObject(response);
+
         socket.getOutputStream().write(ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array());
         byteArrayOutputStream.writeTo(socket.getOutputStream());
     }

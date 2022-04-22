@@ -2,7 +2,6 @@ package commands.command;
 
 import collection.Dragon;
 import commands.Command;
-import commands.UsesCollectionManager;
 import interaction.Request;
 import interaction.Response;
 import run.Client;
@@ -12,7 +11,7 @@ import utils.CommandLine;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class Show extends Command implements UsesCollectionManager {
+public class Show extends Command {
     public Show(CommandLine commandLine) {
         super("show", "|| display all elements of the collection in string representation", 0, commandLine);
     }

@@ -1,17 +1,15 @@
 package commands.command;
-import collection.DragonHead;
+
 import commands.Command;
 import commands.CommandManager;
-import commands.UsesCollectionManager;
 import interaction.Request;
-import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
 import utils.CommandLine;
 
 import java.io.IOException;
 
-public class RemoveByID extends Command implements UsesCollectionManager {
+public class RemoveByID extends Command {
     private final CommandManager commandManager;
     public RemoveByID(CommandLine commandLine, CommandManager commandManager) {
         super("remove_by_id",

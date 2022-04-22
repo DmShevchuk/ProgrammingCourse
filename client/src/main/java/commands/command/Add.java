@@ -4,7 +4,6 @@ import collection.*;
 import commands.*;
 import data.*;
 import interaction.Request;
-import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
 import utils.*;

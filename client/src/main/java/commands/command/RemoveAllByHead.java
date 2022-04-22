@@ -3,14 +3,13 @@ package commands.command;
 import collection.DragonHead;
 import commands.*;
 import interaction.Request;
-import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
 import utils.CommandLine;
 
 import java.io.IOException;
 
-public class RemoveAllByHead extends Command implements UsesCollectionManager {
+public class RemoveAllByHead extends Command {
     private final CommandManager commandManager;
 
     public RemoveAllByHead(CommandLine commandLine, CommandManager commandManager) {

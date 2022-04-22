@@ -58,6 +58,4 @@ public class Client {
         objectOutputStream.writeObject(request);
         return byteArrayOutputStream.toByteArray();
     }
-
-
 }

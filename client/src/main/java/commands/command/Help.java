@@ -1,6 +1,5 @@
 package commands.command;
 
-;
 import commands.Command;
 import commands.CommandManager;
 import run.Client;

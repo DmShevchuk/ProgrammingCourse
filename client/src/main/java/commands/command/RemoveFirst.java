@@ -1,17 +1,15 @@
 package commands.command;
 
-import collection.CollectionManager;
+
 import commands.Command;
-import commands.UsesCollectionManager;
 import interaction.Request;
-import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
 import utils.CommandLine;
 
 import java.io.IOException;
 
-public class RemoveFirst extends Command implements UsesCollectionManager {
+public class RemoveFirst extends Command{
     public RemoveFirst(CommandLine commandLine) {
         super("remove_first",
                 "|| remove the first element from the collection",

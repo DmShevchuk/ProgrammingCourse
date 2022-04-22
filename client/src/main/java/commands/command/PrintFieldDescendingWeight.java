@@ -2,7 +2,6 @@ package commands.command;
 
 import collection.Dragon;
 import commands.Command;
-import commands.UsesCollectionManager;
 import interaction.Request;
 import interaction.Response;
 import run.Client;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PrintFieldDescendingWeight extends Command implements UsesCollectionManager {
+public class PrintFieldDescendingWeight extends Command{
     public PrintFieldDescendingWeight(CommandLine commandLine) {
         super("print_field_descending_weight",
                 "|| display the values of the weight field of all elements",
