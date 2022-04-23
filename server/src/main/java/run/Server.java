@@ -21,7 +21,7 @@ public class Server{
     }
 
     public void run() {
-        saveAndExit(socket);
+        saveAndExit();
         try {
             while (true) {
                 // Ожидание сообщения от клиента
@@ -61,8 +61,11 @@ public class Server{
         byteArrayOutputStream.writeTo(socket.getOutputStream());
     }
 
-    private void saveAndExit(Socket socket){
-        Runtime.getRuntime().addShutdownHook(new Thread(() ->
-                System.out.println("The server application has successfully finished")));
+    private void saveAndExit(){
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            new Save(collectionManager).execute(new Request.Builder().build());
+
+            System.out.println("The server application has successfully finished");
+        }));
     }
 }

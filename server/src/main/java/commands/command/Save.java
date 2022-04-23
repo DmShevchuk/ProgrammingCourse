@@ -16,6 +16,7 @@ public class Save extends Command {
 
     public Save(CollectionManager collectionManager) {
         super(collectionManager);
+        System.out.println("vwewevvwe");
         this.collectionManager = collectionManager;
     }
 
