@@ -10,7 +10,7 @@ public class ResponseReceiver {
     public ResponseReceiver() {
     }
 
-    public Response getResponse(Client client, CommandLine commandLine) {
+    public Response getResponse(Client client, CommandLine commandLine) throws IOException {
         try {
             Response response = client.receive();
             if (response.getStatus() == ResponseStatus.SUCCESS) {
@@ -21,7 +21,8 @@ public class ResponseReceiver {
                 return response;
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            client.resetSocketChannel();
+            commandLine.outLn("Looks like the server was down. We have reconnected!");
         }
         return null;
     }

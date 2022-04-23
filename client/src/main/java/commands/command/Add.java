@@ -88,7 +88,9 @@ public class Add extends Command {
                     client.send(new Request.Builder().setCommandName(this.getName()).setDragonBuild(currentDragon).build());
                     new ResponseReceiver().getResponse(client, commandLine);
                 } catch (IOException e) {
-                    commandLine.errorOut(String.valueOf(e));
+                    commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
+                    commandLine.showOfflineCommands();
+                    client.resetSocketChannel();
                 }
 
             } else if (commandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {

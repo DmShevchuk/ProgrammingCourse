@@ -1,7 +1,6 @@
 import collection.CollectionManager;
 import collection.Dragon;
-import data.FileManager;
-import data.ParserJSON;
+import data.*;
 import run.Server;
 
 import java.io.*;
@@ -20,14 +19,14 @@ public class Main {
             InetAddress inetAddress;
             inetAddress = InetAddress.getByName(HOST);
             serverSocket = new ServerSocket(PORT, 0, inetAddress);
-            System.out.println("Сервер запущен");
+            System.out.println("Server started");
             CollectionManager collectionManager = CollectionManager.getInstance();
             collectionManager.collectionInit(loadCollection());
 
             while (true) {
                 // ожидание подключения
                 Socket socket = serverSocket.accept();
-                System.out.println("Клиент подключился");
+                System.out.println("Client connected");
 
                 new Server(socket, collectionManager);
             }
@@ -55,5 +54,4 @@ public class Main {
         }
         return null;
     }
-
 }

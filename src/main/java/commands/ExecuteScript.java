@@ -1,6 +1,7 @@
 package commands;
 
 import data.FileManager;
+import exceptions.UnableToReadFileException;
 import utils.CommandLine;
 import utils.InputSource;
 
@@ -30,17 +31,18 @@ public class ExecuteScript extends Command {
     public void addInstructions() {
         FileManager fileManager = new FileManager(commandLine);
 
-        if (fileManager.canRead(commandManager.getARG())) {
-
+        try {
+            fileManager.canRead(commandManager.getARG());
             String file = fileManager.read(commandManager.getARG());
 
             if (file != null && file.length() > 0 && checkRecursion(file)) {
                 String[] commands = file.split("\\n");
-
                 for (int i = commands.length - 1; i > -1; i--) {
                     inputStream.addFirst(commands[i]);
                 }
             }
+        }catch (UnableToReadFileException e){
+            commandLine.errorOut(e.getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ public class ExecuteScript extends Command {
 
         for (String f : usedFiles) {
             if (f.equals(file)) {
-                commandLine.errorOut(String.format("Attempt to create a collision, file %s!", commandManager.getARG()));
+                commandLine.errorOut(String.format("Attempt to create a collision, file {%s}!", commandManager.getARG()));
                 return false;
             }
         }

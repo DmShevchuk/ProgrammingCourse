@@ -21,6 +21,7 @@ public class Server{
     }
 
     public void run() {
+        saveAndExit(socket);
         try {
             while (true) {
                 // Ожидание сообщения от клиента
@@ -29,7 +30,7 @@ public class Server{
                 send(runCommand(request), socket);
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("The connection to the client has been terminated!");
         }
     }
 
@@ -58,5 +59,10 @@ public class Server{
 
         socket.getOutputStream().write(ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array());
         byteArrayOutputStream.writeTo(socket.getOutputStream());
+    }
+
+    private void saveAndExit(Socket socket){
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->
+                System.out.println("The server application has successfully finished")));
     }
 }

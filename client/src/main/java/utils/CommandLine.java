@@ -1,21 +1,7 @@
 package utils;
 
 import commands.*;
-import commands.command.Exit;
-import commands.command.Help;
-import commands.command.History;
-import commands.command.Info;
-import commands.command.MinByID;
-import commands.command.PrintFieldDescendingWeight;
-import commands.command.RemoveAllByHead;
-import commands.command.RemoveByID;
-import commands.command.RemoveFirst;
-import commands.command.Show;
-import commands.command.UpdateId;
-import commands.command.Add;
-import commands.command.AddIfMax;
-import commands.command.Clear;
-import commands.command.ExecuteScript;
+import commands.command.*;
 import run.Client;
 
 import java.util.Scanner;
@@ -102,6 +88,15 @@ public class CommandLine {
 
     public void outLn(String text) {
         System.out.println(text);
+    }
+
+    public void showOfflineCommands(){
+        outLn("""
+                Доступные offline-команды:
+                execute_script                    ||{file_name} read and execute a script from the specified file
+                exit                              || terminate program (without saving to file)
+                help                              || displaying information on all available commands
+                history                           || print the last 10 commands (without their arguments)""");
     }
 
     public void successOut(String text) {

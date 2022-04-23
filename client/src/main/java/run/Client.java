@@ -22,6 +22,10 @@ public class Client {
         socketChannel.configureBlocking(false);
     }
 
+    public void resetSocketChannel(){
+        socketChannel = null;
+    }
+
     public void send(Request request) throws IOException {
         if (socketChannel == null) {
             connect();

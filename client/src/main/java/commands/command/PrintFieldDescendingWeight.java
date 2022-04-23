@@ -31,11 +31,13 @@ public class PrintFieldDescendingWeight extends Command{
                 dragonLinkedList.
                         forEach(dragon ->
                                 commandLine.outLn
-                                        (String.format("%d) %s - %d кг", index.incrementAndGet(), dragon.getName(),
+                                        (String.format("%d)%s - %d кг", index.incrementAndGet(), dragon.getName(),
                                                 dragon.getWeight())));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
+            commandLine.showOfflineCommands();
+            client.resetSocketChannel();
         }
     }
 }

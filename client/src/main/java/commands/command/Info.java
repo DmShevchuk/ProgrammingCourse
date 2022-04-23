@@ -25,7 +25,9 @@ public class Info extends Command {
                 commandLine.outLn(response.getResult());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
+            commandLine.showOfflineCommands();
+            client.resetSocketChannel();
         }
     }
 

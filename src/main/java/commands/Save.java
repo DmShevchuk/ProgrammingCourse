@@ -23,10 +23,6 @@ public class Save extends Command implements UsesCollectionManager {
     @Override
     public void execute() {
         FileManager fileManager = new FileManager(commandLine);
-        if (collectionManager.getCollectionSize() == 0) {
-            commandLine.errorOut("The collection has no elements, it cannot be written to!");
-            return;
-        }
 
         if (!fileManager.canWrite(DEFAULT_FILE_NAME)) {
             commandLine.errorOut("The current user does not have permission to write to the file "
@@ -44,11 +40,7 @@ public class Save extends Command implements UsesCollectionManager {
         module.addSerializer(Dragon.class, new CustomDragonSerializer());
         objectMapper.registerModule(module);
 
-
-        String dateString = String.format("{\"initializationDate\": \"%s\",\n",
-                collectionManager.getInitializationDate().toString());
-
-        StringBuilder json = new StringBuilder(dateString + "\"dragons\": [");
+        StringBuilder json = new StringBuilder();
 
         try {
             writer = new PrintWriter(file);
@@ -56,8 +48,8 @@ public class Save extends Command implements UsesCollectionManager {
                 String dragonAsString = objectMapper.writeValueAsString(d);
                 json.append(dragonAsString).append(",");
             }
-            json = new StringBuilder(json.substring(0, json.length() - 1));
-            json.append("]}");
+
+            json = new StringBuilder("{\"dragons\": [" + json.toString().replaceAll(",$", "") + "]}");
 
             writer.write(String.valueOf(json));
             writer.close();

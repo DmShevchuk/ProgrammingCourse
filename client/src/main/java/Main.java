@@ -1,6 +1,6 @@
 import run.Client;
 import utils.CommandLine;
-
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class Main {
@@ -23,8 +23,8 @@ public class Main {
         Client client = new Client(new InetSocketAddress(HOST, PORT));
         try {
             client.connect();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
+        } catch (IOException e){
+            System.out.println("Невозможно подключиться к серверу!");
         }
 
         commandLine.run(client);

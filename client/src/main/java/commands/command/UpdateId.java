@@ -48,7 +48,9 @@ public class UpdateId extends Command{
                     build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (IOException e) {
-            commandLine.errorOut(e.getMessage());
+            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
+            commandLine.showOfflineCommands();
+            client.resetSocketChannel();
         }
     }
 }

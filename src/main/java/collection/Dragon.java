@@ -18,18 +18,6 @@ public class Dragon implements Comparable<Dragon> {
     private DragonType type; //Поле может быть null
     private DragonHead head;
 
-    public Dragon(Integer id, String name, Coordinates coordinates, LocalDate creationDate,
-                  Integer age, Long weight, Boolean speaking, DragonType type, DragonHead head) {
-        this.id = id;
-        this.name = name;
-        this.coordinates = coordinates;
-        this.creationDate = creationDate;
-        this.age = age;
-        this.weight = weight;
-        this.speaking = speaking;
-        this.type = type;
-        this.head = head;
-    }
 
     private Dragon(Builder builder) {
         this.id = builder.id;
