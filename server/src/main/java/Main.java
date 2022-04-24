@@ -6,6 +6,9 @@ import run.Server;
 import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Main {
@@ -19,16 +22,21 @@ public class Main {
             InetAddress inetAddress;
             inetAddress = InetAddress.getByName(HOST);
             serverSocket = new ServerSocket(PORT, 0, inetAddress);
-            System.out.println("Server started");
+
+            Logger logger = Logger.getLogger(Main.class.getName());
+            FileHandler fh = new FileHandler("./serverLog.log");
+            logger.addHandler(fh);
+            logger.log(Level.INFO, "Server started");
+
             CollectionManager collectionManager = CollectionManager.getInstance();
             collectionManager.collectionInit(loadCollection());
 
             while (true) {
                 // ожидание подключения
                 Socket socket = serverSocket.accept();
-                System.out.println("Client connected");
+                logger.log(Level.INFO, "Client connected");
 
-                new Server(socket, collectionManager);
+                new Server(socket, collectionManager, logger);
             }
 
         } catch (Exception e) {
@@ -40,7 +48,7 @@ public class Main {
         }
     }
 
-    private static LinkedList<Dragon> loadCollection(){
+    private static LinkedList<Dragon> loadCollection() {
         FileManager fileManager = new FileManager();
 
         try {

@@ -3,5 +3,6 @@ package interaction;
 public enum ResponseStatus {
     SUCCESS,
     FAIL,
-    INFO;
+    INFO,
+    RESET_CONNECTION;
 }

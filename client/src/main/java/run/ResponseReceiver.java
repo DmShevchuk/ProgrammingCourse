@@ -13,7 +13,10 @@ public class ResponseReceiver {
     public Response getResponse(Client client, CommandLine commandLine) throws IOException {
         try {
             Response response = client.receive();
-            if (response.getStatus() == ResponseStatus.SUCCESS) {
+            if(response.getStatus() == ResponseStatus.RESET_CONNECTION){
+                throw new IOException(response.getResult());
+            }
+            else if (response.getStatus() == ResponseStatus.SUCCESS) {
                 commandLine.successOut(response.getResult());
             } else if (response.getStatus() == ResponseStatus.FAIL) {
                 commandLine.errorOut(response.getResult());

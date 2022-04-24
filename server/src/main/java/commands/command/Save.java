@@ -9,15 +9,18 @@ import data.*;
 import interaction.*;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Save extends Command {
     private final String DEFAULT_FILE_NAME = "collection-out.json";
     private final CollectionManager collectionManager;
+    private final Logger logger;
 
-    public Save(CollectionManager collectionManager) {
+    public Save(CollectionManager collectionManager, Logger logger) {
         super(collectionManager);
-        System.out.println("vwewevvwe");
         this.collectionManager = collectionManager;
+        this.logger = logger;
     }
 
     @Override
@@ -53,6 +56,7 @@ public class Save extends Command {
 
             writer.write(String.valueOf(json));
             writer.close();
+            System.out.println("Collection successfully written to file!");
         } catch (JsonProcessingException | FileNotFoundException e) {
             System.out.println("Невозможно записать коллекцию в файл!");
         }

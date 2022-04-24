@@ -8,6 +8,8 @@ public class Main {
     private static int PORT = 12012;
 
     public static void main(String[] args) {
+        greetingMessage();
+
         if (args.length != 0) {
             try {
                 HOST = args[0].split(":")[0];
@@ -28,5 +30,15 @@ public class Main {
         }
 
         commandLine.run(client);
+    }
+
+    public static void greetingMessage(){
+        System.out.println("""
+                   __| |_ __ __ _  __ _  ___  _ __  ___\s
+                  / _` | '__/ _` |/ _` |/ _ \\| '_ \\/ __|
+                 | (_| | | | (_| | (_| | (_) | | | \\__ \\
+                  \\__,_|_|  \\__,_|\\__, |\\___/|_| |_|___/
+                                  |___/  \s
+                """);
     }
 }
