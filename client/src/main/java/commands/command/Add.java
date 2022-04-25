@@ -6,6 +6,7 @@ import data.*;
 import interaction.Request;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.*;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Add extends Command {
     private Iterator<Map.Entry<String, String>> ITERATOR;
     private String currentField;
     private Client client;
+    private ServerErrorHandler errorHandler;
 
     // Пользователь может устанавливать все поля, за исключением id, creationDate
     private int ALL_FIELDS_ADDED;
@@ -25,9 +27,10 @@ public class Add extends Command {
     private Dragon.Builder currentDragon;
     private final CommandManager commandManager;
 
-    public Add(CommandLine commandLine, CommandManager commandManager) {
+    public Add(CommandLine commandLine, CommandManager commandManager, ServerErrorHandler errorHandler) {
         super("add", "|| add a new element to the collection", 0, commandLine);
         this.commandManager = commandManager;
+        this.errorHandler = errorHandler;
 
         prefixes.put("name", "Enter dragon name:");
         prefixes.put("coordinates", "Specify the coordinates of the dragon (ex. - 10.5 15.9):");
@@ -88,9 +91,7 @@ public class Add extends Command {
                     client.send(new Request.Builder().setCommandName(this.getName()).setDragonBuild(currentDragon).build());
                     new ResponseReceiver().getResponse(client, commandLine);
                 } catch (IOException e) {
-                    commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-                    commandLine.showOfflineCommands();
-                    client.resetSocketChannel();
+                    errorHandler.handleServerError();
                 }
 
             } else if (commandLine.getElementMode() == ElementReadMode.ELEMENT_UPDATE) {

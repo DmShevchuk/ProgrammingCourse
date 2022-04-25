@@ -5,15 +5,19 @@ import interaction.Request;
 import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
 
 public class Info extends Command {
-    public Info(CommandLine commandLine) {
+    private ServerErrorHandler errorHandler;
+
+    public Info(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("info",
                 "|| display information about the collection (type, initialization date, number of elements)",
                 0, commandLine);
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -25,9 +29,7 @@ public class Info extends Command {
                 commandLine.outLn(response.getResult());
             }
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 

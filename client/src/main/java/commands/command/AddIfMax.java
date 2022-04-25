@@ -6,6 +6,7 @@ import commands.CommandManager;
 import interaction.Request;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 import utils.ElementReadMode;
 
@@ -15,11 +16,13 @@ import java.io.IOException;
 public class AddIfMax extends Command {
     private final CommandManager commandManager;
     private Client client;
+    private ServerErrorHandler errorHandler;
 
-    public AddIfMax(CommandLine commandLine, CommandManager commandManager) {
+    public AddIfMax(CommandLine commandLine, CommandManager commandManager, ServerErrorHandler errorHandler) {
         super("add_if_max", "|| add a new element to the collection if its value" +
                 " exceeds the value of the largest element of this collection", 0, commandLine);
         this.commandManager = commandManager;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -38,9 +41,7 @@ public class AddIfMax extends Command {
             client.send(new Request.Builder().setCommandName(this.getName()).setDragonBuild(newDragon).build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 

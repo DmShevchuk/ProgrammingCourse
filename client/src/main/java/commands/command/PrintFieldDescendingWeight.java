@@ -6,6 +6,7 @@ import interaction.Request;
 import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
@@ -13,10 +14,13 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrintFieldDescendingWeight extends Command{
-    public PrintFieldDescendingWeight(CommandLine commandLine) {
+    private ServerErrorHandler errorHandler;
+
+    public PrintFieldDescendingWeight(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("print_field_descending_weight",
                 "|| display the values of the weight field of all elements",
                 0, commandLine);
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -35,9 +39,7 @@ public class PrintFieldDescendingWeight extends Command{
                                                 dragon.getWeight())));
             }
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 }

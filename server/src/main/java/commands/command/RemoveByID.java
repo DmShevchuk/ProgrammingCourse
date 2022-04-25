@@ -20,10 +20,10 @@ public class RemoveByID extends Command {
         int id = Integer.parseInt(request.getArgs());
 
         if (collectionManager.getCollectionSize() == 0 || !collectionManager.checkExistingID(id)) {
-            return new Response(ResponseStatus.FAIL, String.format("В коллекции нет элементов с id=%d!", id));
+            return new Response(ResponseStatus.FAIL, String.format("Non-existent id=%d!", id));
         }
 
         collectionManager.deleteElementByID(id);
-        return new Response(ResponseStatus.SUCCESS, String.format("Элемент с id=%d удален!", id));
+        return new Response(ResponseStatus.SUCCESS, String.format("Element with id=%d removed!", id));
     }
 }

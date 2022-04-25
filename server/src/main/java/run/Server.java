@@ -74,8 +74,9 @@ public class Server{
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 send(new Response(ResponseStatus.RESET_CONNECTION, "Force disconnect"), socket);
-            } catch (IOException e) {
-                System.out.println("No connected clients.");
+                new Save(collectionManager, logger).execute(new Request.Builder().build());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
             new Save(collectionManager, logger).execute(new Request.Builder().build());
             System.out.println("The server has completed its work...");

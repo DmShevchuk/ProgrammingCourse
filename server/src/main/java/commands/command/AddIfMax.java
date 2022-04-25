@@ -20,9 +20,9 @@ public class AddIfMax extends Command{
     public Response execute(Request request) {
         if (compare(request.getDragonBuild())){
             collectionManager.addDragon(request.getDragonBuild());
-            return new Response(ResponseStatus.SUCCESS, "Дракон добавлен в коллекцию!");
+            return new Response(ResponseStatus.SUCCESS, "Dragon added to collection!");
         }
-        return new Response(ResponseStatus.FAIL, "Дракон не превосходит самого большого дракона!");
+        return new Response(ResponseStatus.FAIL, "The dragon is not superior the largest dragon!");
     }
 
     public boolean compare(Dragon.Builder newDragon) {

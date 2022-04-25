@@ -6,14 +6,18 @@ import interaction.Request;
 import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class Show extends Command {
-    public Show(CommandLine commandLine) {
+    private ServerErrorHandler errorHandler;
+
+    public Show(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("show", "|| display all elements of the collection in string representation", 0, commandLine);
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -27,9 +31,7 @@ public class Show extends Command {
                         forEach(dragon -> commandLine.outLn(dragon.toString()));
             }
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 }

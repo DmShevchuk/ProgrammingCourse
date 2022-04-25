@@ -6,6 +6,7 @@ import commands.CommandManager;
 import interaction.Request;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 import utils.ElementReadMode;
 
@@ -16,12 +17,14 @@ public class UpdateId extends Command{
     private Integer currentId;
     private final CommandManager commandManager;
     private Client client;
+    private ServerErrorHandler errorHandler;
 
-    public UpdateId(CommandLine commandLine, CommandManager commandManager) {
+    public UpdateId(CommandLine commandLine, CommandManager commandManager, ServerErrorHandler errorHandler) {
         super("update",
                 "||{id}  update the value of the collection element whose id is equal to the given one",
                 1, commandLine);
         this.commandManager = commandManager;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -48,9 +51,7 @@ public class UpdateId extends Command{
                     build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 }

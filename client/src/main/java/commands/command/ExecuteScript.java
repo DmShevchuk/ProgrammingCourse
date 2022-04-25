@@ -7,8 +7,6 @@ import exceptions.UnableToReadFileException;
 import run.Client;
 import utils.CommandLine;
 import utils.InputSource;
-
-import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;

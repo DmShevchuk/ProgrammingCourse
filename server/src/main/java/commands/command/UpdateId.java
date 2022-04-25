@@ -21,9 +21,9 @@ public class UpdateId extends Command {
         int id = Integer.parseInt(request.getArgs());
         if (collectionManager.checkExistingID(id)) {
             collectionManager.updateElementById(id, request.getDragonBuild().build());
-            return new Response(ResponseStatus.SUCCESS, "Элемент успешно обновлен!");
+            return new Response(ResponseStatus.SUCCESS, "Item updated successfully!");
         }
-        return new Response(ResponseStatus.FAIL, "Такого элемента уже не существует!");
+        return new Response(ResponseStatus.FAIL, "This element no longer exists!");
     }
 
 }

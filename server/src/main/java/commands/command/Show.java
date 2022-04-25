@@ -17,7 +17,7 @@ public class Show extends Command {
     @Override
     public Response execute(Request request) {
         if(collectionManager.getCollectionSize() == 0){
-            return new Response(ResponseStatus.FAIL, "Коллекция пуста!");
+            return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
         return new Response(ResponseStatus.INFO, collectionManager.getCOLLECTION());
     }

@@ -17,7 +17,7 @@ public class Add extends Command{
     @Override
     public Response execute(Request request) {
         collectionManager.addDragon(request.getDragonBuild());
-        return new Response(ResponseStatus.SUCCESS, "Дракон добавлен в коллекцию!");
+        return new Response(ResponseStatus.SUCCESS, "Dragon added to collection!");
     }
 
 }

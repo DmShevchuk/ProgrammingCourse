@@ -1,4 +1,5 @@
 import run.Client;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -27,13 +28,14 @@ public class Main {
         try {
             client.connect();
         } catch (IOException e){
-            System.out.println("Невозможно подключиться к серверу!");
+            System.out.println("Unable to connect to server!");
         }
 
         try {
             commandLine.run(client);
+            ServerErrorHandler a = new ServerErrorHandler(client, commandLine);
         } catch (NoSuchElementException e){
-            System.out.println("Приложение закрыто!");
+            System.out.println("Application closed!");
         }
 
     }

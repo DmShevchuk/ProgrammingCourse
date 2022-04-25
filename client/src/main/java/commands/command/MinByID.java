@@ -5,15 +5,19 @@ import interaction.Request;
 import interaction.Response;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
 
 public class MinByID extends Command {
-    public MinByID(CommandLine commandLine) {
+    private ServerErrorHandler errorHandler;
+
+    public MinByID(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("min_by_id",
                 "|| display any object from the collection whose id field value is the minimum",
                 0, commandLine);
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -26,9 +30,7 @@ public class MinByID extends Command {
                 commandLine.outLn(response.getDragon().toString());
             }
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 }

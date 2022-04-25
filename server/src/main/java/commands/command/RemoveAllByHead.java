@@ -18,9 +18,9 @@ public class RemoveAllByHead extends Command {
     @Override
     public Response execute(Request request) {
         if (collectionManager.getCollectionSize() == 0) {
-            return new Response(ResponseStatus.FAIL, "В коллекции нет элементов!");
+            return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
         collectionManager.removeByHead(new DragonHead(Long.parseLong(request.getArgs())));
-        return new Response(ResponseStatus.SUCCESS, String.format("Драконы с размером головы = %s удалены!", request.getArgs()));
+        return new Response(ResponseStatus.SUCCESS, String.format("Dragons with head size=%s removed!", request.getArgs()));
     }
 }

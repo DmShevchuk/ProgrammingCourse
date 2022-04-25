@@ -3,6 +3,7 @@ package utils;
 import commands.*;
 import commands.command.*;
 import run.Client;
+import run.ServerErrorHandler;
 
 import java.util.Scanner;
 
@@ -15,21 +16,22 @@ public class CommandLine {
     public void run(Client client) {
         String INPUT_COMMAND;
         CommandManager commandManager = new CommandManager(this, client);
+        ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
 
         commandManager.addCommand(new Help(this, commandManager));
-        commandManager.addCommand(new Show(this));
-        commandManager.addCommand(new Info(this));
-        commandManager.addCommand(new RemoveByID(this, commandManager));
-        commandManager.addCommand(new Clear(this));
+        commandManager.addCommand(new Show(this, errorHandler));
+        commandManager.addCommand(new Info(this, errorHandler));
+        commandManager.addCommand(new RemoveByID(this, commandManager, errorHandler));
+        commandManager.addCommand(new Clear(this, errorHandler));
         commandManager.addCommand(new History(this, commandManager));
-        commandManager.addCommand(new MinByID(this));
-        commandManager.addCommand(new RemoveFirst(this));
-        commandManager.addCommand(new PrintFieldDescendingWeight(this));
-        commandManager.addCommand(new RemoveAllByHead(this, commandManager));
+        commandManager.addCommand(new MinByID(this, errorHandler));
+        commandManager.addCommand(new RemoveFirst(this, errorHandler));
+        commandManager.addCommand(new PrintFieldDescendingWeight(this, errorHandler));
+        commandManager.addCommand(new RemoveAllByHead(this, commandManager, errorHandler));
         commandManager.addCommand(new Exit(this));
-        commandManager.addCommand(new Add(this, commandManager));
-        commandManager.addCommand(new UpdateId(this, commandManager));
-        commandManager.addCommand(new AddIfMax(this, commandManager));
+        commandManager.addCommand(new Add(this, commandManager, errorHandler));
+        commandManager.addCommand(new UpdateId(this, commandManager, errorHandler));
+        commandManager.addCommand(new AddIfMax(this, commandManager, errorHandler));
         commandManager.addCommand(new ExecuteScript(this, commandManager));
 
         while (true) {
@@ -90,7 +92,7 @@ public class CommandLine {
 
     public void showOfflineCommands() {
         outLn("""
-                Доступные offline-команды:
+                Available offline-commands:
                 execute_script                    ||{file_name} read and execute a script from the specified file
                 exit                              || terminate program (without saving to file)
                 help                              || displaying information on all available commands

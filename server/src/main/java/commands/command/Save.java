@@ -55,7 +55,7 @@ public class Save extends Command {
             writer.close();
             System.out.println("Collection successfully written to file!");
         } catch (JsonProcessingException | FileNotFoundException e) {
-            System.out.println("Невозможно записать коллекцию в файл!");
+            System.out.println("Cannot write collection to file!");
         }
         return null;
     }

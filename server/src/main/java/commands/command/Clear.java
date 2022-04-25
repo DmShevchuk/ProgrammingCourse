@@ -17,7 +17,7 @@ public class Clear extends Command {
     @Override
     public Response execute(Request request) {
         collectionManager.clearCollection();
-        return new Response(ResponseStatus.SUCCESS, "Коллекция очищена!");
+        return new Response(ResponseStatus.SUCCESS, "Collection cleared!");
     }
 }
 

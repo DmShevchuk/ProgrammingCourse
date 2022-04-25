@@ -19,7 +19,6 @@ public class ParserJSON {
         JsonNode jsonNodeRoot = objectMapper.readTree(jsonFile);
 
         JsonNode jsonNodeDragons = jsonNodeRoot.get("dragons");
-
         SimpleModule module =
                 new SimpleModule("CustomDragonDeserializer",
                         new Version(1, 0, 0, null, null, null));

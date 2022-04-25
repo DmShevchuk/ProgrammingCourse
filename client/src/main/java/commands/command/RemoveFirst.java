@@ -5,15 +5,18 @@ import commands.Command;
 import interaction.Request;
 import run.Client;
 import run.ResponseReceiver;
+import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
 
 public class RemoveFirst extends Command{
-    public RemoveFirst(CommandLine commandLine) {
+    private ServerErrorHandler errorHandler;
+    public RemoveFirst(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("remove_first",
                 "|| remove the first element from the collection",
                 0, commandLine);
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -22,9 +25,7 @@ public class RemoveFirst extends Command{
             client.send(new Request.Builder().setCommandName(this.getName()).build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (IOException e) {
-            commandLine.errorOut("Невозможно получить доступ к серверу, повторите попытку позже!");
-            commandLine.showOfflineCommands();
-            client.resetSocketChannel();
+            errorHandler.handleServerError();
         }
     }
 }

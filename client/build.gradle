@@ -26,10 +26,10 @@ test {
 apply plugin: 'application'
 apply plugin: 'java'
 
-mainClassName = 'Client'
+mainClassName = 'Main'
 
 jar {
     manifest {
-        attributes 'Main-Class': 'Client'
+        attributes 'Main-Class': 'Main'
     }
 }

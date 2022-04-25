@@ -1,6 +1,7 @@
 import collection.CollectionManager;
 import collection.Dragon;
 import data.*;
+import exceptions.UnableToWorkWithFileException;
 import run.Server;
 
 import java.io.*;
@@ -29,7 +30,13 @@ public class Main {
             logger.log(Level.INFO, "Server started");
 
             CollectionManager collectionManager = CollectionManager.getInstance();
-            collectionManager.collectionInit(loadCollection());
+
+            try {
+                collectionManager.collectionInit(loadCollection());
+            } catch (Exception e) {
+                System.out.println("Unable to process input file!");
+                System.err.println(e.getMessage());
+            }
 
             while (true) {
                 // ожидание подключения
@@ -40,7 +47,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         } finally {
             if (serverSocket != null)
                 serverSocket.close();
@@ -48,18 +55,13 @@ public class Main {
         }
     }
 
-    private static LinkedList<Dragon> loadCollection() {
+    private static LinkedList<Dragon> loadCollection() throws IOException {
         FileManager fileManager = new FileManager();
 
-        try {
-            fileManager.canRead(FILENAME);
-            String jsonString = fileManager.read(FILENAME);
-            ParserJSON parser = new ParserJSON();
-            return parser.parse(jsonString);
+        fileManager.canRead(FILENAME);
+        String jsonString = fileManager.read(FILENAME);
+        ParserJSON parser = new ParserJSON();
 
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        return null;
+        return parser.parse(jsonString);
     }
 }

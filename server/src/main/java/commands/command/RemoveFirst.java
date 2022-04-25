@@ -18,9 +18,9 @@ public class RemoveFirst extends Command {
     @Override
     public Response execute(Request request) {
         if (collectionManager.getCollectionSize() == 0) {
-            return new Response(ResponseStatus.FAIL, "В коллекции нет элементов!");
+            return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
         collectionManager.removeFirst();
-        return new Response(ResponseStatus.SUCCESS, "Первый элемент коллекции удален!");
+        return new Response(ResponseStatus.SUCCESS, "First element of collection has been removed!");
     }
 }
