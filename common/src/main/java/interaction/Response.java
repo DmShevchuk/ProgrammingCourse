@@ -1,6 +1,5 @@
 package interaction;
 
-
 import collection.Dragon;
 
 import java.io.Serializable;
@@ -12,17 +11,17 @@ public class Response implements Serializable {
     private Dragon dragon;
     private LinkedList<Dragon> dragonList;
 
-    public Response(ResponseStatus status, String result){
+    public Response(ResponseStatus status, String result) {
         this.status = status;
         this.result = result;
     }
 
-    public Response(ResponseStatus status, Dragon dragon){
+    public Response(ResponseStatus status, Dragon dragon) {
         this.status = status;
         this.dragon = dragon;
     }
 
-    public Response(ResponseStatus status, LinkedList<Dragon> dragonList){
+    public Response(ResponseStatus status, LinkedList<Dragon> dragonList) {
         this.status = status;
         this.dragonList = dragonList;
     }

@@ -90,13 +90,17 @@ public class CommandLine {
         System.out.println(text);
     }
 
-    public void showOfflineCommands(){
+    public void showOfflineCommands() {
         outLn("""
                 Доступные offline-команды:
                 execute_script                    ||{file_name} read and execute a script from the specified file
                 exit                              || terminate program (without saving to file)
                 help                              || displaying information on all available commands
                 history                           || print the last 10 commands (without their arguments)""");
+    }
+
+    public static void out(String text) {
+        System.out.print(text);
     }
 
     public void successOut(String text) {
@@ -109,9 +113,5 @@ public class CommandLine {
         String ANSI_RED = "\u001B[31m";
         String ANSI_RESET = "\u001B[0m";
         System.out.println(ANSI_RED + text + ANSI_RESET);
-    }
-
-    public static void out(String text) {
-        System.out.print(text);
     }
 }

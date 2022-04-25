@@ -9,18 +9,15 @@ import data.*;
 import interaction.*;
 
 import java.io.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Save extends Command {
-    private final String DEFAULT_FILE_NAME = "collection-out.json";
+    private final String DEFAULT_FILE_NAME = "collection.json";
     private final CollectionManager collectionManager;
-    private final Logger logger;
 
     public Save(CollectionManager collectionManager, Logger logger) {
         super(collectionManager);
         this.collectionManager = collectionManager;
-        this.logger = logger;
     }
 
     @Override

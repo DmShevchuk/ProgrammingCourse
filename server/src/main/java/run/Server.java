@@ -75,7 +75,7 @@ public class Server{
             try {
                 send(new Response(ResponseStatus.RESET_CONNECTION, "Force disconnect"), socket);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("No connected clients.");
             }
             new Save(collectionManager, logger).execute(new Request.Builder().build());
             System.out.println("The server has completed its work...");

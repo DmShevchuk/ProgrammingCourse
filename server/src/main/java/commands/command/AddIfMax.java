@@ -26,6 +26,9 @@ public class AddIfMax extends Command{
     }
 
     public boolean compare(Dragon.Builder newDragon) {
+        if(collectionManager.getCollectionSize() == 0){
+            return true;
+        }
         Dragon dragon = collectionManager.getMaxElement();
         return dragon.compareTo(newDragon.build()) < 0;
     }
