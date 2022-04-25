@@ -8,6 +8,7 @@ import run.Client;
 import utils.CommandLine;
 import utils.InputSource;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ import java.util.NoSuchElementException;
 
 
 public class ExecuteScript extends Command {
-    private static ArrayDeque<String> inputStream = new ArrayDeque<String>();
-    private static List<String> usedFiles = new ArrayList<String>();
+    private ArrayDeque<String> inputStream = new ArrayDeque<String>();
+    private List<String> usedFiles = new ArrayList<String>();
     private final CommandManager commandManager;
 
     public ExecuteScript(CommandLine commandLine, CommandManager commandManager) {
@@ -41,7 +42,7 @@ public class ExecuteScript extends Command {
             if (file != null && file.length() > 0 && checkRecursion(file)) {
                 String[] commands = file.split("\\n");
                 for (int i = commands.length - 1; i > -1; i--) {
-                    inputStream.addFirst(commands[i]);
+                    inputStream.addFirst(commands[i].strip());
                 }
             }
         }catch (UnableToReadFileException e){
@@ -54,7 +55,7 @@ public class ExecuteScript extends Command {
             return inputStream.removeFirst();
         } catch (NoSuchElementException e) {
             stopScript();
-            return "_stop_script_";
+            return "__stopScript__";
         }
     }
 

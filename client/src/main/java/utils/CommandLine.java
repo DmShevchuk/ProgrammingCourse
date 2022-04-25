@@ -36,21 +36,19 @@ public class CommandLine {
             // Выводим в консоль >> для ввода пользователя
             out(USER_INPUT_PREFIX);
 
-            if ((INPUT_SOURCE != InputSource.SCRIPT) && !SCANNER.hasNext())
-                ((Exit) commandManager.getCommand("exit")).execute(client);
-
-            INPUT_COMMAND = (INPUT_SOURCE == InputSource.COMMAND) ? SCANNER.nextLine().strip() :
-                    ((ExecuteScript) commandManager.getCommand("execute_script")).nextLine().strip();
-
             if (INPUT_SOURCE == InputSource.SCRIPT) {
-                outLn(INPUT_COMMAND);
+                INPUT_COMMAND = ((ExecuteScript) commandManager.getCommand("execute_script")).nextLine();
+            } else {
+                INPUT_COMMAND = SCANNER.nextLine().strip();
             }
+
+            if (INPUT_SOURCE == InputSource.SCRIPT) outLn(INPUT_COMMAND);
 
             if (ELEMENT_MODE == ElementReadMode.STANDARD) {
                 if (INPUT_COMMAND.length() == 0) {
                     outLn("Empty string entered");
                     continue;
-                } else if (INPUT_COMMAND.equals("_stop_script_")) {
+                } else if (INPUT_COMMAND.equals("__stopScript__")) {
                     continue;
                 }
 

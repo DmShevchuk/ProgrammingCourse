@@ -2,6 +2,7 @@ import run.Client;
 import utils.CommandLine;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.NoSuchElementException;
 
 public class Main {
     private static String HOST = "127.0.0.1";
@@ -29,7 +30,12 @@ public class Main {
             System.out.println("Невозможно подключиться к серверу!");
         }
 
-        commandLine.run(client);
+        try {
+            commandLine.run(client);
+        } catch (NoSuchElementException e){
+            System.out.println("Приложение закрыто!");
+        }
+
     }
 
     public static void greetingMessage(){
