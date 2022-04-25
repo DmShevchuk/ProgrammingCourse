@@ -13,7 +13,7 @@ import utils.ElementReadMode;
 import java.io.IOException;
 
 
-public class UpdateId extends Command{
+public class UpdateId extends Command {
     private Integer currentId;
     private final CommandManager commandManager;
     private Client client;

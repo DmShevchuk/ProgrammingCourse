@@ -6,7 +6,7 @@ import interaction.Request;
 import interaction.Response;
 import interaction.ResponseStatus;
 
-public class Add extends Command{
+public class Add extends Command {
     private final CollectionManager collectionManager;
 
     public Add(CollectionManager collectionManager) {

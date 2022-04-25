@@ -11,7 +11,7 @@ import utils.CommandLine;
 import java.io.IOException;
 
 public class Info extends Command {
-    private ServerErrorHandler errorHandler;
+    private final ServerErrorHandler errorHandler;
 
     public Info(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("info",

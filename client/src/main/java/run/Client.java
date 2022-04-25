@@ -22,7 +22,7 @@ public class Client {
         socketChannel.configureBlocking(false);
     }
 
-    public void resetSocketChannel(){
+    public void resetSocketChannel() {
         socketChannel = null;
     }
 

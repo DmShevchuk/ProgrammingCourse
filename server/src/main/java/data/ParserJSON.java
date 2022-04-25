@@ -12,7 +12,8 @@ import java.util.LinkedList;
 
 
 public class ParserJSON {
-    public ParserJSON() {}
+    public ParserJSON() {
+    }
 
     public LinkedList<Dragon> parse(String jsonFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server{
+public class Server {
     private final Socket socket;
     private final CollectionManager collectionManager;
     private final Logger logger;
@@ -41,7 +41,7 @@ public class Server{
         }
     }
 
-    private Response runCommand(Request request){
+    private Response runCommand(Request request) {
         logger.log(Level.INFO, String.format("Execution request '%s' command", request.getCommandName()));
 
         return switch (request.getCommandName()) {
@@ -70,7 +70,7 @@ public class Server{
         byteArrayOutputStream.writeTo(socket.getOutputStream());
     }
 
-    private void saveAndExit(){
+    private void saveAndExit() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 send(new Response(ResponseStatus.RESET_CONNECTION, "Force disconnect"), socket);

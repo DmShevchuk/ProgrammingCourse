@@ -11,7 +11,7 @@ import utils.CommandLine;
 import java.io.IOException;
 
 public class MinByID extends Command {
-    private ServerErrorHandler errorHandler;
+    private final ServerErrorHandler errorHandler;
 
     public MinByID(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("min_by_id",
@@ -24,7 +24,6 @@ public class MinByID extends Command {
     public void execute(Client client) {
         try {
             client.send(new Request.Builder().setCommandName(this.getName()).build());
-
             Response response = new ResponseReceiver().getResponse(client, commandLine);
             if (response != null) {
                 commandLine.outLn(response.getDragon().toString());

@@ -18,7 +18,7 @@ public class Add extends Command {
     private Iterator<Map.Entry<String, String>> ITERATOR;
     private String currentField;
     private Client client;
-    private ServerErrorHandler errorHandler;
+    private final ServerErrorHandler errorHandler;
 
     // Пользователь может устанавливать все поля, за исключением id, creationDate
     private int ALL_FIELDS_ADDED;
@@ -85,6 +85,7 @@ public class Add extends Command {
             commandLine.errorOut(String.format("Unable to get %s from %s!", currentField, value));
         }
 
+        // Если пользователь ввел корректно все поля
         if (ALL_FIELDS_ADDED == 0) {
             if (commandLine.getElementMode() == ElementReadMode.ELEMENT_ADD) {
                 try {

@@ -16,12 +16,11 @@ public abstract class Command {
         this.commandLine = commandLine;
     }
 
+    public abstract void execute(Client client);
+
     public String getName() {
         return name;
     }
-
-
-    public abstract void execute(Client client);
 
     public String getInfo() {
         return info;

@@ -6,7 +6,7 @@ import interaction.Request;
 import interaction.Response;
 import interaction.ResponseStatus;
 
-public class Info extends Command{
+public class Info extends Command {
     private final CollectionManager collectionManager;
 
     public Info(CollectionManager collectionManager) {

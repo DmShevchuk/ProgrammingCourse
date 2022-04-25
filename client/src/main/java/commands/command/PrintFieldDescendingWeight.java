@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PrintFieldDescendingWeight extends Command{
-    private ServerErrorHandler errorHandler;
+public class PrintFieldDescendingWeight extends Command {
+    private final ServerErrorHandler errorHandler;
 
     public PrintFieldDescendingWeight(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("print_field_descending_weight",
@@ -35,7 +35,7 @@ public class PrintFieldDescendingWeight extends Command{
                 dragonLinkedList.
                         forEach(dragon ->
                                 commandLine.outLn
-                                        (String.format("%d)%s - %d кг", index.incrementAndGet(), dragon.getName(),
+                                        (String.format("%d)%s - %d kg", index.incrementAndGet(), dragon.getName(),
                                                 dragon.getWeight())));
             }
         } catch (IOException e) {

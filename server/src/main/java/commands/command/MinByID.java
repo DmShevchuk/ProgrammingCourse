@@ -8,6 +8,7 @@ import interaction.ResponseStatus;
 
 public class MinByID extends Command {
     private final CollectionManager collectionManager;
+
     public MinByID(CollectionManager collectionManager) {
         super(collectionManager);
         this.collectionManager = collectionManager;
@@ -15,7 +16,7 @@ public class MinByID extends Command {
 
     @Override
     public Response execute(Request request) {
-        if (collectionManager.getCollectionSize() == 0){
+        if (collectionManager.getCollectionSize() == 0) {
             return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
         return new Response(ResponseStatus.INFO, collectionManager.getMinById());

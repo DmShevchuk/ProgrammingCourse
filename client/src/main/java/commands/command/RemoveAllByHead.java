@@ -7,11 +7,12 @@ import run.Client;
 import run.ResponseReceiver;
 import run.ServerErrorHandler;
 import utils.CommandLine;
+
 import java.io.IOException;
 
 public class RemoveAllByHead extends Command {
     private final CommandManager commandManager;
-    private ServerErrorHandler errorHandler;
+    private final ServerErrorHandler errorHandler;
 
     public RemoveAllByHead(CommandLine commandLine, CommandManager commandManager, ServerErrorHandler errorHandler) {
         super("remove_all_by_head",

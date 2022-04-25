@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class RemoveByID extends Command {
     private final CommandManager commandManager;
-    private ServerErrorHandler errorHandler;
+    private final ServerErrorHandler errorHandler;
 
     public RemoveByID(CommandLine commandLine, CommandManager commandManager, ServerErrorHandler errorHandler) {
         super("remove_by_id",

@@ -8,7 +8,6 @@ import interaction.ResponseStatus;
 
 
 public class UpdateId extends Command {
-    private Integer currentId;
     private CollectionManager collectionManager;
 
     public UpdateId(CollectionManager collectionManager) {

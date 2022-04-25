@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Каждый объект класса {@link collection.Dragon} имеет свой тип (WATER, UNDERGROUND, AIR, FIRE)
- * */
+ */
 public enum DragonType implements Serializable {
     WATER("WATER"),
     UNDERGROUND("UNDERGROUND"),
@@ -13,11 +13,11 @@ public enum DragonType implements Serializable {
 
     private final String stringEq;
 
-    DragonType(String stringEq){
+    DragonType(String stringEq) {
         this.stringEq = stringEq;
     }
 
-    public static DragonType getTypeByString(String title){
+    public static DragonType getTypeByString(String title) {
         return switch (title) {
             case ("WATER") -> DragonType.WATER;
             case ("UNDERGROUND") -> DragonType.UNDERGROUND;
@@ -28,7 +28,7 @@ public enum DragonType implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return stringEq;
     }
 }

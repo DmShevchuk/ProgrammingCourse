@@ -1,4 +1,5 @@
 package commands;
+
 import run.Client;
 import utils.CommandLine;
 
@@ -7,18 +8,18 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 public class CommandManager {
-    private static HashMap<String, Command> commandHashMap = new HashMap<>();
-    private static Stack<String> STACK = new Stack<>();
+    private static final HashMap<String, Command> commandHashMap = new HashMap<>();
+    private static final Stack<String> STACK = new Stack<>();
     private static String ARG = null;
     private final CommandLine commandLine;
     private final Client client;
 
-    public CommandManager(CommandLine commandLine, Client client){
+    public CommandManager(CommandLine commandLine, Client client) {
         this.commandLine = commandLine;
         this.client = client;
     }
 
-    public void addCommand(Command command){
+    public void addCommand(Command command) {
         if (!commandHashMap.containsKey(command.getName())) {
             commandHashMap.put(command.getName(), command);
         }
@@ -77,7 +78,7 @@ public class CommandManager {
     }
 
     public TreeMap<String, String> getCommandsInfo() {
-        TreeMap<String, String> lst = new TreeMap();
+        TreeMap<String, String> lst = new TreeMap<>();
         for (Command cmd : commandHashMap.values()) {
             lst.put(cmd.getName(), cmd.getInfo());
         }

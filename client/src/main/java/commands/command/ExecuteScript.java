@@ -7,6 +7,7 @@ import exceptions.UnableToReadFileException;
 import run.Client;
 import utils.CommandLine;
 import utils.InputSource;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.NoSuchElementException;
 
 
 public class ExecuteScript extends Command {
-    private ArrayDeque<String> inputStream = new ArrayDeque<String>();
-    private List<String> usedFiles = new ArrayList<String>();
+    private final ArrayDeque<String> inputStream = new ArrayDeque<String>();
+    private final List<String> usedFiles = new ArrayList<String>();
     private final CommandManager commandManager;
 
     public ExecuteScript(CommandLine commandLine, CommandManager commandManager) {
@@ -43,7 +44,7 @@ public class ExecuteScript extends Command {
                     inputStream.addFirst(commands[i].strip());
                 }
             }
-        }catch (UnableToReadFileException e){
+        } catch (UnableToReadFileException e) {
             commandLine.errorOut(e.getMessage());
         }
     }

@@ -1,6 +1,7 @@
 import run.Client;
 import run.ServerErrorHandler;
 import utils.CommandLine;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.NoSuchElementException;
@@ -15,7 +16,7 @@ public class Main {
         if (args.length != 0) {
             try {
                 HOST = args[0].split(":")[0];
-                PORT = Integer.getInteger(args[0].split(":")[1]);
+                PORT = Integer.parseInt(args[0].split(":")[1]);
             } catch (ClassCastException e) {
                 HOST = "127.0.0.1";
                 PORT = 12012;
@@ -27,20 +28,20 @@ public class Main {
         Client client = new Client(new InetSocketAddress(HOST, PORT));
         try {
             client.connect();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Unable to connect to server!");
         }
 
         try {
             commandLine.run(client);
             ServerErrorHandler a = new ServerErrorHandler(client, commandLine);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             System.out.println("Application closed!");
         }
 
     }
 
-    public static void greetingMessage(){
+    public static void greetingMessage() {
         System.out.println("""
                  _____                                 \s
                 |  __ \\                                \s

@@ -8,7 +8,7 @@ import interaction.Response;
 import interaction.ResponseStatus;
 
 
-public class AddIfMax extends Command{
+public class AddIfMax extends Command {
     private final CollectionManager collectionManager;
 
     public AddIfMax(CollectionManager collectionManager) {
@@ -18,7 +18,7 @@ public class AddIfMax extends Command{
 
     @Override
     public Response execute(Request request) {
-        if (compare(request.getDragonBuild())){
+        if (compare(request.getDragonBuild())) {
             collectionManager.addDragon(request.getDragonBuild());
             return new Response(ResponseStatus.SUCCESS, "Dragon added to collection!");
         }
@@ -26,7 +26,7 @@ public class AddIfMax extends Command{
     }
 
     public boolean compare(Dragon.Builder newDragon) {
-        if(collectionManager.getCollectionSize() == 0){
+        if (collectionManager.getCollectionSize() == 0) {
             return true;
         }
         Dragon dragon = collectionManager.getMaxElement();

@@ -12,7 +12,6 @@ import java.io.*;
 import java.util.logging.Logger;
 
 public class Save extends Command {
-    private final String DEFAULT_FILE_NAME = "collection.json";
     private final CollectionManager collectionManager;
 
     public Save(CollectionManager collectionManager, Logger logger) {
@@ -23,6 +22,7 @@ public class Save extends Command {
     @Override
     public Response execute(Request request) {
         FileManager fileManager = new FileManager();
+        String DEFAULT_FILE_NAME = "collection.json";
 
         if (!fileManager.canWrite(DEFAULT_FILE_NAME)) {
             System.out.println("The current user does not have permission to write to the file "

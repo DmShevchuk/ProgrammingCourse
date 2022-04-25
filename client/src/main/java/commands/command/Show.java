@@ -27,8 +27,7 @@ public class Show extends Command {
             Response response = new ResponseReceiver().getResponse(client, commandLine);
             if (response != null) {
                 LinkedList<Dragon> dragonLinkedList = response.getDragonList();
-                dragonLinkedList.
-                        forEach(dragon -> commandLine.outLn(dragon.toString()));
+                dragonLinkedList.forEach(dragon -> commandLine.outLn(dragon.toString()));
             }
         } catch (IOException e) {
             errorHandler.handleServerError();

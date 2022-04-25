@@ -8,27 +8,17 @@ import java.io.*;
 public class FileManager {
     private final CommandLine commandLine;
 
-    public FileManager(CommandLine commandLine){
+    public FileManager(CommandLine commandLine) {
         this.commandLine = commandLine;
     }
 
-    public void canRead(String fileName) throws UnableToReadFileException{
+    public void canRead(String fileName) throws UnableToReadFileException {
         File file = new File(fileName);
-        if(file.canRead()) return;
+        if (file.canRead()) return;
         throw new UnableToReadFileException(String.format("Can't read file {%s}!", fileName));
     }
 
-    public boolean canWrite(String fileName) {
-        try {
-            File file = new File(fileName);
-            return file.canWrite();
-        } catch (Exception e) {
-            commandLine.errorOut(String.format("Unable to write data to file %s!", fileName));
-        }
-        return false;
-    }
-
-    public String read(String fileName){
+    public String read(String fileName) {
         String fileContent = "";
         try {
             InputStream inputStream = new FileInputStream(fileName);
@@ -44,7 +34,7 @@ public class FileManager {
 
             inputStreamReader.close();
             return fileContent;
-        }catch (IOException e){
+        } catch (IOException e) {
             commandLine.errorOut(String.format("Problems reading the file %s!", fileName));
             return null;
         }

@@ -10,8 +10,9 @@ import utils.CommandLine;
 
 import java.io.IOException;
 
-public class RemoveFirst extends Command{
-    private ServerErrorHandler errorHandler;
+public class RemoveFirst extends Command {
+    private final ServerErrorHandler errorHandler;
+
     public RemoveFirst(CommandLine commandLine, ServerErrorHandler errorHandler) {
         super("remove_first",
                 "|| remove the first element from the collection",

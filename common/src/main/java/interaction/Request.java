@@ -1,6 +1,7 @@
 package interaction;
 
 import collection.Dragon;
+
 import java.io.Serializable;
 
 public class Request implements Serializable {
@@ -18,7 +19,7 @@ public class Request implements Serializable {
         return commandName;
     }
 
-    public String getArgs(){
+    public String getArgs() {
         return args;
     }
 
@@ -26,29 +27,30 @@ public class Request implements Serializable {
         return dragonBuild;
     }
 
-    public static class Builder{
+    public static class Builder {
         private String commandName;
         private String args;
         private Dragon.Builder dragonBuild;
 
-        public Builder(){}
+        public Builder() {
+        }
 
-        public Builder setCommandName(String commandName){
+        public Builder setCommandName(String commandName) {
             this.commandName = commandName;
             return this;
         }
 
-        public Builder setArgs(String args){
+        public Builder setArgs(String args) {
             this.args = args;
             return this;
         }
 
-        public Builder setDragonBuild(Dragon.Builder dragonBuild){
+        public Builder setDragonBuild(Dragon.Builder dragonBuild) {
             this.dragonBuild = dragonBuild;
             return this;
         }
 
-        public Request build(){
+        public Request build() {
             return new Request(this);
         }
 

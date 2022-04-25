@@ -1,15 +1,12 @@
 package commands.command;
 
 import collection.CollectionManager;
-import collection.Dragon;
 import commands.Command;
 import interaction.Request;
 import interaction.Response;
 import interaction.ResponseStatus;
 
-import java.util.LinkedList;
-
-public class PrintFieldDescendingWeight extends Command{
+public class PrintFieldDescendingWeight extends Command {
     private final CollectionManager collectionManager;
 
     public PrintFieldDescendingWeight(CollectionManager collectionManager) {
@@ -19,7 +16,7 @@ public class PrintFieldDescendingWeight extends Command{
 
     @Override
     public Response execute(Request request) {
-        if (collectionManager.getCollectionSize() == 0){
+        if (collectionManager.getCollectionSize() == 0) {
             return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
         return new Response(ResponseStatus.INFO, collectionManager.sortByWeight());

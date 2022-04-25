@@ -1,15 +1,16 @@
 package collection;
 
 import java.io.Serializable;
+
 /**
  * Координаты являются полем {@link collection.Dragon}
- * */
+ */
 public class Coordinates implements Serializable {
-    private Double x; //Значение поля должно быть больше -972, Поле не может быть null
+    private final Double x; //Значение поля должно быть больше -972, Поле не может быть null
 
-    private Double y; //Значение поля должно быть больше -290, Поле не может быть null
+    private final Double y; //Значение поля должно быть больше -290, Поле не может быть null
 
-    public Coordinates(Double x, Double y){
+    public Coordinates(Double x, Double y) {
         this.x = x;
         this.y = y;
     }
@@ -23,7 +24,7 @@ public class Coordinates implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return  x + " " + y;
+    public String toString() {
+        return x + " " + y;
     }
 }
