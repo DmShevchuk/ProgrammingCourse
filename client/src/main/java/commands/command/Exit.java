@@ -11,6 +11,7 @@ public class Exit extends Command {
 
     @Override
     public void execute(Client client) {
+        client.resetSocketChannel();
         System.exit(0);
     }
 }
