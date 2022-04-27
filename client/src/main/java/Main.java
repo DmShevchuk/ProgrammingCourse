@@ -11,8 +11,6 @@ public class Main {
     private static int PORT = 12012;
 
     public static void main(String[] args) {
-        greetingMessage();
-
         if (args.length != 0) {
             try {
                 HOST = args[0].split(":")[0];
@@ -39,18 +37,5 @@ public class Main {
             System.out.println("Application closed!");
         }
 
-    }
-
-    public static void greetingMessage() {
-        System.out.println("""
-                 _____                                 \s
-                |  __ \\                                \s
-                | |  | |_ __ __ _  __ _  ___  _ __  ___\s
-                | |  | | '__/ _` |/ _` |/ _ \\| '_ \\/ __|
-                | |__| | | | (_| | (_| | (_) | | | \\__ \\
-                |_____/|_|  \\__,_|\\__, |\\___/|_| |_|___/
-                                   __/ |               \s
-                                  |___/                \s
-                                """);
     }
 }
