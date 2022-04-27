@@ -41,8 +41,13 @@ public class Main {
                 // ожидание подключения
                 Socket socket = serverSocket.accept();
                 logger.log(Level.INFO, "Client connected");
+                Thread thread = new Thread(){
+                    public void run(){
+                        new Server(socket, collectionManager, logger);;
+                    }
+                };
 
-                new Server(socket, collectionManager, logger);
+                thread.start();
             }
 
         } catch (Exception e) {
