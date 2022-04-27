@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     private static CollectionManager instance;
     private final LocalDate initializationDate = LocalDate.now();
-    private LinkedList<Dragon> COLLECTION = new LinkedList<>();
-    private Integer currentID = 1;
+    private LinkedList<Dragon> collection = new LinkedList<>();
+    private Integer currentId = 1;
 
     private static LocalDate currentDate;
 
@@ -29,13 +29,13 @@ public class CollectionManager {
     }
 
     public void collectionInit(List<Dragon> dragonList) {
-        if (dragonList != null) COLLECTION = (LinkedList<Dragon>) dragonList;
+        if (dragonList != null) collection = (LinkedList<Dragon>) dragonList;
         sortCollection();
     }
 
     private void nextID() {
-        while (checkExistingID(currentID)) {
-            currentID++;
+        while (checkExistingID(currentId)) {
+            currentId++;
         }
     }
 
@@ -44,7 +44,7 @@ public class CollectionManager {
     }
 
     public void addDragon(Dragon dragon) {
-        COLLECTION.add(dragon);
+        collection.add(dragon);
         sortCollection();
     }
 
@@ -52,7 +52,7 @@ public class CollectionManager {
         nextID();
         refreshDate();
 
-        builder.setId(currentID);
+        builder.setId(currentId);
         builder.setCreationDate(currentDate);
 
         addDragon(builder.build());
@@ -65,64 +65,64 @@ public class CollectionManager {
                         The collection contains objects: %s
                         Initialization date: %s
                         Amount of elements: %d""",
-                COLLECTION.getClass(), Dragon.class, initializationDate, COLLECTION.size());
+                collection.getClass(), Dragon.class, initializationDate, collection.size());
     }
 
     public LinkedList<Dragon> getCOLLECTION() {
-        return (LinkedList<Dragon>) COLLECTION.clone();
+        return (LinkedList<Dragon>) collection.clone();
     }
 
     public int getCollectionSize() {
-        return COLLECTION.size();
+        return collection.size();
     }
 
     public void removeFirst() {
-        COLLECTION.removeFirst();
+        collection.removeFirst();
     }
 
     //Удалить из коллекции элементы с указанным размером головы
     public void removeByHead(DragonHead head) {
-        COLLECTION.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
+        collection.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
         sortCollection();
     }
 
     public LinkedList<Dragon> sortByWeight() {
-        return COLLECTION.stream().
-                sorted(Comparator.comparing(Dragon::getWeight)).
-                collect(Collectors.toCollection(LinkedList::new));
+        return collection.stream()
+                .sorted(Comparator.comparing(Dragon::getWeight))
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public void clearCollection() {
-        COLLECTION.clear();
+        collection.clear();
     }
 
     public Dragon getMaxElement() {
         sortCollection();
-        return COLLECTION.getLast();
+        return collection.getLast();
     }
 
     public boolean checkExistingID(Integer id) {
-        return COLLECTION.stream()
+        return collection.stream()
                 .filter(dragon -> id.equals(dragon.getId()))
                 .findAny()
                 .orElse(null) != null;
     }
 
     public void deleteElementByID(Integer id) {
-        COLLECTION.removeIf(dragon -> id.equals(dragon.getId()));
+        collection.removeIf(dragon -> id.equals(dragon.getId()));
     }
 
     public Dragon getElementByID(Integer id) {
-        return COLLECTION.stream()
+        return collection.stream()
                 .filter(dragon -> id.equals(dragon.getId()))
                 .findAny()
                 .orElse(null);
     }
 
     public Dragon getMinById() {
-        return COLLECTION.stream().
-                min(Comparator.comparing(Dragon::getId)).
-                orElse(null);
+        return collection.stream()
+                .min(Comparator.comparing(Dragon::getId))
+                .orElse(null);
     }
 
     public void updateElementById(Integer id, Dragon d) {
@@ -141,13 +141,13 @@ public class CollectionManager {
 
     // Сортировка коллекции по возрасту драконов
     public void sortCollection() {
-        COLLECTION.sort(Comparator.naturalOrder());
+        collection.sort(Comparator.naturalOrder());
     }
 
     public String collectionToString() {
         String toReturn = "";
 
-        for (Dragon d : COLLECTION) {
+        for (Dragon d : collection) {
             toReturn += d.toString() + "\n";
         }
         return toReturn.strip().length() == 0 ? "The dragon collection is empty!" : toReturn.strip();
