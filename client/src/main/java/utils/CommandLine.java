@@ -14,7 +14,6 @@ public class CommandLine {
     private ElementReadMode ELEMENT_MODE = ElementReadMode.STANDARD;
 
     public void run(Client client) {
-        greetingMessage();
         String INPUT_COMMAND;
         CommandManager commandManager = new CommandManager(this, client);
         ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
@@ -114,10 +113,5 @@ public class CommandLine {
         String ANSI_RED = "\u001B[31m";
         String ANSI_RESET = "\u001B[0m";
         System.out.println(ANSI_RED + text + ANSI_RESET);
-    }
-
-    public void greetingMessage(){
-        FileManager fileManager = new FileManager(this);
-        outLn(fileManager.read("client\\src\\main\\java\\resources\\greetingMessage.txt"));
     }
 }
