@@ -8,7 +8,7 @@ import run.Client;
 import run.ResponseReceiver;
 import run.ServerErrorHandler;
 import utils.CommandLine;
-import utils.ElementReadMode;
+import utils.DragonCreator;
 
 import java.io.IOException;
 
@@ -31,14 +31,16 @@ public class UpdateId extends Command {
     public void execute(Client client) {
         this.client = client;
         try {
-            currentId = Integer.parseInt(commandManager.getARG());
-            commandLine.outLn("To enter null, use an empty string.");
+            currentId = Integer.parseInt(commandManager.getArg());
+            DragonCreator dragonCreator = new DragonCreator(commandLine);
+            Dragon.Builder newDragon = dragonCreator.getNewDragon();
 
-            commandLine.setElementMode(ElementReadMode.ELEMENT_UPDATE);
-            ((Add) commandManager.getCommand("add")).addInit();
+            if (newDragon == null) return;
+
+            update(newDragon);
 
         } catch (ClassCastException e) {
-            commandLine.errorOut("Impossible to get id=" + commandManager.getARG());
+            commandLine.errorOut("Impossible to get id=" + commandManager.getArg());
         }
     }
 

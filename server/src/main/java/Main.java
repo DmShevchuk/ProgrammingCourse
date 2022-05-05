@@ -1,10 +1,13 @@
 import collection.CollectionManager;
 import collection.Dragon;
-import data.*;
+import data.FileManager;
+import data.ParserJSON;
 import run.Server;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -41,12 +44,7 @@ public class Main {
                 // ожидание подключения
                 Socket socket = serverSocket.accept();
                 logger.log(Level.INFO, "Client connected");
-                Thread thread = new Thread(){
-                    public void run(){
-                        new Server(socket, collectionManager, logger);;
-                    }
-                };
-
+                Thread thread = new Thread(() -> new Server(socket, collectionManager, logger));
                 thread.start();
             }
 

@@ -3,19 +3,16 @@ package commands.command;
 import commands.Command;
 import commands.CommandManager;
 import data.FileManager;
-import exceptions.UnableToReadFileException;
 import run.Client;
 import utils.CommandLine;
 import utils.InputSource;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 public class ExecuteScript extends Command {
-    private final ArrayDeque<String> inputStream = new ArrayDeque<String>();
+    private final ArrayList<String> instructionList = new ArrayList<>();
     private final List<String> usedFiles = new ArrayList<String>();
     private final CommandManager commandManager;
 
@@ -28,54 +25,49 @@ public class ExecuteScript extends Command {
     @Override
     public void execute(Client client) {
         addInstructions();
-        commandLine.setInputSource(InputSource.SCRIPT);
     }
 
     public void addInstructions() {
         FileManager fileManager = new FileManager(commandLine);
 
-        try {
-            fileManager.canRead(commandManager.getARG());
-            String file = fileManager.read(commandManager.getARG());
+        if (fileManager.canRead(commandManager.getArg())) {
 
-            if (file != null && file.length() > 0 && checkRecursion(file)) {
+            String file = fileManager.read(commandManager.getArg());
+
+            if (file != null && file.length() > 0 && !isCreatingRecursion(file)) {
                 String[] commands = file.split("\\n");
-                for (int i = commands.length - 1; i > -1; i--) {
-                    inputStream.addFirst(commands[i].strip());
+                for (String command : commands) {
+                    instructionList.add(command.trim());
                 }
+                commandLine.setInputSource(InputSource.SCRIPT);
+                setInstructionList();
             }
-        } catch (UnableToReadFileException e) {
-            commandLine.errorOut(e.getMessage());
+        } else {
+            commandLine.errorOut(String.format("Unable to read file '%s'", commandManager.getArg()));
         }
     }
 
-    public String nextLine() {
-        try {
-            return inputStream.removeFirst();
-        } catch (NoSuchElementException e) {
-            stopScript();
-            return "__stopScript__";
-        }
+    private void setInstructionList() {
+        commandLine.addScriptInstructions(instructionList);
+        instructionList.clear();
     }
 
-    public void stopScript() {
-        inputStream.clear();
+    public void clearFields() {
         usedFiles.clear();
-        commandLine.setInputSource(InputSource.COMMAND);
     }
 
-    public boolean checkRecursion(String file) {
+    public boolean isCreatingRecursion(String file) {
         if (usedFiles.size() > 0 && usedFiles.get(usedFiles.size() - 1).equals(file)) {
-            return true;
+            return false;
         }
 
         for (String f : usedFiles) {
             if (f.equals(file)) {
-                commandLine.errorOut(String.format("Attempt to create a collision, file {%s}!", commandManager.getARG()));
-                return false;
+                commandLine.errorOut(String.format("Attempt to create a collision, file %s!", commandManager.getArg()));
+                return true;
             }
         }
         usedFiles.add(file);
-        return true;
+        return false;
     }
 }

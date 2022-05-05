@@ -25,8 +25,8 @@ public class RemoveAllByHead extends Command {
     @Override
     public void execute(Client client) {
         try {
-            new DragonHead(Long.parseLong(commandManager.getARG()));
-            client.send(new Request.Builder().setCommandName(this.getName()).setArgs(commandManager.getARG()).build());
+            new DragonHead(Long.parseLong(commandManager.getArg()));
+            client.send(new Request.Builder().setCommandName(this.getName()).setArgs(commandManager.getArg()).build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (ClassCastException | IOException e) {
             errorHandler.handleServerError();

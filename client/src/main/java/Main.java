@@ -1,5 +1,4 @@
 import run.Client;
-import run.ServerErrorHandler;
 import utils.CommandLine;
 
 import java.io.IOException;
@@ -22,20 +21,21 @@ public class Main {
             }
         }
 
-        CommandLine commandLine = new CommandLine();
+
         Client client = new Client(new InetSocketAddress(HOST, PORT));
+
+        CommandLine commandLine = new CommandLine();
         try {
             client.connect();
+            System.out.println("Соединение установлено!");
         } catch (IOException e) {
             System.out.println("Unable to connect to server!");
         }
 
         try {
             commandLine.run(client);
-            ServerErrorHandler a = new ServerErrorHandler(client, commandLine);
         } catch (NoSuchElementException e) {
             System.out.println("Application closed!");
         }
-
     }
 }

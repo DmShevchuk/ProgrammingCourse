@@ -1,21 +1,25 @@
 package utils;
 
-import commands.*;
+import commands.CommandManager;
 import commands.command.*;
+import exceptions.IncorrectArgQuantityException;
+import exceptions.IncorrectCommandException;
 import run.Client;
 import run.ServerErrorHandler;
-
+import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class CommandLine {
     private String USER_INPUT_PREFIX = ">>";
-    private final Scanner SCANNER = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private InputSource INPUT_SOURCE = InputSource.COMMAND;
-    private ElementReadMode ELEMENT_MODE = ElementReadMode.STANDARD;
+    private CommandManager commandManager;
+    private ArrayList<String> scriptInstructions = new ArrayList<>();
 
     public void run(Client client) {
         String INPUT_COMMAND;
-        CommandManager commandManager = new CommandManager(this, client);
+        commandManager = new CommandManager(this, client);
         ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
 
         commandManager.addCommand(new Help(this, commandManager));
@@ -37,57 +41,53 @@ public class CommandLine {
         while (true) {
             // Выводим в консоль >> для ввода пользователя
             out(USER_INPUT_PREFIX);
-
-            if (INPUT_SOURCE == InputSource.SCRIPT) {
-                INPUT_COMMAND = ((ExecuteScript) commandManager.getCommand("execute_script")).nextLine();
-            } else {
-                INPUT_COMMAND = SCANNER.nextLine().strip();
-            }
-
-            if (INPUT_SOURCE == InputSource.SCRIPT) outLn(INPUT_COMMAND);
-
-            if (ELEMENT_MODE == ElementReadMode.STANDARD) {
-                if (INPUT_COMMAND.length() == 0) {
-                    outLn("Empty string entered");
-                    continue;
-                } else if (INPUT_COMMAND.equals("__stopScript__")) {
-                    continue;
-                }
-
-                String[] userCommand = INPUT_COMMAND.split("\\s");
-
-                if (commandManager.checkCommand(userCommand[0], userCommand.length)) {
-                    if (userCommand.length == 2) {
-                        commandManager.setARG(userCommand[1]);
-                    }
-                    commandManager.runCommand(userCommand[0]);
-                }
-
-            } else {
-                ((Add) commandManager.getCommand("add")).addValue(INPUT_COMMAND);
-            }
+            INPUT_COMMAND = getNextLine();
+            parseInputLine(INPUT_COMMAND);
         }
 
+    }
+
+    public String getNextLine() {
+        if (INPUT_SOURCE == InputSource.COMMAND) {
+            return scanner.nextLine().trim();
+        }
+        return getNextScriptInstruction();
+    }
+
+    public void parseInputLine(String line) {
+        String[] userCommand = line.split("\\s");
+        try {
+            commandManager.recognizeCommand(userCommand[0], userCommand.length - 1);
+            if (userCommand.length == 2) {
+                commandManager.setArg(userCommand[1]);
+            }
+            commandManager.runCommand(userCommand[0]);
+        } catch (IncorrectCommandException | IncorrectArgQuantityException e) {
+            errorOut(e.getMessage());
+        }
+    }
+
+    public void addScriptInstructions(ArrayList<String> lines) {
+        scriptInstructions.addAll(lines);
+    }
+
+    public String getNextScriptInstruction() {
+        String instruction = scriptInstructions.get(0);
+        outLn(instruction);
+        scriptInstructions.remove(0);
+        if (scriptInstructions.size() == 0) {
+            setInputSource(InputSource.COMMAND);
+            ((ExecuteScript)commandManager.getCommand("execute_script")).clearFields();
+        }
+        return instruction;
     }
 
     public void setInputSource(InputSource mode) {
         INPUT_SOURCE = mode;
     }
 
-    public void setElementMode(ElementReadMode mode) {
-        ELEMENT_MODE = mode;
-    }
-
-    public ElementReadMode getElementMode() {
-        return ELEMENT_MODE;
-    }
-
     public void setUserInputPrefix(String prefix) {
         USER_INPUT_PREFIX = prefix;
-    }
-
-    public void outLn(String text) {
-        System.out.println(text);
     }
 
     public void showOfflineCommands() {
@@ -99,8 +99,12 @@ public class CommandLine {
                 history                           || print the last 10 commands (without their arguments)""");
     }
 
-    public static void out(String text) {
+    public void out(String text) {
         System.out.print(text);
+    }
+
+    public void outLn(String text) {
+        System.out.println(text);
     }
 
     public void successOut(String text) {

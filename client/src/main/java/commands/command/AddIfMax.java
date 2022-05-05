@@ -8,7 +8,7 @@ import run.Client;
 import run.ResponseReceiver;
 import run.ServerErrorHandler;
 import utils.CommandLine;
-import utils.ElementReadMode;
+import utils.DragonCreator;
 
 import java.io.IOException;
 
@@ -29,11 +29,14 @@ public class AddIfMax extends Command {
     public void execute(Client client) {
         this.client = client;
 
-        commandLine.outLn("Enter an item to compare:");
-        commandLine.outLn("(Empty string -> null)");
-        commandLine.setElementMode(ElementReadMode.ELEMENT_COMPARE);
+        commandLine.outLn("Adding a dragon to compare\n(empty string = null, '_quit_' to exit)");
 
-        ((Add) commandManager.getCommand("add")).addInit();
+        DragonCreator dragonCreator = new DragonCreator(commandLine);
+        Dragon.Builder newDragon = dragonCreator.getNewDragon();
+
+        if (newDragon == null) return;
+
+        compare(newDragon);
     }
 
     public void compare(Dragon.Builder newDragon) {

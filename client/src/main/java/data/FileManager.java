@@ -1,6 +1,4 @@
 package data;
-
-import exceptions.UnableToReadFileException;
 import utils.CommandLine;
 
 import java.io.*;
@@ -12,10 +10,9 @@ public class FileManager {
         this.commandLine = commandLine;
     }
 
-    public void canRead(String fileName) throws UnableToReadFileException {
+    public boolean canRead(String fileName) {
         File file = new File(fileName);
-        if (file.canRead()) return;
-        throw new UnableToReadFileException(String.format("Can't read file {%s}!", fileName));
+        return file.canRead();
     }
 
     public String read(String fileName) {

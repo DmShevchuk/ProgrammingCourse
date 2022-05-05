@@ -24,8 +24,8 @@ public class RemoveByID extends Command {
     @Override
     public void execute(Client client) {
         try {
-            Integer.parseInt(commandManager.getARG());
-            client.send(new Request.Builder().setCommandName(this.getName()).setArgs(commandManager.getARG()).build());
+            Integer.parseInt(commandManager.getArg());
+            client.send(new Request.Builder().setCommandName(this.getName()).setArgs(commandManager.getArg()).build());
             new ResponseReceiver().getResponse(client, commandLine);
         } catch (ClassCastException | IOException e) {
             errorHandler.handleServerError();
