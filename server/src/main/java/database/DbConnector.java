@@ -1,36 +1,27 @@
 package database;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.util.Properties;
 
 public class DbConnector {
-    private Connection connection;
-    private final String db_url = "jdbc:postgresql://localhost:2345/studs";
+    private final String propFileName;
 
-    public DbConnector() {
+    public DbConnector(String propFileName) {
+        this.propFileName = propFileName;
     }
 
-    public Connection createConnection() {
-        //TODO обработка невозможности соединения
-        Scanner scanner = new Scanner(System.in);
-        //TODO скрыть ввод пароля
-        while (connection == null) {
-            System.out.print("Введите логин: ");
-            String user = scanner.nextLine();
-            System.out.print("Введите пароль: ");
-            String password = scanner.nextLine();
-            try {
-                getConnection(user, password);
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return connection;
-    }
+    public Connection createConnection() throws IOException, SQLException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(propFileName));
 
-    private void getConnection(String user, String password) throws SQLException {
-        connection = DriverManager.getConnection(db_url, user, password);
+        String host = properties.getProperty("dbHost");
+        String login = properties.getProperty("dbLogin");
+        String password = properties.getProperty("dbPassword");
+
+        return DriverManager.getConnection(host, login, password);
     }
 }

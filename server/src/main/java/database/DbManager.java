@@ -12,7 +12,7 @@ public class DbManager {
     }
 
 
-    public int add(Dragon dragon) throws SQLException {
+    public synchronized int add(Dragon dragon) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO dragons (name, coordinate_x, coordinate_y, creation_date," +
                         " age, weight, speaking, type, dragon_head, owner_id) " +
@@ -24,7 +24,7 @@ public class DbManager {
         return -1;
     }
 
-    public Integer getLastId() throws SQLException {
+    public synchronized Integer getLastId() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT last_value FROM dragons_id_seq");
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
@@ -59,7 +59,7 @@ public class DbManager {
     }
 
 
-    public int clearCollection(int userId) throws SQLException {
+    public synchronized int clearCollection(int userId) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "DELETE FROM dragons WHERE owner_id = ?");
         preparedStatement.setInt(1, userId);
@@ -67,21 +67,21 @@ public class DbManager {
     }
 
 
-    public int removeByHead(int userId, Long dragonHead) throws SQLException {
+    public synchronized int removeByHead(int userId, Long dragonHead) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM dragons WHERE owner_id = ? AND dragon_head = ?");
         preparedStatement.setInt(1, userId);
         preparedStatement.setInt(2, Math.toIntExact(dragonHead));
         return preparedStatement.executeUpdate();
     }
 
-    public int removeById(int userId, int dragonId) throws SQLException {
+    public synchronized int removeById(int userId, int dragonId) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM dragons WHERE owner_id = ? AND id = ?");
         preparedStatement.setInt(1, userId);
         preparedStatement.setInt(2, dragonId);
         return preparedStatement.executeUpdate();
     }
 
-    public int updateId(Dragon dragon) throws SQLException {
+    public synchronized int updateId(Dragon dragon) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE dragons SET " +
                 "name = ?, coordinate_x = ?, coordinate_y = ?, creation_date = ?, age = ?," +
                 "weight = ?, speaking = ?, type = ?, dragon_head = ?, owner_id = ?" +
@@ -91,7 +91,7 @@ public class DbManager {
         return preparedStatement.executeUpdate();
     }
 
-    public int removeFirst(int firstId, int userId) throws SQLException {
+    public synchronized int removeFirst(int firstId, int userId) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE id = ? AND owner_id = ?");
 
@@ -99,14 +99,5 @@ public class DbManager {
         preparedStatement.setInt(2, userId);
         return preparedStatement.executeUpdate();
         //TODO NoPermissionException
-    }
-
-    public boolean canWorkWithDragon(int dragonId, int userId) throws SQLException {
-        // TODO исключение
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM dragons WHERE id = ? AND owner_id = ?");
-        statement.setInt(1, dragonId);
-        statement.setInt(2, userId);
-        ResultSet resultSet = statement.executeQuery();
-        return resultSet.next();
     }
 }

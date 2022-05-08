@@ -1,79 +1,64 @@
 import collection.CollectionManager;
-import collection.Dragon;
-import data.FileManager;
-import data.ParserJSON;
 import database.CollectionLoader;
 import database.DbConnector;
 import database.DbManager;
 import run.Server;
+import run.ServerStarter;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
-import java.util.LinkedList;
+import java.sql.SQLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class Main {
-    private static final String FILENAME = "collection.json";
-    private static final int PORT = 12012;
-    private static final String HOST = "127.0.0.1";
-
     public static void main(String[] ar) throws IOException {
-        ServerSocket serverSocket = null;
+        ServerSocket serverSocket;
+        Connection connection;
+
         try {
-            InetAddress inetAddress;
-            inetAddress = InetAddress.getByName(HOST);
-            serverSocket = new ServerSocket(PORT, 0, inetAddress);
-
-            Logger logger = Logger.getLogger(Main.class.getName());
-            FileHandler fh = new FileHandler("./serverLog.log");
-            logger.addHandler(fh);
-
-            CollectionManager collectionManager = CollectionManager.getInstance();
-
-            DbConnector dbConnector = new DbConnector();
-            Connection connection = dbConnector.createConnection();
-            DbManager dbManager = new DbManager(connection);
-
-            logger.log(Level.INFO, "Server started");
-
-            try {
-                collectionManager.collectionInit(new CollectionLoader(connection).loadCollection());
-                logger.log(Level.INFO, "Коллекция загружена!");
-            } catch (Exception e) {
-                System.out.println("Unable to process input file!");
-                System.err.println(e.getMessage());
-            }
-
-            while (true) {
-                // ожидание подключения
-                Socket socket = serverSocket.accept();
-                logger.log(Level.INFO, "Client connected");
-                Thread thread = new Thread(() -> new Server(socket, collectionManager, logger, connection, dbManager));
-                thread.start();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (serverSocket != null)
-                serverSocket.close();
-            System.exit(0);
+            String propPath = new File("server/src/main/resources/connection.properties").getAbsolutePath();
+            serverSocket = new ServerStarter(propPath).start();
+        } catch (IOException e){
+            System.out.printf("Unable to run server: %s!", e.getMessage());
+            return;
         }
-    }
 
-    private static LinkedList<Dragon> loadCollection() throws IOException {
-        FileManager fileManager = new FileManager();
+        try {
+            String propPath = new File("server/src/main/resources/dbConfig.properties").getAbsolutePath();
+            connection = new DbConnector(propPath).createConnection();
+        }catch (SQLException e){
+            System.out.printf("Unable to connect to database %s!", e.getMessage());
+            return;
+        }
 
-        fileManager.canRead(FILENAME);
-        String jsonString = fileManager.read(FILENAME);
-        ParserJSON parser = new ParserJSON();
+        CollectionManager collectionManager = CollectionManager.getInstance();
+        DbManager dbManager = new DbManager(connection);
 
-        return parser.parse(jsonString);
+        Logger logger = Logger.getLogger(Main.class.getName());
+        FileHandler fh = new FileHandler("./serverLog.log");
+        logger.addHandler(fh);
+        logger.log(Level.INFO, "Server is started, connection to database is established!");
+
+        try {
+            collectionManager.collectionInit(new CollectionLoader(connection).loadCollection());
+            logger.log(Level.INFO, "Collection loaded!");
+        } catch (SQLException e) {
+            logger.log(Level.WARNING,"Unable to load collection!");
+            return;
+        }
+
+        while (true) {
+            // ожидание подключения
+            Socket socket = serverSocket.accept();
+            logger.log(Level.INFO, "Client connected");
+            Thread thread = new Thread(() -> new Server(socket, collectionManager, logger, connection, dbManager));
+            thread.start();
+        }
     }
 }
