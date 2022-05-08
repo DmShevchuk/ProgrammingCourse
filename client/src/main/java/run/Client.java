@@ -1,8 +1,6 @@
 package run;
 
-import interaction.Request;
-import interaction.Response;
-
+import interaction.*;
 import java.net.*;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -11,7 +9,7 @@ import java.nio.channels.SocketChannel;
 public class Client {
     private final SocketAddress socketAddress;
     private SocketChannel socketChannel;
-
+    private Account account;
 
     public Client(SocketAddress socketAddress) {
         this.socketAddress = socketAddress;
@@ -24,6 +22,18 @@ public class Client {
 
     public void resetSocketChannel() {
         socketChannel = null;
+    }
+
+    public void setAccount(Account account){
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void removeAccount(){
+        this.account = null;
     }
 
     public void send(Request request) throws IOException {

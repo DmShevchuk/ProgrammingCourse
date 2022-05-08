@@ -1,7 +1,9 @@
 package collection;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -81,8 +83,9 @@ public class CollectionManager {
     }
 
     //Удалить из коллекции элементы с указанным размером головы
-    public void removeByHead(DragonHead head) {
-        collection.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
+    public void removeByHead(Integer ownerId, DragonHead head) {
+        collection.removeIf(dragon ->
+                (dragon.getHead().getSize() == head.getSize() && ownerId.equals(dragon.getOwnerId())));
         sortCollection();
     }
 
@@ -92,8 +95,8 @@ public class CollectionManager {
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public void clearCollection() {
-        collection.clear();
+    public void clearCollection(Integer ownerId) {
+        collection.removeIf(dragon -> ownerId.equals(dragon.getOwnerId()));
     }
 
     public Dragon getMaxElement() {
@@ -125,6 +128,10 @@ public class CollectionManager {
                 .orElse(null);
     }
 
+    public Integer getFirstId() {
+        return collection.getFirst().getId();
+    }
+
     public void updateElementById(Integer id, Dragon d) {
         Dragon dragon = getElementByID(id);
 
@@ -135,11 +142,12 @@ public class CollectionManager {
         dragon.setSpeaking(d.getSpeaking());
         dragon.setType(d.getType());
         dragon.setHead(d.getHead());
+        dragon.setOwnerId(d.getOwnerId());
 
         sortCollection();
     }
 
-    // Сортировка коллекции по возрасту драконов
+    // Сортировка коллекции по весу драконов
     public void sortCollection() {
         collection.sort(Comparator.naturalOrder());
     }

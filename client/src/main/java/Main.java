@@ -1,9 +1,6 @@
-import run.Client;
-import utils.CommandLine;
+import utils.AppStarter;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.NoSuchElementException;
 
 public class Main {
     private static String HOST = "127.0.0.1";
@@ -20,22 +17,25 @@ public class Main {
                 System.out.println(String.format("Wrong connection address, using {%s}:{%d} instead!", HOST, PORT));
             }
         }
+        AppStarter appStarter = new AppStarter(new InetSocketAddress(HOST, PORT));
+        appStarter.run();
 
 
-        Client client = new Client(new InetSocketAddress(HOST, PORT));
-
-        CommandLine commandLine = new CommandLine();
-        try {
-            client.connect();
-            System.out.println("Соединение установлено!");
-        } catch (IOException e) {
-            System.out.println("Unable to connect to server!");
-        }
-
-        try {
-            commandLine.run(client);
-        } catch (NoSuchElementException e) {
-            System.out.println("Application closed!");
-        }
+//        Client client = new Client(new InetSocketAddress(HOST, PORT));
+//
+//        CommandLine commandLine = new CommandLine();
+//        try {
+//            client.connect();
+//            System.out.println("Connection established!");
+//        } catch (IOException e) {
+//            System.out.println("Unable to connect to server!");
+//        }
+//
+//        try {
+//
+//            commandLine.run(client);
+//        } catch (NoSuchElementException e) {
+//            System.out.println("Application closed!");
+//        }
     }
 }

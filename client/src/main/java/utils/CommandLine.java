@@ -4,43 +4,35 @@ import commands.CommandManager;
 import commands.command.*;
 import exceptions.IncorrectArgQuantityException;
 import exceptions.IncorrectCommandException;
+import interaction.Account;
 import run.Client;
 import run.ServerErrorHandler;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//TODO красивую таблицу вывода
 
 public class CommandLine {
-    private String USER_INPUT_PREFIX = ">>";
-    private final Scanner scanner = new Scanner(System.in);
-    private InputSource INPUT_SOURCE = InputSource.COMMAND;
+    private final Client client;
+    private String userInputPrefix;
+    private Scanner scanner;
+    private InputSource inputSource;
     private CommandManager commandManager;
-    private ArrayList<String> scriptInstructions = new ArrayList<>();
+    private final ArrayList<String> scriptInstructions = new ArrayList<>();
+    private final Account account;
 
-    public void run(Client client) {
+    public CommandLine(Client client) {
+        this.client = client;
+        this.account = client.getAccount();
+        commandLineInit();
+    }
+
+    public void run() {
         String INPUT_COMMAND;
-        commandManager = new CommandManager(this, client);
-        ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
-
-        commandManager.addCommand(new Help(this, commandManager));
-        commandManager.addCommand(new Show(this, errorHandler));
-        commandManager.addCommand(new Info(this, errorHandler));
-        commandManager.addCommand(new RemoveByID(this, commandManager, errorHandler));
-        commandManager.addCommand(new Clear(this, errorHandler));
-        commandManager.addCommand(new History(this, commandManager));
-        commandManager.addCommand(new MinByID(this, errorHandler));
-        commandManager.addCommand(new RemoveFirst(this, errorHandler));
-        commandManager.addCommand(new PrintFieldDescendingWeight(this, errorHandler));
-        commandManager.addCommand(new RemoveAllByHead(this, commandManager, errorHandler));
-        commandManager.addCommand(new Exit(this));
-        commandManager.addCommand(new Add(this, commandManager, errorHandler));
-        commandManager.addCommand(new UpdateId(this, commandManager, errorHandler));
-        commandManager.addCommand(new AddIfMax(this, commandManager, errorHandler));
-        commandManager.addCommand(new ExecuteScript(this, commandManager));
 
         while (true) {
-            // Выводим в консоль >> для ввода пользователя
-            out(USER_INPUT_PREFIX);
+            outPrefix();
             INPUT_COMMAND = getNextLine();
             parseInputLine(INPUT_COMMAND);
         }
@@ -48,7 +40,7 @@ public class CommandLine {
     }
 
     public String getNextLine() {
-        if (INPUT_SOURCE == InputSource.COMMAND) {
+        if (inputSource == InputSource.COMMAND) {
             return scanner.nextLine().trim();
         }
         return getNextScriptInstruction();
@@ -77,17 +69,18 @@ public class CommandLine {
         scriptInstructions.remove(0);
         if (scriptInstructions.size() == 0) {
             setInputSource(InputSource.COMMAND);
-            ((ExecuteScript)commandManager.getCommand("execute_script")).clearFields();
+            //TODO убрать строчку ниже
+            ((ExecuteScript) commandManager.getCommand("execute_script")).clearFields();
         }
         return instruction;
     }
 
     public void setInputSource(InputSource mode) {
-        INPUT_SOURCE = mode;
+        inputSource = mode;
     }
 
     public void setUserInputPrefix(String prefix) {
-        USER_INPUT_PREFIX = prefix;
+        userInputPrefix = prefix;
     }
 
     public void showOfflineCommands() {
@@ -99,8 +92,41 @@ public class CommandLine {
                 history                           || print the last 10 commands (without their arguments)""");
     }
 
+    public void commandLineInit() {
+        this.userInputPrefix = account.getLogin() + ">";
+        this.scanner = new Scanner(System.in);
+        this.inputSource = InputSource.COMMAND;
+
+        setUserInputPrefix(userInputPrefix);
+
+        commandManager = new CommandManager(this);
+        ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
+
+        commandManager.addCommand(new Help(this, commandManager));
+        commandManager.addCommand(new Show(this, client, errorHandler));
+        commandManager.addCommand(new Info(this, client, errorHandler));
+        commandManager.addCommand(new RemoveByID(this, client, commandManager, errorHandler));
+        commandManager.addCommand(new Clear(this, client, errorHandler));
+        commandManager.addCommand(new History(this, commandManager));
+        commandManager.addCommand(new MinByID(this, client, errorHandler));
+        commandManager.addCommand(new RemoveFirst(this, client, errorHandler));
+        commandManager.addCommand(new PrintFieldDescendingWeight(this, client, errorHandler));
+        commandManager.addCommand(new RemoveAllByHead(this, client, commandManager, errorHandler));
+        commandManager.addCommand(new Exit(this, client));
+        commandManager.addCommand(new Add(this, client, errorHandler));
+        commandManager.addCommand(new UpdateId(this, client, commandManager, errorHandler));
+        commandManager.addCommand(new AddIfMax(this, client, errorHandler));
+        commandManager.addCommand(new ExecuteScript(this, commandManager));
+    }
+
     public void out(String text) {
         System.out.print(text);
+    }
+
+    public void outPrefix() {
+        String ANSI_GREEN = "\u001b[36m";
+        String ANSI_RESET = "\u001B[0m";
+        System.out.print(ANSI_GREEN + account.getLogin() + ">>" + ANSI_RESET);
     }
 
     public void outLn(String text) {
@@ -117,5 +143,10 @@ public class CommandLine {
         String ANSI_RED = "\u001B[31m";
         String ANSI_RESET = "\u001B[0m";
         System.out.println(ANSI_RED + text + ANSI_RESET);
+    }
+
+    public void showOutLn(String ansiCode, String dragonString){
+        String ANSI_RESET = "\u001B[0m";
+        System.out.println(ansiCode + dragonString + ANSI_RESET);
     }
 }

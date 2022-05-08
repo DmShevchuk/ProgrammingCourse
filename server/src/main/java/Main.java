@@ -2,12 +2,16 @@ import collection.CollectionManager;
 import collection.Dragon;
 import data.FileManager;
 import data.ParserJSON;
+import database.CollectionLoader;
+import database.DbConnector;
+import database.DbManager;
 import run.Server;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -29,12 +33,18 @@ public class Main {
             Logger logger = Logger.getLogger(Main.class.getName());
             FileHandler fh = new FileHandler("./serverLog.log");
             logger.addHandler(fh);
-            logger.log(Level.INFO, "Server started");
 
             CollectionManager collectionManager = CollectionManager.getInstance();
 
+            DbConnector dbConnector = new DbConnector();
+            Connection connection = dbConnector.createConnection();
+            DbManager dbManager = new DbManager(connection);
+
+            logger.log(Level.INFO, "Server started");
+
             try {
-                collectionManager.collectionInit(loadCollection());
+                collectionManager.collectionInit(new CollectionLoader(connection).loadCollection());
+                logger.log(Level.INFO, "Коллекция загружена!");
             } catch (Exception e) {
                 System.out.println("Unable to process input file!");
                 System.err.println(e.getMessage());
@@ -44,7 +54,7 @@ public class Main {
                 // ожидание подключения
                 Socket socket = serverSocket.accept();
                 logger.log(Level.INFO, "Client connected");
-                Thread thread = new Thread(() -> new Server(socket, collectionManager, logger));
+                Thread thread = new Thread(() -> new Server(socket, collectionManager, logger, connection, dbManager));
                 thread.start();
             }
 

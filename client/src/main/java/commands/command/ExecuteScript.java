@@ -23,7 +23,7 @@ public class ExecuteScript extends Command {
     }
 
     @Override
-    public void execute(Client client) {
+    public void execute() {
         addInstructions();
     }
 

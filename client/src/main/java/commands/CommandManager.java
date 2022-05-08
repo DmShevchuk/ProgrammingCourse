@@ -14,11 +14,9 @@ public class CommandManager {
     private final Stack<String> stack = new Stack<>();
     private static String arg = null;
     private final CommandLine commandLine;
-    private final Client client;
 
-    public CommandManager(CommandLine commandLine, Client client) {
+    public CommandManager(CommandLine commandLine) {
         this.commandLine = commandLine;
-        this.client = client;
     }
 
     public void recognizeCommand(String cmd, int argsSize) {
@@ -46,7 +44,7 @@ public class CommandManager {
 
     public void runCommand(String cmd) {
         try {
-            commandHashMap.get(cmd).execute(client);
+            commandHashMap.get(cmd).execute();
             //Запись команды в историю
             stack.push(cmd);
             if (stack.size() == 11) {

@@ -81,8 +81,8 @@ public class DragonCreator {
     private void creatorInit() {
         currentDragon = new Dragon.Builder();
         iterator = prefixes.entrySet().iterator();
-        // Все поля за исключением id и creationDate
-        allFieldsAdded = Dragon.class.getDeclaredFields().length - 2;
+        // Все поля за исключением id, creationDate и ownerId
+        allFieldsAdded = Dragon.class.getDeclaredFields().length - 3;
         nextField();
     }
 

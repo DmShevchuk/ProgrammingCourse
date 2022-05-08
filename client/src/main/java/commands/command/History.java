@@ -17,7 +17,7 @@ public class History extends Command {
     }
 
     @Override
-    public void execute(Client client) {
+    public void execute() {
         Stack<String> commands = commandManager.getStack();
         int size = commands.size();
 
