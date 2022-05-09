@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 
 public class Main {
-    private final static int MAX_THREAD_QUANTITY = 9;
+    private final static int MAX_CONNECTED_USERS = 2;
 
     public static void main(String[] ar) throws IOException {
         ServerSocket serverSocket;
@@ -65,9 +65,11 @@ public class Main {
         CommandManager commandManager = new CommandManager(collectionManager, dbManager);
         ResponseSender responseSender = new ResponseSender();
 
+        int threadQuantity = Thread.getAllStackTraces().keySet().size();
+
         while (true) {
             Socket socket = serverSocket.accept();
-            if (Thread.getAllStackTraces().keySet().size() == MAX_THREAD_QUANTITY) {
+            if (Thread.getAllStackTraces().keySet().size() == threadQuantity + MAX_CONNECTED_USERS) {
                 responseSender.send(new Response(ResponseStatus.FAIL,
                         "Too many clients on the server, please try again later!"), socket);
                 socket.close();

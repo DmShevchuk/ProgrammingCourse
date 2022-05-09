@@ -12,20 +12,6 @@ import java.util.Set;
  */
 
 public class FieldChecker {
-    private Set<Integer> idSet = new HashSet<>();
-
-    public Pair<Boolean, Integer> checkId(Object obj) {
-        try {
-            Integer id = Integer.valueOf(String.valueOf(obj));
-            if (!idSet.contains(id)) {
-                idSet.add(id);
-                return new Pair<>(id > 0, id);
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            return new Pair<>(false, null);
-        }
-    }
 
     /**
      * Поле name не может быть null, Строка не может быть пустой
@@ -50,8 +36,8 @@ public class FieldChecker {
     public Pair<Boolean, Coordinates> checkCoordinates(Object obj) {
         try {
             String coords = (String) obj;
-            Double X = Double.parseDouble(coords.split("\\s")[0]);
-            Double Y = Double.parseDouble(coords.split("\\s")[1]);
+            double X = Double.parseDouble(coords.split("\\s")[0]);
+            double Y = Double.parseDouble(coords.split("\\s")[1]);
             return new Pair<>(X > -972 && Y > -290, new Coordinates(X, Y));
         } catch (Exception e) {
             return new Pair<>(false, null);
@@ -66,7 +52,7 @@ public class FieldChecker {
             return new Pair<>(true, null);
         }
         try {
-            Integer age = Integer.valueOf(String.valueOf(obj));
+            int age = Integer.parseInt(String.valueOf(obj));
             return new Pair<>(age > 0, age);
         } catch (Exception e) {
             return new Pair<>(false, null);
@@ -78,7 +64,7 @@ public class FieldChecker {
      */
     public Pair<Boolean, Long> checkWeight(Object obj) {
         try {
-            Long weight = Long.valueOf(String.valueOf(obj));
+            long weight = Long.parseLong(String.valueOf(obj));
             return new Pair<>(weight > 0, weight);
         } catch (Exception e) {
             return new Pair<>(false, null);
@@ -125,7 +111,7 @@ public class FieldChecker {
         }
 
         try {
-            Long head = Long.valueOf(String.valueOf(obj));
+            long head = Long.parseLong(String.valueOf(obj));
             return new Pair<>(head > 0, new DragonHead(head));
         } catch (Exception e) {
             return new Pair<>(false, null);
