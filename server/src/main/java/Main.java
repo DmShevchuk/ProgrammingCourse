@@ -11,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,12 +55,13 @@ public class Main {
             return;
         }
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
         while (true) {
             // ожидание подключения
             Socket socket = serverSocket.accept();
             logger.log(Level.INFO, "Client connected");
-            Thread thread = new Thread(() -> new Server(socket, collectionManager, logger, connection, dbManager));
-            thread.start();
+            executorService.execute(new Server(socket, collectionManager, logger, connection, dbManager));
         }
     }
 }

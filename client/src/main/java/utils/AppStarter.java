@@ -11,11 +11,11 @@ import java.util.NoSuchElementException;
 public class AppStarter {
     private final InetSocketAddress inetSocketAddress;
 
-    public AppStarter(InetSocketAddress inetSocketAddress){
+    public AppStarter(InetSocketAddress inetSocketAddress) {
         this.inetSocketAddress = inetSocketAddress;
     }
 
-    public void run(){
+    public void run() {
         Client client = new Client(inetSocketAddress);
         Console console = System.console();
         Account account = null;

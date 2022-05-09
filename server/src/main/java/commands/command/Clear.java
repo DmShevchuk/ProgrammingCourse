@@ -31,7 +31,7 @@ public class Clear extends Command {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Response(ResponseStatus.SUCCESS, "Failed to clear collection," +
+        return new Response(ResponseStatus.FAIL, "Failed to clear collection," +
                 " maybe there are no items to delete!");
     }
 }

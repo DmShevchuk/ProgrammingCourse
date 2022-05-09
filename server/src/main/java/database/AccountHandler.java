@@ -41,8 +41,6 @@ public class AccountHandler {
     public Account register(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
-
-        System.out.println("Here!");
         String sqlQuery = "INSERT INTO users (name, password, salt) VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
         String salt = generateSalt();
@@ -60,7 +58,6 @@ public class AccountHandler {
     public Account signIn(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
-        System.out.println(login + password);
         String sqlQuery = "SELECT * FROM users WHERE name = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
         preparedStatement.setString(1, login);

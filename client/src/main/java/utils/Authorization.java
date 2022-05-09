@@ -39,7 +39,7 @@ public class Authorization {
         while (password.length() == 0) {
             password = String.copyValueOf(console.readPassword("Enter password:"));
         }
-        return getAuthResult(new Account(login, password), RequestType.AUTH);
+        return getAuthResult(new Account(login, hashPassword(password)), RequestType.AUTH);
     }
 
     private Account signUp() {

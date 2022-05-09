@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server {
+public class Server implements Runnable {
     private final Socket socket;
     private final CollectionManager collectionManager;
     private final Connection connection;
@@ -25,7 +25,8 @@ public class Server {
     private Account account;
     private final DbManager dbManager;
 
-    public Server(Socket socket, CollectionManager collectionManager, Logger logger, Connection connection,
+    public Server(Socket socket, CollectionManager collectionManager,
+                  Logger logger, Connection connection,
                   DbManager dbManager) {
         this.socket = socket;
         this.collectionManager = collectionManager;
@@ -48,7 +49,6 @@ public class Server {
                     send(runCommand(request), socket);
                     logger.log(Level.INFO, "Execution result sent to the client");
                 } else {
-                    System.out.println("Here!");
                     try {
                         if (request.getRequestType() == RequestType.AUTH) {
                             account = accountHandler.signIn(request.getAccount());
@@ -57,13 +57,11 @@ public class Server {
                         }
                         if (account != null) {
                             send(new Response(ResponseStatus.AUTH_RESULT, account), socket);
-                            System.out.println("Success!");
                         } else {
                             throw new SQLException();
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
-                        System.out.println("Not success!");
+                        logger.log(Level.WARNING, "Failed to run request!");
                         send(new Response(ResponseStatus.AUTH_RESULT, account), socket);
                     }
                 }

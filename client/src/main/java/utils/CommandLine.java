@@ -47,6 +47,8 @@ public class CommandLine {
     }
 
     public void parseInputLine(String line) {
+        if (line.length() == 0){return;}
+
         String[] userCommand = line.split("\\s");
         try {
             commandManager.recognizeCommand(userCommand[0], userCommand.length - 1);
@@ -117,6 +119,7 @@ public class CommandLine {
         commandManager.addCommand(new UpdateId(this, client, commandManager, errorHandler));
         commandManager.addCommand(new AddIfMax(this, client, errorHandler));
         commandManager.addCommand(new ExecuteScript(this, commandManager));
+        commandManager.addCommand(new Logout(this, client));
     }
 
     public void out(String text) {

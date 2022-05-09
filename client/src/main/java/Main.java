@@ -19,23 +19,5 @@ public class Main {
         }
         AppStarter appStarter = new AppStarter(new InetSocketAddress(HOST, PORT));
         appStarter.run();
-
-
-//        Client client = new Client(new InetSocketAddress(HOST, PORT));
-//
-//        CommandLine commandLine = new CommandLine();
-//        try {
-//            client.connect();
-//            System.out.println("Connection established!");
-//        } catch (IOException e) {
-//            System.out.println("Unable to connect to server!");
-//        }
-//
-//        try {
-//
-//            commandLine.run(client);
-//        } catch (NoSuchElementException e) {
-//            System.out.println("Application closed!");
-//        }
     }
 }
