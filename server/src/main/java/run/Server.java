@@ -10,6 +10,10 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+    Класс, реализующий логику работы с подключением пользователя
+**/
+
 public class Server implements Runnable {
     private final Socket socket;
     private final AccountHandler accountHandler;
@@ -29,17 +33,19 @@ public class Server implements Runnable {
         run();
     }
 
+
     public void run() {
         try {
             while (true) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 Request request = (Request) objectInputStream.readObject();
 
-                logger.log(Level.INFO, "New request received");
                 Response response = null;
                 if (request.getRequestType() == RequestType.RUN_COMMAND) {
+                    logger.log(Level.INFO, "New request to run command " + request.getCommandName());
                     response = commandManager.runCommand(request);
                 } else {
+                    logger.log(Level.INFO, "New request to login");
                     Account account = accountHandler.passAuth(request);
                     if (account == null) {
                         response = new Response(ResponseStatus.FAIL, "Unable to login!");

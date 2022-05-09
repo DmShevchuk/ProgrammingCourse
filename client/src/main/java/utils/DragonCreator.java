@@ -13,6 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/*
+Класс, отвечающий за создание объекта Dragon из пользовательского ввода
+**/
+
 public class DragonCreator {
     private final CommandLine commandLine;
     private int allFieldsAdded;
@@ -47,7 +51,7 @@ public class DragonCreator {
                 commandLine.setUserInputPrefix(">>");
                 return null;
             }
-
+            // Пустая строка -> null
             if ("".equals(line)) {
                 line = null;
             }
@@ -70,6 +74,7 @@ public class DragonCreator {
             } else {
                 commandLine.errorOut(String.format("Unable to get %s from %s!", currentField, line));
             }
+            // Возврат к обычному вводу пользователя
             if (allFieldsAdded == 0) {
                 commandLine.setUserInputPrefix(">>");
                 return currentDragon;

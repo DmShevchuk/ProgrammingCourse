@@ -23,6 +23,15 @@ public class Client {
         socketChannel.configureBlocking(false);
     }
 
+    public void refuseConnection() {
+        try {
+            socketChannel.close();
+        } catch (IOException ignored) {
+        }
+
+        resetSocketChannel();
+    }
+
     public void resetSocketChannel() {
         socketChannel = null;
     }

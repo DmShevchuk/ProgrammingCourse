@@ -8,8 +8,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
+/*
+    Класс, отправляющий ответы пользователям
+**/
 public class ResponseSender {
-    public ResponseSender(){}
+    public ResponseSender() {
+    }
 
     public synchronized void send(Response response, Socket socket) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

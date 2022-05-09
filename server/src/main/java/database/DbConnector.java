@@ -7,6 +7,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/*
+    Класс, создающий подключение к БД по параметрам,
+    заданным в resources/dbConfig.properties
+**/
+
 public class DbConnector {
     private final String propFileName;
 

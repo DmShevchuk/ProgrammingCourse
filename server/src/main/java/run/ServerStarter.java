@@ -6,12 +6,18 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.Properties;
 
+/*
+     Класс, запускающий сервер с параметрами,
+     указанными в resources/connection.properties
+**/
+
 public class ServerStarter {
     private final String propFileName;
 
-    public ServerStarter(String propFileName){
+    public ServerStarter(String propFileName) {
         this.propFileName = propFileName;
     }
+
 
     public ServerSocket start() throws IOException {
         Properties properties = new Properties();

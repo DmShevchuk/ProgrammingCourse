@@ -4,6 +4,11 @@ import collection.Dragon;
 
 import java.sql.*;
 
+
+/*
+    Класс, отвечающий за взаимодействие с БД
+**/
+
 public class DbManager {
     private final Connection connection;
 
@@ -11,7 +16,9 @@ public class DbManager {
         this.connection = connection;
     }
 
-
+    /*
+        Добавить дракона в БД
+    **/
     public synchronized int add(Dragon dragon) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO dragons (name, coordinate_x, coordinate_y, creation_date," +
@@ -24,6 +31,11 @@ public class DbManager {
         return -1;
     }
 
+
+    /*
+        Получить последний id из dragons_id_seq, чтобы назначить этот id,
+        который храниться в памяти
+    **/
     public synchronized Integer getLastId() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT last_value FROM dragons_id_seq");
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -34,6 +46,9 @@ public class DbManager {
     }
 
 
+    /*
+        Устанавливает в preparedStatement поля объекта класса Dragon
+     **/
     public PreparedStatement setDragon(Dragon dragon, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, dragon.getName());
         preparedStatement.setFloat(2, dragon.getCoordinates().getX().floatValue());
@@ -58,6 +73,9 @@ public class DbManager {
     }
 
 
+    /*
+        Очистка тех элементов коллекции, которые принадлежат указанному пользователю
+     **/
     public synchronized int clearCollection(int userId) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE owner_id = ?");
@@ -67,6 +85,9 @@ public class DbManager {
     }
 
 
+    /*
+        Удаляет дракона по размеру головы
+     **/
     public synchronized int removeByHead(int userId, Long dragonHead) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE owner_id = ? AND dragon_head = ?");
@@ -75,6 +96,10 @@ public class DbManager {
         return preparedStatement.executeUpdate();
     }
 
+
+    /*
+        Удаляет дракона по id
+     **/
     public synchronized int removeById(int userId, int dragonId) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE owner_id = ? AND id = ?");
@@ -83,6 +108,10 @@ public class DbManager {
         return preparedStatement.executeUpdate();
     }
 
+
+    /*
+        Обновить дракона, хранящегося в БД
+     **/
     public synchronized int updateId(Dragon dragon) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("UPDATE dragons" +
@@ -94,6 +123,14 @@ public class DbManager {
         return preparedStatement.executeUpdate();
     }
 
+
+    /*
+        Удалить первый элемент в коллекции
+        !ВАЖНО! Первый элемент коллекции - дракон, имеющий минимальный вес !ВАЖНО!
+        Поэтому:
+        @param firstId - id дракона с минимальным весом
+        @param userId - id пользователя, отправившего запрос
+     **/
     public synchronized int removeFirst(int firstId, int userId) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE id = ? AND owner_id = ?");

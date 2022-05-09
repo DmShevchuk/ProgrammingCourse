@@ -14,6 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
+/*
+    Класс, отвечающий за вход и регистрацию пользователей
+**/
+
 public class AccountHandler {
     private final Connection connection;
 
@@ -21,7 +25,10 @@ public class AccountHandler {
         this.connection = connection;
     }
 
-    public Account passAuth(Request request) {
+    /*
+        Метод, инициирующий процесс входа/регистрации
+    **/
+    public synchronized Account passAuth(Request request) {
         try {
             if (request.getRequestType() == RequestType.AUTH) {
                 return signIn(request.getAccount());
@@ -33,12 +40,20 @@ public class AccountHandler {
 
     }
 
+    /*
+        Генерация "соли"
+        Она хранится как отдельное поле в таблице users
+    **/
     private String generateSalt() {
         byte[] array = new byte[16];
         new Random().nextBytes(array);
         return new String(array, StandardCharsets.UTF_8);
     }
 
+    /*
+        Хеширование пароля по алгоритму SHA-224
+        и добавление к нему "перца"
+    **/
     private String hashPassword(String password, String salt) {
         String pepper = "AxmoOplam-K01LSla";
         try {
@@ -52,6 +67,11 @@ public class AccountHandler {
         return null;
     }
 
+    /*
+        Регистрация пользователя
+        В конце вызов #signIn(Account account),
+        чтобы получить id аккаунта, которое назначается БД
+    **/
     public Account register(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
@@ -70,6 +90,9 @@ public class AccountHandler {
         return signIn(new Account(login, password));
     }
 
+    /*
+        Вход в аккаунт
+    **/
     public Account signIn(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
