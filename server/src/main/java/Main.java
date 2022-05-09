@@ -16,7 +16,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,17 +43,16 @@ public class Main {
                     .getAbsolutePath();
             connection = new DbConnector(propPath).createConnection();
         } catch (SQLException e) {
-            System.out.printf("Unable to connect to database %s!", e.getMessage());
+            System.out.println("Unable to connect to database," +
+                    " check host (../resources/dbConfig.properties) availability!");
             return;
         }
 
+        Logger logger = Logger.getLogger(Main.class.getName());
+        logger.log(Level.INFO, "Server is started, connection to database is established!");
+
         CollectionManager collectionManager = CollectionManager.getInstance();
         DbManager dbManager = new DbManager(connection);
-
-        Logger logger = Logger.getLogger(Main.class.getName());
-        FileHandler fh = new FileHandler("./serverLog.log");
-        logger.addHandler(fh);
-        logger.log(Level.INFO, "Server is started, connection to database is established!");
 
         try {
             CollectionLoader loader = new CollectionLoader(connection);
@@ -65,6 +63,7 @@ public class Main {
             logger.log(Level.WARNING, "Unable to load collection!");
             return;
         }
+
         AccountHandler accountHandler = new AccountHandler(connection);
         CommandManager commandManager = new CommandManager(collectionManager, dbManager);
         ResponseSender responseSender = new ResponseSender();

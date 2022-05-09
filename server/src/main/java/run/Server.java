@@ -21,7 +21,8 @@ public class Server implements Runnable {
     private final CommandManager commandManager;
     private final ResponseSender responseSender;
 
-    public Server(Socket socket, Logger logger,
+    public Server(Socket socket,
+                  Logger logger,
                   AccountHandler accountHandler,
                   CommandManager commandManager,
                   ResponseSender responseSender) {
@@ -40,7 +41,7 @@ public class Server implements Runnable {
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 Request request = (Request) objectInputStream.readObject();
 
-                Response response = null;
+                Response response;
                 if (request.getRequestType() == RequestType.RUN_COMMAND) {
                     logger.log(Level.INFO, "New request to run command " + request.getCommandName());
                     response = commandManager.runCommand(request);
@@ -53,14 +54,13 @@ public class Server implements Runnable {
                         response = new Response(ResponseStatus.AUTH_RESULT, account);
                     }
                 }
-                responseSender.send(response, socket);
+                new Thread(() -> responseSender.send(response, socket)).start();
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.INFO, "Client disconnected!");
             try {
                 socket.close();
-            } catch (IOException ignore) {
-            }
+            } catch (IOException ignore) {}
         }
     }
 
