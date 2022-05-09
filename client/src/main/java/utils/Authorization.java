@@ -56,18 +56,19 @@ public class Authorization {
 
     }
 
-    private String getPasswordConfirm(){
+    private String getPasswordConfirm() {
         String password = "";
         String passwordConfirm = "";
         while (password.length() == 0) {
             password = String.copyValueOf(console.readPassword("Enter password:"));
         }
 
-        while (passwordConfirm.length() == 0){
-            passwordConfirm = String.copyValueOf(console.readPassword("Enter password again:"));;
+        while (passwordConfirm.length() == 0) {
+            passwordConfirm = String.copyValueOf(console.readPassword("Enter password again:"));
+            ;
         }
 
-        if(password.equals(passwordConfirm)){
+        if (password.equals(passwordConfirm)) {
             return hashPassword(password);
         }
 
@@ -87,16 +88,16 @@ public class Authorization {
         return null;
     }
 
-    private Account getAuthResult(Account account, RequestType requestType){
+    private Account getAuthResult(Account account, RequestType requestType) {
         try {
             client.send(new Request.Builder().setRequestType(requestType).setAccount(account).build());
             Response response = client.receive();
             if (response.getAccount() != null) {
                 System.out.println("Login Successful!");
                 return response.getAccount();
-            }else {
-                System.out.println("Failed to login!");
             }
+            System.out.println(response.getResult());
+            client.resetSocketChannel();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Problems connecting to the server!");
         }

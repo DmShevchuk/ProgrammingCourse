@@ -19,7 +19,6 @@ public class ServerStarter {
 
         String host = properties.getProperty("host");
         int port = Integer.parseInt(properties.getProperty("port"));
-
         InetAddress inetAddress;
         inetAddress = InetAddress.getByName(host);
         return new ServerSocket(port, 0, inetAddress);

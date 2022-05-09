@@ -24,11 +24,7 @@ public class Client {
     }
 
     public void resetSocketChannel() {
-        try {
-            socketChannel.close();
-        } catch (IOException | NullPointerException e) {
-
-        }
+        socketChannel = null;
     }
 
     public void setAccount(Account account) {

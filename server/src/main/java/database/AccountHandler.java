@@ -1,6 +1,8 @@
 package database;
 
 import interaction.Account;
+import interaction.Request;
+import interaction.RequestType;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +19,18 @@ public class AccountHandler {
 
     public AccountHandler(Connection connection) {
         this.connection = connection;
+    }
+
+    public Account passAuth(Request request) {
+        try {
+            if (request.getRequestType() == RequestType.AUTH) {
+                return signIn(request.getAccount());
+            }
+            return register(request.getAccount());
+        } catch (SQLException e) {
+            return null;
+        }
+
     }
 
     private String generateSalt() {
@@ -41,27 +55,30 @@ public class AccountHandler {
     public Account register(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
-        String sqlQuery = "INSERT INTO users (name, password, salt) VALUES (?, ?, ?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("INSERT INTO users (name, password, salt) VALUES (?, ?, ?)");
+
         String salt = generateSalt();
         String hashedPassword = hashPassword(password, salt);
-        //TODO свое исключение
-        if (hashedPassword == null) throw new RuntimeException();
+
         preparedStatement.setString(1, login);
         preparedStatement.setString(2, hashedPassword);
         preparedStatement.setString(3, salt);
+
         preparedStatement.executeUpdate();
-        preparedStatement.close();
+
         return signIn(new Account(login, password));
     }
 
     public Account signIn(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
-        String sqlQuery = "SELECT * FROM users WHERE name = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM users WHERE name = ?");
+
         preparedStatement.setString(1, login);
         ResultSet resultSet = preparedStatement.executeQuery();
+
         if (resultSet.next()) {
             int id = resultSet.getInt("id");
             String hashedPassword = resultSet.getString("password");
@@ -70,6 +87,7 @@ public class AccountHandler {
                 return new Account(id, login, password);
             }
         }
+
         return null;
     }
 }
