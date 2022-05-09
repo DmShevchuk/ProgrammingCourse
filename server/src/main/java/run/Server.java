@@ -57,6 +57,10 @@ public class Server implements Runnable {
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.INFO, "Client disconnected!");
+            try {
+                socket.close();
+            } catch (IOException ignore) {
+            }
         }
     }
 

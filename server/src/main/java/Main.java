@@ -28,6 +28,7 @@ public class Main {
         ServerSocket serverSocket;
         Connection connection;
 
+        // Запуск сервера
         try {
             String propPath = new File("server/src/main/resources/connection.properties")
                     .getAbsolutePath();
@@ -37,6 +38,7 @@ public class Main {
             return;
         }
 
+        // Подключение к БД
         try {
             String propPath = new File("server/src/main/resources/dbConfig.properties")
                     .getAbsolutePath();
@@ -55,7 +57,9 @@ public class Main {
         logger.log(Level.INFO, "Server is started, connection to database is established!");
 
         try {
-            collectionManager.collectionInit(new CollectionLoader(connection).loadCollection());
+            CollectionLoader loader = new CollectionLoader(connection);
+            loader.initializeTables();
+            collectionManager.collectionInit(loader.loadCollection());
             logger.log(Level.INFO, "Collection loaded!");
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Unable to load collection!");

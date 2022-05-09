@@ -5,10 +5,7 @@ import collection.Dragon;
 import collection.DragonHead;
 import collection.DragonType;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 
 /*
@@ -58,5 +55,39 @@ public class CollectionLoader {
         builder.setOwnerId(resultSet.getInt("owner_id"));
 
         return builder.build();
+    }
+
+
+    /*
+        SQL-скрипты, инициализирующие таблицы Dragons и Users
+        В случае, если таких еще нет
+    **/
+    public void initializeTables() throws SQLException {
+        PreparedStatement createUsersTable = connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS Users(" +
+                        " id SERIAL UNIQUE PRIMARY KEY," +
+                        " name VARCHAR UNIQUE NOT NULL," +
+                        " password VARCHAR NOT NULL," +
+                        " salt VARCHAR NOT NULL);"
+        );
+        createUsersTable.executeUpdate();
+
+        PreparedStatement createDragonTable = connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS Dragons(" +
+                        "    id SERIAL UNIQUE PRIMARY KEY," +
+                        "    name VARCHAR NOT NULL," +
+                        "    coordinate_x FLOAT NOT NULL CHECK(coordinate_x > -972)," +
+                        "    coordinate_y FLOAT NOT NULL CHECK(coordinate_y > -290)," +
+                        "    creation_date DATE NOT NULL," +
+                        "    age INTEGER CHECK (age > 0)," +
+                        "    weight BIGINT CHECK (weight > 0)," +
+                        "    speaking BOOLEAN NOT NULL," +
+                        "    type VARCHAR CHECK(type = 'WATER' OR type = 'UNDERGROUND' OR type = 'AIR' OR type = 'FIRE')," +
+                        "    dragon_head BIGINT NOT NULL," +
+                        "    owner_id INTEGER NOT NULL," +
+                        "    FOREIGN KEY (owner_id) REFERENCES Users (id)" +
+                        ");"
+        );
+        createDragonTable.executeUpdate();
     }
 }
