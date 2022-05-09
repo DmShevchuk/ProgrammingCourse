@@ -19,6 +19,6 @@ public class Show extends Command {
         if (collectionManager.getCollectionSize() == 0) {
             return new Response(ResponseStatus.FAIL, "Collection is empty!");
         }
-        return new Response(ResponseStatus.INFO, collectionManager.getCOLLECTION());
+        return new Response(ResponseStatus.INFO, collectionManager.getCollection());
     }
 }

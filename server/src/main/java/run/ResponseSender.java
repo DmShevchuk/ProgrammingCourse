@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 public class ResponseSender {
     public ResponseSender(){}
 
-    public void send(Response response, Socket socket) throws IOException {
+    public synchronized void send(Response response, Socket socket) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
