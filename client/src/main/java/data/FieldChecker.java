@@ -13,6 +13,35 @@ import java.util.Set;
 
 public class FieldChecker {
 
+    public Pair<Boolean, ?> checkField(String fName, String value){
+        switch (fName){
+            case "name" -> {
+                return checkName(value);
+            }
+            case "coordinates" -> {
+                return checkCoordinates(value);
+            }
+            case "age" -> {
+                return checkAge(value);
+            }
+            case "weight" -> {
+                return checkWeight(value);
+            }
+            case "speaking" -> {
+                return checkSpeaking(value);
+            }
+            case "type" -> {
+                return checkType(value);
+            }
+            case "head" -> {
+                return checkHead(value);
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
     /**
      * Поле name не может быть null, Строка не может быть пустой
      * {@link collection.Dragon}

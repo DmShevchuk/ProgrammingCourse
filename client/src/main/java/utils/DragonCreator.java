@@ -22,7 +22,6 @@ public class DragonCreator {
     private int allFieldsAdded;
     private final FieldChecker fieldChecker = new FieldChecker();
     private final Map<String, String> prefixes = new LinkedHashMap<>();
-    private final Map<String, Function<Object, Pair>> checker = new HashMap<>();
     private String currentField;
     private Dragon.Builder currentDragon;
     private Iterator<Map.Entry<String, String>> iterator;
@@ -39,7 +38,6 @@ public class DragonCreator {
         prefixes.put("head", "Enter the size of the dragon's head:");
 
         creatorInit();
-        mapInit();
     }
 
     public Dragon.Builder getNewDragon() {
@@ -56,8 +54,7 @@ public class DragonCreator {
                 line = null;
             }
 
-            Function<Object, Pair> func = checker.get(currentField);
-            Pair result = func.apply(line);
+            Pair<Boolean, ?> result = fieldChecker.checkField(currentField, line);
 
             if (result.getFirst()) {
                 switch (currentField) {
@@ -95,15 +92,4 @@ public class DragonCreator {
         currentField = iterator.next().getKey();
         commandLine.setUserInputPrefix(prefixes.get(currentField));
     }
-
-    private void mapInit() {
-        checker.put("name", fieldChecker::checkName);
-        checker.put("coordinates", fieldChecker::checkCoordinates);
-        checker.put("age", fieldChecker::checkAge);
-        checker.put("weight", fieldChecker::checkWeight);
-        checker.put("speaking", fieldChecker::checkSpeaking);
-        checker.put("type", fieldChecker::checkType);
-        checker.put("head", fieldChecker::checkHead);
-    }
-
 }
