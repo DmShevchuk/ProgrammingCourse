@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 
 public class UpdateId extends Command {
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private final DbManager dbManager;
 
     public UpdateId(CollectionManager collectionManager, DbManager dbManager) {

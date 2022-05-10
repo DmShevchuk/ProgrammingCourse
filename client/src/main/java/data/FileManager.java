@@ -16,7 +16,7 @@ public class FileManager {
     }
 
     public String read(String fileName) {
-        String fileContent = "";
+        StringBuilder fileContent = new StringBuilder();
         try {
             InputStream inputStream = new FileInputStream(fileName);
             Reader inputStreamReader = new InputStreamReader(inputStream);
@@ -25,12 +25,12 @@ public class FileManager {
 
             while (data != -1) {
                 char theChar = (char) data;
-                fileContent += theChar;
+                fileContent.append(theChar);
                 data = inputStreamReader.read();
             }
 
             inputStreamReader.close();
-            return fileContent;
+            return fileContent.toString();
         } catch (IOException e) {
             commandLine.errorOut(String.format("Problems reading the file %s!", fileName));
             return null;

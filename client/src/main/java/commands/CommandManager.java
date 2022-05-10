@@ -1,8 +1,8 @@
 package commands;
 
+import commands.command.ExecuteScript;
 import exceptions.IncorrectArgQuantityException;
 import exceptions.IncorrectCommandException;
-import run.Client;
 import utils.CommandLine;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class CommandManager {
     private final HashMap<String, Command> commandHashMap = new HashMap<>();
     private final Stack<String> stack = new Stack<>();
-    private static String arg = null;
+    private String arg = null;
     private final CommandLine commandLine;
 
     public CommandManager(CommandLine commandLine) {
@@ -35,11 +35,8 @@ public class CommandManager {
         }
     }
 
-    public Command getCommand(String cmd) {
-        if (commandHashMap.containsKey(cmd)) {
-            return commandHashMap.get(cmd);
-        }
-        return null;
+    public ExecuteScript getExecuteScript() {
+        return (ExecuteScript) commandHashMap.get("execute_script");
     }
 
     public void runCommand(String cmd) {

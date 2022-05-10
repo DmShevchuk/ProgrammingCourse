@@ -80,10 +80,8 @@ public class DbManager {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("DELETE FROM dragons WHERE owner_id = ?");
         preparedStatement.setInt(1, userId);
-        int changedLines = preparedStatement.executeUpdate();
-        return changedLines;
+        return preparedStatement.executeUpdate();
     }
-
 
     /*
         Удаляет дракона по размеру головы

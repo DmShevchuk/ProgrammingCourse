@@ -11,7 +11,6 @@ import run.ServerErrorHandler;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//TODO красивую таблицу вывода
 
 public class CommandLine {
     private final Client client;
@@ -47,7 +46,9 @@ public class CommandLine {
     }
 
     public void parseInputLine(String line) {
-        if (line.length() == 0){return;}
+        if (line.length() == 0) {
+            return;
+        }
 
         String[] userCommand = line.split("\\s");
         try {
@@ -71,8 +72,7 @@ public class CommandLine {
         scriptInstructions.remove(0);
         if (scriptInstructions.size() == 0) {
             setInputSource(InputSource.COMMAND);
-            //TODO убрать строчку ниже
-            ((ExecuteScript) commandManager.getCommand("execute_script")).clearFields();
+            commandManager.getExecuteScript().clearFields();
         }
         return instruction;
     }
@@ -148,7 +148,7 @@ public class CommandLine {
         System.out.println(ANSI_RED + text + ANSI_RESET);
     }
 
-    public void showOutLn(String ansiCode, String dragonString){
+    public void showOutLn(String ansiCode, String dragonString) {
         String ANSI_RESET = "\u001B[0m";
         System.out.println(ansiCode + dragonString + ANSI_RESET);
     }

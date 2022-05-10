@@ -24,11 +24,7 @@ public class Client {
     }
 
     public void refuseConnection() {
-        try {
-            socketChannel.close();
-        } catch (IOException ignored) {
-        }
-
+        try {socketChannel.close();} catch (IOException ignored) {}
         resetSocketChannel();
     }
 

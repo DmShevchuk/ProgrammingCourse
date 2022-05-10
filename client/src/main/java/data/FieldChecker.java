@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class FieldChecker {
 
-    public Pair<Boolean, ?> checkField(String fName, String value){
+    public Pair<Boolean, ?> checkField(String fName, Object value){
         switch (fName){
             case "name" -> {
                 return checkName(value);

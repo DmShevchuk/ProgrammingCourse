@@ -35,8 +35,10 @@ public class Show extends Command {
             if (response != null) {
                 LinkedList<Dragon> dragonLinkedList = response.getDragonList();
                 for(Dragon d: dragonLinkedList){
+                    // Вывод дракона белым, он если принадлежит текущему пользователю
                     if(d.getOwnerId().equals(client.getAccount().getId())){
                         commandLine.showOutLn("\u001b[37;1m", d.toString());
+                        // Иначе серым
                     }else{
                         commandLine.showOutLn("\u001b[30;1m", d.toString());
                     }

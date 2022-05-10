@@ -6,8 +6,7 @@ import interaction.Response;
 
 public abstract class Command {
 
-    protected Command(CollectionManager collectionManager) {
-    }
+    protected Command(CollectionManager collectionManager) {}
 
     public abstract Response execute(Request request);
 }

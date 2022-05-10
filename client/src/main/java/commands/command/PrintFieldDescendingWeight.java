@@ -39,10 +39,10 @@ public class PrintFieldDescendingWeight extends Command {
 
                 AtomicInteger index = new AtomicInteger();
                 dragonLinkedList.
-                        forEach(dragon ->
-                                commandLine.outLn
-                                        (String.format("%d)%s - %d kg", index.incrementAndGet(), dragon.getName(),
-                                                dragon.getWeight())));
+                        forEach(dragon -> commandLine.outLn(String.format("%d)%s - %d kg",
+                                        index.incrementAndGet(),
+                                        dragon.getName(),
+                                        dragon.getWeight())));
             }
         } catch (IOException e) {
             errorHandler.handleServerError();

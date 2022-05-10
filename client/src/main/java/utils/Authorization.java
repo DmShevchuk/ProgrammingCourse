@@ -65,7 +65,6 @@ public class Authorization {
 
         while (passwordConfirm.length() == 0) {
             passwordConfirm = String.copyValueOf(console.readPassword("Enter password again:"));
-            ;
         }
 
         if (password.equals(passwordConfirm)) {
