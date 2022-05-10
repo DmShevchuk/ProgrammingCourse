@@ -20,6 +20,7 @@ import java.util.Random;
 
 public class AccountHandler {
     private final Connection connection;
+    private volatile int  connectedAccounts = 0;
 
     public AccountHandler(Connection connection) {
         this.connection = connection;
@@ -112,5 +113,13 @@ public class AccountHandler {
         }
 
         return null;
+    }
+
+    public synchronized void setConnectedAccounts(int val){
+        connectedAccounts += val;
+    }
+
+    public synchronized int getConnectedAccounts(){
+        return connectedAccounts;
     }
 }

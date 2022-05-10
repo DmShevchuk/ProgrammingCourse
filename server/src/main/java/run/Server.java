@@ -7,6 +7,8 @@ import interaction.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +38,7 @@ public class Server implements Runnable {
 
 
     public void run() {
+        ExecutorService executor = Executors.newCachedThreadPool();
         try {
             while (true) {
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -54,13 +57,16 @@ public class Server implements Runnable {
                         response = new Response(ResponseStatus.AUTH_RESULT, account);
                     }
                 }
-                new Thread(() -> responseSender.send(response, socket)).start();
+                try {
+                    executor.execute(responseSender.send(response, socket));
+                }catch (NullPointerException ignored){}
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.INFO, "Client disconnected!");
+            accountHandler.setConnectedAccounts(-1);
             try {
                 socket.close();
-            } catch (IOException ignore) {}
+            } catch (IOException ignored) {}
         }
     }
 

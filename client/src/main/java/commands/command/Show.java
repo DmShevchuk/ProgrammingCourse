@@ -38,7 +38,7 @@ public class Show extends Command {
                     // Вывод дракона белым, он если принадлежит текущему пользователю
                     if(d.getOwnerId().equals(client.getAccount().getId())){
                         commandLine.showOutLn("\u001b[37;1m", d.toString());
-                        // Иначе серым
+                        // В другом случае серым
                     }else{
                         commandLine.showOutLn("\u001b[30;1m", d.toString());
                     }

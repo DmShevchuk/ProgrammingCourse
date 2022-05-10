@@ -68,17 +68,16 @@ public class Main {
         CommandManager commandManager = new CommandManager(collectionManager, dbManager);
         ResponseSender responseSender = new ResponseSender();
 
-        int threadQuantity = Thread.getAllStackTraces().keySet().size();
-
         while (true) {
             Socket socket = serverSocket.accept();
-            if (Thread.getAllStackTraces().keySet().size() == threadQuantity + MAX_CONNECTED_USERS) {
+            if (accountHandler.getConnectedAccounts() == MAX_CONNECTED_USERS) {
                 responseSender.send(new Response(ResponseStatus.FAIL,
                         "Too many clients on the server, please try again later!"), socket);
                 socket.close();
             } else {
                 logger.log(Level.INFO, "Client connected");
                 new Thread(() -> new Server(socket, logger, accountHandler, commandManager, responseSender)).start();
+                accountHandler.setConnectedAccounts(+1);
             }
         }
     }

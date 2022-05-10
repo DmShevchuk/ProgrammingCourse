@@ -16,17 +16,12 @@ public class ResponseSender {
     public ResponseSender() {
     }
 
-    public synchronized void send(Response response, Socket socket){
+    public synchronized Runnable send(Response response, Socket socket) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(response);
-            socket.getOutputStream().write(ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array());
-            byteArrayOutputStream.writeTo(socket.getOutputStream());
-        } catch (IOException e) {
-            try {socket.close();}catch (IOException ignored){}
-        }
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(response);
+        socket.getOutputStream().write(ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array());
+        byteArrayOutputStream.writeTo(socket.getOutputStream());
+        return null;
     }
-
 }

@@ -119,7 +119,7 @@ public class CommandLine {
         commandManager.addCommand(new UpdateId(this, client, commandManager, errorHandler));
         commandManager.addCommand(new AddIfMax(this, client, errorHandler));
         commandManager.addCommand(new ExecuteScript(this, commandManager));
-        commandManager.addCommand(new Logout(this, client));
+//        commandManager.addCommand(new Logout(this, client));
     }
 
     public void out(String text) {
