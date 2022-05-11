@@ -115,15 +115,11 @@ public class AccountHandler {
         return null;
     }
 
-    public void setConnectedAccounts(int val) {
-        synchronized (connectedAccounts) {
-            connectedAccounts += val;
-        }
+    public synchronized void setConnectedAccounts(int val) {
+        connectedAccounts += val;
     }
 
     public synchronized int getConnectedAccounts() {
-        synchronized (connectedAccounts) {
-            return connectedAccounts;
-        }
+        return connectedAccounts;
     }
 }

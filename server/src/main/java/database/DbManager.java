@@ -23,28 +23,16 @@ public class DbManager {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO dragons (name, coordinate_x, coordinate_y, creation_date," +
                         " age, weight, speaking, type, dragon_head, owner_id) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+                        "RETURNING id");
         preparedStatement = setDragon(dragon, preparedStatement);
-        if (preparedStatement.executeUpdate() == 1) {
-            return getLastId();
+        preparedStatement.execute();
+        ResultSet lastId = preparedStatement.getResultSet();
+        if (lastId.next()) {
+            return lastId.getInt(1);
         }
         return -1;
     }
-
-
-    /*
-        Получить последний id из dragons_id_seq, чтобы назначить этот id,
-        который храниться в памяти
-    **/
-    public synchronized Integer getLastId() throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT last_value FROM dragons_id_seq");
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            return resultSet.getInt("last_value");
-        }
-        return null;
-    }
-
 
     /*
         Устанавливает в preparedStatement поля объекта класса Dragon
