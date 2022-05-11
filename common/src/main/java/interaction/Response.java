@@ -10,6 +10,7 @@ public class Response implements Serializable {
     private String result;
     private Dragon dragon;
     private LinkedList<Dragon> dragonList;
+    private Account account;
 
     public Response(ResponseStatus status, String result) {
         this.status = status;
@@ -26,6 +27,11 @@ public class Response implements Serializable {
         this.dragonList = dragonList;
     }
 
+    public Response(ResponseStatus status, Account account) {
+        this.status = status;
+        this.account = account;
+    }
+
     public ResponseStatus getStatus() {
         return status;
     }
@@ -40,5 +46,9 @@ public class Response implements Serializable {
 
     public Dragon getDragon() {
         return dragon;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 }

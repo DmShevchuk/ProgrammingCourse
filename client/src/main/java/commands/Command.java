@@ -16,7 +16,7 @@ public abstract class Command {
         this.commandLine = commandLine;
     }
 
-    public abstract void execute(Client client);
+    public abstract void execute();
 
     public String getName() {
         return name;

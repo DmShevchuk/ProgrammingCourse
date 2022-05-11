@@ -17,14 +17,14 @@ public class History extends Command {
     }
 
     @Override
-    public void execute(Client client) {
+    public void execute() {
         Stack<String> commands = commandManager.getStack();
         int size = commands.size();
 
-        String toReturn = String.format("Latest commands (%d):\n", size);
+        StringBuilder toReturn = new StringBuilder(String.format("Latest commands (%d):\n", size));
         for (String cmd : commands) {
-            toReturn += cmd + "\n";
+            toReturn.append(cmd).append("\n");
         }
-        commandLine.errorOut(size == 0 ? "Command list is empty!" : toReturn.strip());
+        commandLine.errorOut(size == 0 ? "Command list is empty!" : toReturn.toString().strip());
     }
 }

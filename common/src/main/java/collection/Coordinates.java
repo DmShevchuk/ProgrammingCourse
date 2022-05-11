@@ -11,8 +11,8 @@ public class Coordinates implements Serializable {
     private final Double y; //Значение поля должно быть больше -290, Поле не может быть null
 
     public Coordinates(Double x, Double y) {
-        this.x = x;
-        this.y = y;
+        this.x = round(x, 2);
+        this.y = round(y, 2);
     }
 
     public Double getX() {
@@ -21,6 +21,11 @@ public class Coordinates implements Serializable {
 
     public Double getY() {
         return y;
+    }
+
+    private double round(double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
     }
 
     @Override

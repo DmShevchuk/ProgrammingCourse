@@ -17,7 +17,7 @@ public class Help extends Command {
     }
 
     @Override
-    public void execute(Client client) {
+    public void execute() {
         // Получение HasMap<Команда, Описание>
         Map<String, String> commandsInfo = commandManager.getCommandsInfo();
 

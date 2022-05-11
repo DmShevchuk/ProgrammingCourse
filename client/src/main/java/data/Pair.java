@@ -9,8 +9,8 @@ public class Pair<T1, T2> {
         this.second = second;
     }
 
-    public T1 getFirst() {
-        return first;
+    public boolean getFirst() {
+        return (boolean) first;
     }
 
     public T2 getSecond() {

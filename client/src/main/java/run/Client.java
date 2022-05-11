@@ -1,29 +1,47 @@
 package run;
 
+import interaction.Account;
 import interaction.Request;
 import interaction.Response;
 
-import java.net.*;
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class Client {
-    private final SocketAddress socketAddress;
+    private final InetSocketAddress inetSocketAddress;
     private SocketChannel socketChannel;
+    private Account account;
 
-
-    public Client(SocketAddress socketAddress) {
-        this.socketAddress = socketAddress;
+    public Client(InetSocketAddress socketAddress) {
+        this.inetSocketAddress = socketAddress;
     }
 
     public void connect() throws IOException {
-        socketChannel = SocketChannel.open(socketAddress);
+        socketChannel = SocketChannel.open(inetSocketAddress);
         socketChannel.configureBlocking(false);
+    }
+
+    public void refuseConnection() {
+        try {socketChannel.close();} catch (IOException ignored) {}
+        resetSocketChannel();
     }
 
     public void resetSocketChannel() {
         socketChannel = null;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
     }
 
     public void send(Request request) throws IOException {

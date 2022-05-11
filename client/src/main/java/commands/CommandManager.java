@@ -1,6 +1,8 @@
 package commands;
 
-import run.Client;
+import commands.command.ExecuteScript;
+import exceptions.IncorrectArgQuantityException;
+import exceptions.IncorrectCommandException;
 import utils.CommandLine;
 
 import java.util.HashMap;
@@ -8,15 +10,23 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 public class CommandManager {
-    private static final HashMap<String, Command> commandHashMap = new HashMap<>();
-    private static final Stack<String> STACK = new Stack<>();
-    private static String ARG = null;
+    private final HashMap<String, Command> commandHashMap = new HashMap<>();
+    private final Stack<String> stack = new Stack<>();
+    private String arg = null;
     private final CommandLine commandLine;
-    private final Client client;
 
-    public CommandManager(CommandLine commandLine, Client client) {
+    public CommandManager(CommandLine commandLine) {
         this.commandLine = commandLine;
-        this.client = client;
+    }
+
+    public void recognizeCommand(String cmd, int argsSize) {
+        if (!commandHashMap.containsKey(cmd)) {
+            throw new IncorrectCommandException(String.format("Failed to recognize command <%s>!", cmd));
+        }
+        if (argsSize != commandHashMap.get(cmd).getArgQuantity()) {
+            throw new IncorrectArgQuantityException(String.format("Command <%s> takes arguments: %d, arguments supplied: %d!",
+                    cmd, commandHashMap.get(cmd).getArgQuantity(), argsSize));
+        }
     }
 
     public void addCommand(Command command) {
@@ -25,33 +35,17 @@ public class CommandManager {
         }
     }
 
-    public Command getCommand(String cmd) {
-        if (commandHashMap.containsKey(cmd)) {
-            return commandHashMap.get(cmd);
-        }
-        return null;
-    }
-
-    public boolean checkCommand(String cmd, int argsSize) {
-        if (!commandHashMap.containsKey(cmd)) {
-            commandLine.errorOut(String.format("Failed to recognize command <%s>!", cmd));
-            return false;
-        }
-        if ((argsSize - 1) != commandHashMap.get(cmd).getArgQuantity()) {
-            commandLine.errorOut(String.format("Command <%s> takes arguments: %d, arguments supplied: %d!",
-                    cmd, commandHashMap.get(cmd).getArgQuantity(), argsSize - 1));
-            return false;
-        }
-        return true;
+    public ExecuteScript getExecuteScript() {
+        return (ExecuteScript) commandHashMap.get("execute_script");
     }
 
     public void runCommand(String cmd) {
         try {
-            commandHashMap.get(cmd).execute(client);
+            commandHashMap.get(cmd).execute();
             //Запись команды в историю
-            STACK.push(cmd);
-            if (STACK.size() == 11) {
-                STACK.remove(0);
+            stack.push(cmd);
+            if (stack.size() == 11) {
+                stack.remove(0);
             }
 
         } catch (Exception e) {
@@ -61,20 +55,20 @@ public class CommandManager {
         }
     }
 
-    public String getARG() {
-        return ARG;
+    public String getArg() {
+        return arg;
     }
 
-    public void setARG(String arg) {
-        ARG = arg;
+    public void setArg(String arg) {
+        this.arg = arg;
     }
 
     public void resetArg() {
-        ARG = null;
+        arg = null;
     }
 
     public Stack<String> getStack() {
-        return (Stack<String>) STACK.clone();
+        return (Stack<String>) stack.clone();
     }
 
     public TreeMap<String, String> getCommandsInfo() {

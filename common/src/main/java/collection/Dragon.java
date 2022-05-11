@@ -18,6 +18,7 @@ public class Dragon implements Comparable<Dragon>, Serializable {
     private Boolean speaking; //Поле не может быть null
     private DragonType type; //Поле может быть null
     private DragonHead head;
+    private Integer ownerId;
 
     private Dragon(Builder builder) {
         this.id = builder.id;
@@ -29,6 +30,7 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         this.speaking = builder.speaking;
         this.type = builder.type;
         this.head = builder.head;
+        this.ownerId = builder.ownerId;
     }
 
     public Integer getId() {
@@ -67,6 +69,10 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         return head;
     }
 
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -95,9 +101,13 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         this.head = head;
     }
 
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
     @Override
     public int compareTo(Dragon o) {
-        return this.age.compareTo(o.getAge());
+        return this.weight.compareTo(o.getWeight());
     }
 
     @Override
@@ -131,6 +141,7 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         private Boolean speaking = Boolean.TRUE;
         private DragonType type;
         private DragonHead head = new DragonHead(500);
+        private Integer ownerId = 0;
 
 
         public Builder() {
@@ -178,6 +189,11 @@ public class Dragon implements Comparable<Dragon>, Serializable {
 
         public Builder setHead(DragonHead head) {
             this.head = head;
+            return this;
+        }
+
+        public Builder setOwnerId(Integer ownerId){
+            this.ownerId = ownerId;
             return this;
         }
 

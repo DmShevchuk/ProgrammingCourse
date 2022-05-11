@@ -1,7 +1,10 @@
 package collection;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 
@@ -13,9 +16,7 @@ public class CollectionManager {
     private static CollectionManager instance;
     private final LocalDate initializationDate = LocalDate.now();
     private LinkedList<Dragon> collection = new LinkedList<>();
-    private Integer currentId = 1;
-
-    private static LocalDate currentDate;
+    ReentrantLock lock = new ReentrantLock();
 
     private CollectionManager() {
     }
@@ -33,29 +34,15 @@ public class CollectionManager {
         sortCollection();
     }
 
-    private void nextID() {
-        while (checkExistingID(currentId)) {
-            currentId++;
-        }
-    }
-
-    private void refreshDate() {
-        currentDate = LocalDate.now();
-    }
-
     public void addDragon(Dragon dragon) {
-        collection.add(dragon);
-        sortCollection();
-    }
+        lock.lock();
+        try {
+            collection.add(dragon);
+            sortCollection();
+        } finally {
+            lock.unlock();
+        }
 
-    public void addDragon(Dragon.Builder builder) {
-        nextID();
-        refreshDate();
-
-        builder.setId(currentId);
-        builder.setCreationDate(currentDate);
-
-        addDragon(builder.build());
     }
 
     //Получить информацию о хранящейся коллекции
@@ -68,7 +55,7 @@ public class CollectionManager {
                 collection.getClass(), Dragon.class, initializationDate, collection.size());
     }
 
-    public LinkedList<Dragon> getCOLLECTION() {
+    public LinkedList<Dragon> getCollection() {
         return (LinkedList<Dragon>) collection.clone();
     }
 
@@ -77,13 +64,25 @@ public class CollectionManager {
     }
 
     public void removeFirst() {
-        collection.removeFirst();
+        lock.lock();
+        try {
+            collection.removeFirst();
+        } finally {
+            lock.unlock();
+        }
+
     }
 
     //Удалить из коллекции элементы с указанным размером головы
-    public void removeByHead(DragonHead head) {
-        collection.removeIf(dragon -> dragon.getHead().getSize() == head.getSize());
-        sortCollection();
+    public void removeByHead(Integer ownerId, DragonHead head) {
+        lock.lock();
+        try {
+            collection.removeIf(dragon ->
+                    (dragon.getHead().getSize() == head.getSize() && ownerId.equals(dragon.getOwnerId())));
+            sortCollection();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public LinkedList<Dragon> sortByWeight() {
@@ -92,8 +91,13 @@ public class CollectionManager {
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public void clearCollection() {
-        collection.clear();
+    public void clearCollection(Integer ownerId) {
+        lock.lock();
+        try {
+            collection.removeIf(dragon -> ownerId.equals(dragon.getOwnerId()));
+        } finally {
+            lock.unlock();
+        }
     }
 
     public Dragon getMaxElement() {
@@ -109,7 +113,12 @@ public class CollectionManager {
     }
 
     public void deleteElementByID(Integer id) {
-        collection.removeIf(dragon -> id.equals(dragon.getId()));
+        lock.lock();
+        try {
+            collection.removeIf(dragon -> id.equals(dragon.getId()));
+        } finally {
+            lock.unlock();
+        }
     }
 
     public Dragon getElementByID(Integer id) {
@@ -125,32 +134,38 @@ public class CollectionManager {
                 .orElse(null);
     }
 
+    public Integer getFirstId() {
+        return collection.getFirst().getId();
+    }
+
     public void updateElementById(Integer id, Dragon d) {
-        Dragon dragon = getElementByID(id);
+        lock.lock();
+        try {
+            Dragon dragon = getElementByID(id);
 
-        dragon.setName(d.getName());
-        dragon.setCoordinates(d.getCoordinates());
-        dragon.setAge(d.getAge());
-        dragon.setWeight(d.getWeight());
-        dragon.setSpeaking(d.getSpeaking());
-        dragon.setType(d.getType());
-        dragon.setHead(d.getHead());
+            dragon.setName(d.getName());
+            dragon.setCoordinates(d.getCoordinates());
+            dragon.setAge(d.getAge());
+            dragon.setWeight(d.getWeight());
+            dragon.setSpeaking(d.getSpeaking());
+            dragon.setType(d.getType());
+            dragon.setHead(d.getHead());
+            dragon.setOwnerId(d.getOwnerId());
 
-        sortCollection();
-    }
-
-    // Сортировка коллекции по возрасту драконов
-    public void sortCollection() {
-        collection.sort(Comparator.naturalOrder());
-    }
-
-    public String collectionToString() {
-        String toReturn = "";
-
-        for (Dragon d : collection) {
-            toReturn += d.toString() + "\n";
+            sortCollection();
+        } finally {
+            lock.unlock();
         }
-        return toReturn.strip().length() == 0 ? "The dragon collection is empty!" : toReturn.strip();
+    }
+
+    // Сортировка коллекции по весу драконов
+    public void sortCollection() {
+        lock.lock();
+        try {
+            collection.sort(Comparator.naturalOrder());
+        } finally {
+            lock.unlock();
+        }
     }
 
 }

@@ -4,5 +4,6 @@ public enum ResponseStatus {
     SUCCESS,
     FAIL,
     INFO,
-    RESET_CONNECTION;
+    RESET_CONNECTION,
+    AUTH_RESULT;
 }

@@ -1,6 +1,4 @@
 package data;
-
-import exceptions.UnableToReadFileException;
 import utils.CommandLine;
 
 import java.io.*;
@@ -12,14 +10,13 @@ public class FileManager {
         this.commandLine = commandLine;
     }
 
-    public void canRead(String fileName) throws UnableToReadFileException {
+    public boolean canRead(String fileName) {
         File file = new File(fileName);
-        if (file.canRead()) return;
-        throw new UnableToReadFileException(String.format("Can't read file {%s}!", fileName));
+        return file.canRead();
     }
 
     public String read(String fileName) {
-        String fileContent = "";
+        StringBuilder fileContent = new StringBuilder();
         try {
             InputStream inputStream = new FileInputStream(fileName);
             Reader inputStreamReader = new InputStreamReader(inputStream);
@@ -28,12 +25,12 @@ public class FileManager {
 
             while (data != -1) {
                 char theChar = (char) data;
-                fileContent += theChar;
+                fileContent.append(theChar);
                 data = inputStreamReader.read();
             }
 
             inputStreamReader.close();
-            return fileContent;
+            return fileContent.toString();
         } catch (IOException e) {
             commandLine.errorOut(String.format("Problems reading the file %s!", fileName));
             return null;
