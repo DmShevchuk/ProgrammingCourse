@@ -6,6 +6,7 @@ import collection.DragonHead;
 import collection.DragonType;
 import data.FieldChecker;
 import data.Pair;
+import exceptions.DragonInputInterruptedException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,14 +41,14 @@ public class DragonCreator {
         creatorInit();
     }
 
-    public Dragon.Builder getNewDragon() {
+    public Dragon.Builder getNewDragon() throws DragonInputInterruptedException {
         while (true) {
             commandLine.out(prefixes.get(currentField));
             String line = commandLine.getNextLine();
             // Если пользователь не хочет вводить поля, прекращаем создание/обновление дракона
             if ("_quit_".equals(line)) {
                 commandLine.setUserInputPrefix(">>");
-                return null;
+                throw new DragonInputInterruptedException();
             }
             // Пустая строка -> null
             if ("".equals(line)) {

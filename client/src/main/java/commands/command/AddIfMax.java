@@ -2,6 +2,7 @@ package commands.command;
 
 import collection.Dragon;
 import commands.Command;
+import exceptions.DragonInputInterruptedException;
 import interaction.Request;
 import interaction.RequestType;
 import run.Client;
@@ -30,9 +31,12 @@ public class AddIfMax extends Command {
         commandLine.outLn("Adding a dragon to compare\n(empty string = null, '_quit_' to exit)");
 
         DragonCreator dragonCreator = new DragonCreator(commandLine);
-        Dragon.Builder newDragon = dragonCreator.getNewDragon();
-
-        if (newDragon == null) return;
+        Dragon.Builder newDragon;
+        try {
+            newDragon = dragonCreator.getNewDragon();
+        } catch (DragonInputInterruptedException e) {
+            return;
+        }
         newDragon.setOwnerId(client.getAccount().getId());
         compare(newDragon);
     }

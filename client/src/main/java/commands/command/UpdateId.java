@@ -3,6 +3,7 @@ package commands.command;
 import collection.Dragon;
 import commands.Command;
 import commands.CommandManager;
+import exceptions.DragonInputInterruptedException;
 import interaction.Request;
 import interaction.RequestType;
 import run.Client;
@@ -34,9 +35,13 @@ public class UpdateId extends Command {
         try {
             currentId = Integer.parseInt(commandManager.getArg());
             DragonCreator dragonCreator = new DragonCreator(commandLine);
-            Dragon.Builder newDragon = dragonCreator.getNewDragon();
+            Dragon.Builder newDragon;
+            try {
+                newDragon = dragonCreator.getNewDragon();
+            }catch (DragonInputInterruptedException e){
+                return;
+            }
 
-            if (newDragon == null) return;
             update(newDragon);
 
         } catch (ClassCastException e) {

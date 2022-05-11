@@ -2,6 +2,7 @@ package commands.command;
 
 import collection.Dragon;
 import commands.Command;
+import exceptions.DragonInputInterruptedException;
 import interaction.Request;
 import interaction.RequestType;
 import run.Client;
@@ -27,10 +28,12 @@ public class Add extends Command {
         commandLine.outLn("Adding a dragon to the collection\n(empty string = null, '_quit_' to exit)");
 
         DragonCreator dragonCreator = new DragonCreator(commandLine);
-        Dragon.Builder newDragon = dragonCreator.getNewDragon();
-
-        if (newDragon == null) return;
-
+        Dragon.Builder newDragon;
+        try {
+            newDragon = dragonCreator.getNewDragon();
+        } catch (DragonInputInterruptedException e) {
+            return;
+        }
         newDragon.setOwnerId(client.getAccount().getId());
         try {
             client.send(new Request.Builder()
