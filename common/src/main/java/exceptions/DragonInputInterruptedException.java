@@ -1,7 +1,6 @@
 package exceptions;
 
-public class DragonInputInterruptedException extends RuntimeException {
+public class DragonInputInterruptedException extends Exception {
     public DragonInputInterruptedException() {
-        super("");
     }
 }
