@@ -1,14 +1,13 @@
 package commands.command;
 
 import commands.Command;
-import run.Client;
-import utils.CommandLine;
+import account.Client;
 
 public class Exit extends Command {
     private final Client client;
 
-    public Exit(CommandLine commandLine, Client client) {
-        super("exit", "|| terminate program (without saving to file)", 0, commandLine);
+    public Exit(Client client) {
+        super("exit", "|| terminate program (without saving to file)", 0);
         this.client = client;
     }
 

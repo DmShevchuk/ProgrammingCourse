@@ -1,5 +1,6 @@
 package run;
 
+import account.Client;
 import utils.CommandLine;
 
 public class ServerErrorHandler {

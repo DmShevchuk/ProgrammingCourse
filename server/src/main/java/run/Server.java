@@ -2,11 +2,13 @@ package run;
 
 import commands.CommandManager;
 import database.AccountHandler;
+import exceptions.IncorrectLoginDataException;
 import interaction.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -50,23 +52,29 @@ public class Server implements Runnable {
                     response = commandManager.runCommand(request);
                 } else {
                     logger.log(Level.INFO, "New request to login");
-                    Account account = accountHandler.passAuth(request);
-                    if (account == null) {
-                        response = new Response(ResponseStatus.FAIL, "Unable to login!");
-                    } else {
+
+                    try {
+                        Account account = accountHandler.passAuth(request);
                         response = new Response(ResponseStatus.AUTH_RESULT, account);
+                    } catch (IncorrectLoginDataException e) {
+                        response = new Response(ResponseStatus.FAIL, e.getMessage());
+                    } catch (SQLException e) {
+                        response = new Response(ResponseStatus.FAIL, "Unable to login!");
                     }
+
                 }
                 try {
                     executor.execute(responseSender.send(response, socket));
-                }catch (NullPointerException ignored){}
+                } catch (NullPointerException ignored) {
+                }
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.INFO, "Client disconnected!");
             accountHandler.setConnectedAccounts(-1);
             try {
                 socket.close();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
     }
 

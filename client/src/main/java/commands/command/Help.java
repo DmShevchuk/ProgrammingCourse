@@ -2,16 +2,14 @@ package commands.command;
 
 import commands.Command;
 import commands.CommandManager;
-import run.Client;
-import utils.CommandLine;
 
 import java.util.*;
 
 public class Help extends Command {
     private final CommandManager commandManager;
 
-    public Help(CommandLine commandLine, CommandManager commandManager) {
-        super("help", "|| displaying information on all available commands", 0, commandLine);
+    public Help(CommandManager commandManager) {
+        super("help", "|| displaying information on all available commands", 0);
         this.commandManager = commandManager;
 
     }
@@ -35,7 +33,7 @@ public class Help extends Command {
             string.append(String.format(settings, key));
             string.append(commandsInfo.get(key)).append("\n");
         }
-        commandLine.outLn(String.valueOf(string).strip());
+        //commandLine.outLn(String.valueOf(string).strip());
     }
 
 }

@@ -1,5 +1,6 @@
 package database;
 
+import exceptions.IncorrectLoginDataException;
 import interaction.Account;
 import interaction.Request;
 import interaction.RequestType;
@@ -29,15 +30,11 @@ public class AccountHandler {
     /*
         Метод, инициирующий процесс входа/регистрации
     **/
-    public synchronized Account passAuth(Request request) {
-        try {
-            if (request.getRequestType() == RequestType.AUTH) {
-                return signIn(request.getAccount());
-            }
-            return register(request.getAccount());
-        } catch (SQLException e) {
-            return null;
+    public synchronized Account passAuth(Request request) throws SQLException {
+        if (request.getRequestType() == RequestType.AUTH) {
+            return signIn(request.getAccount());
         }
+        return register(request.getAccount());
 
     }
 
@@ -70,14 +67,13 @@ public class AccountHandler {
 
     /*
         Регистрация пользователя
-        В конце вызов #signIn(Account account),
-        чтобы получить id аккаунта, которое назначается БД
+        В случае успешной регистрации - получение его id
     **/
     public Account register(Account account) throws SQLException {
         String login = account.getLogin();
         String password = account.getHashedPassword();
         PreparedStatement preparedStatement = connection
-                .prepareStatement("INSERT INTO users (name, password, salt) VALUES (?, ?, ?)");
+                .prepareStatement("INSERT INTO users (name, password, salt) VALUES (?, ?, ?) RETURNING id");
 
         String salt = generateSalt();
         String hashedPassword = hashPassword(password, salt);
@@ -86,9 +82,16 @@ public class AccountHandler {
         preparedStatement.setString(2, hashedPassword);
         preparedStatement.setString(3, salt);
 
-        preparedStatement.executeUpdate();
-
-        return signIn(new Account(login, password));
+        try {
+            preparedStatement.execute();
+            ResultSet lastId = preparedStatement.getResultSet();
+            if (lastId.next()) {
+                return new Account(lastId.getInt(1), login, password);
+            }
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IncorrectLoginDataException(String.format("Login '%s' is not unique!", login));
+        }
     }
 
     /*
@@ -112,7 +115,7 @@ public class AccountHandler {
             }
         }
 
-        return null;
+        throw new IncorrectLoginDataException(String.format("Account with login '%s' doesn't exist!", login));
     }
 
     public synchronized void setConnectedAccounts(int val) {

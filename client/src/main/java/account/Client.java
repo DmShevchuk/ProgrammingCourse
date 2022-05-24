@@ -1,4 +1,4 @@
-package run;
+package account;
 
 import interaction.Account;
 import interaction.Request;

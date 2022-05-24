@@ -5,7 +5,7 @@ import commands.command.*;
 import exceptions.IncorrectArgQuantityException;
 import exceptions.IncorrectCommandException;
 import interaction.Account;
-import run.Client;
+import account.Client;
 import run.ServerErrorHandler;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class CommandLine {
     public CommandLine(Client client) {
         this.client = client;
         this.account = client.getAccount();
-        commandLineInit();
+        //commandLineInit();
     }
 
     public void run() {
@@ -104,21 +104,21 @@ public class CommandLine {
         commandManager = new CommandManager(this);
         ServerErrorHandler errorHandler = new ServerErrorHandler(client, this);
 
-        commandManager.addCommand(new Help(this, commandManager));
-        commandManager.addCommand(new Show(this, client, errorHandler));
-        commandManager.addCommand(new Info(this, client, errorHandler));
-        commandManager.addCommand(new RemoveByID(this, client, commandManager, errorHandler));
-        commandManager.addCommand(new Clear(this, client, errorHandler));
-        commandManager.addCommand(new History(this, commandManager));
-        commandManager.addCommand(new MinByID(this, client, errorHandler));
-        commandManager.addCommand(new RemoveFirst(this, client, errorHandler));
-        commandManager.addCommand(new PrintFieldDescendingWeight(this, client, errorHandler));
-        commandManager.addCommand(new RemoveAllByHead(this, client, commandManager, errorHandler));
-        commandManager.addCommand(new Exit(this, client));
-        commandManager.addCommand(new Add(this, client, errorHandler));
-        commandManager.addCommand(new UpdateId(this, client, commandManager, errorHandler));
-        commandManager.addCommand(new AddIfMax(this, client, errorHandler));
-        commandManager.addCommand(new ExecuteScript(this, commandManager));
+        commandManager.addCommand(new Help( commandManager));
+        commandManager.addCommand(new Show( client, errorHandler));
+        commandManager.addCommand(new Info(client, errorHandler));
+        commandManager.addCommand(new RemoveByID( client, commandManager, errorHandler));
+        commandManager.addCommand(new Clear(client, errorHandler));
+        commandManager.addCommand(new History( commandManager));
+        commandManager.addCommand(new MinByID( client, errorHandler));
+        commandManager.addCommand(new RemoveFirst( client, errorHandler));
+        commandManager.addCommand(new PrintFieldDescendingWeight( client, errorHandler));
+        commandManager.addCommand(new RemoveAllByHead(client, commandManager, errorHandler));
+        commandManager.addCommand(new Exit( client));
+        commandManager.addCommand(new Add(client, errorHandler));
+        commandManager.addCommand(new UpdateId(client, commandManager, errorHandler));
+        commandManager.addCommand(new AddIfMax(client, errorHandler));
+        commandManager.addCommand(new ExecuteScript(commandManager));
 //        commandManager.addCommand(new Logout(this, client));
     }
 
