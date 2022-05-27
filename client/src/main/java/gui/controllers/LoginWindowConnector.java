@@ -49,7 +49,8 @@ public class LoginWindowConnector {
             return;
         }
         try {
-            appWorker.setMainWindow();
+            response.getDragonList().forEach(System.out::println);
+            appWorker.setMainWindow(response.getDragonList());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

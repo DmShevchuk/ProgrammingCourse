@@ -7,8 +7,6 @@ import utils.AppStarter;
 import java.net.InetSocketAddress;
 
 public class App extends Application {
-    private static String HOST = "127.0.0.1";
-    private static int PORT = 12012;
 
     public static void main(String[] args) {
         launch();
@@ -16,6 +14,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String HOST = "127.0.0.1";
+        int PORT = 12012;
+
         AppStarter appStarter = new AppStarter(new InetSocketAddress(HOST, PORT));
         Client client = appStarter.run();
 

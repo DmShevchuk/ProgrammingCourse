@@ -1,16 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:controller="gui.controllers.MainWindowController" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="934.0"
-            xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-    <TableView layoutX="21.0" layoutY="14.0" prefHeight="495.0" prefWidth="586.0">
-        <columns>
-            <TableColumn prefWidth="75.0" text="C1"/>
-            <TableColumn prefWidth="75.0" text="C2"/>
-        </columns>
-    </TableView>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0"
+            prefWidth="970.0"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
+    <TabPane layoutX="16.0" layoutY="70.0" prefHeight="473.0" prefWidth="938.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Таблица">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="938.0">
+                        <children>
+                            <TableView fx:id="dragonTable" layoutX="3.0" layoutY="5.0" prefHeight="382.0"
+                                       prefWidth="931.0">
+                                <columns>
+                                    <TableColumn fx:id="id" prefWidth="75.0" text="id"/>
+                                    <TableColumn fx:id="name" prefWidth="75.0" text="Имя"/>
+                                    <TableColumn fx:id="coordinates" prefWidth="75.0" text="Координаты">
+                                        <columns>
+                                            <TableColumn fx:id="x" prefWidth="37.5" text="X"/>
+                                            <TableColumn fx:id="y" minWidth="0.0" prefWidth="37.5" text="Y"/>
+                                        </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="creationDate" prefWidth="144.0" text="Дата создания "/>
+                                    <TableColumn fx:id="age" prefWidth="84.0" text="Возраст"/>
+                                    <TableColumn fx:id="type" prefWidth="84.0" text="Тип"/>
+                                    <TableColumn fx:id="weight" prefWidth="88.800048828125" text="Вес"/>
+                                    <TableColumn fx:id="speaking" prefWidth="133.5999755859375" text="Говорит"/>
+                                    <TableColumn fx:id="headSize" prefWidth="180.800048828125" text="Размер головы"/>
+                                </columns>
+                            </TableView>
+                            <Button layoutX="661.0" layoutY="392.0" mnemonicParsing="false" prefHeight="26.0"
+                                    prefWidth="132.0" text="Удалить"/>
+                            <Button layoutX="802.0" layoutY="392.0" mnemonicParsing="false" prefHeight="18.0"
+                                    prefWidth="132.0" text="Добавить"/>
+                            <Button layoutX="514.0" layoutY="393.0" mnemonicParsing="false" prefHeight="19.0"
+                                    prefWidth="142.0" text="Очистить"/>
+                            <Button layoutX="364.0" layoutY="393.0" mnemonicParsing="false" prefHeight="19.0"
+                                    prefWidth="142.0" text="Обновить"/>
+                            <Button layoutX="214.0" layoutY="393.0" mnemonicParsing="false" prefHeight="19.0"
+                                    prefWidth="142.0" text="Показать"/>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Визуализация">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </Tab>
+            <Tab text="Скрипт">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <Button layoutX="721.0" layoutY="395.0" mnemonicParsing="false" prefHeight="26.0"
+                            prefWidth="201.0" text="Выполнить скрипт"/>
+                    <TextArea layoutX="25.0" layoutY="14.0" prefHeight="408.0" prefWidth="475.0">
+                        <font>
+                            <Font size="20.0"/>
+                        </font>
+                    </TextArea>
+                    <Button layoutX="720.0" layoutY="307.0" mnemonicParsing="false" prefHeight="26.0"
+                            prefWidth="203.0" text="Загрузить файл (*.txt)"/>
+                    <Button layoutX="721.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0"
+                            prefWidth="201.0" text="Очистить поле"/>
+                    <Label alignment="CENTER" layoutX="537.0" layoutY="106.0" prefHeight="35.0"
+                           prefWidth="386.0" textFill="RED">
+                        <font>
+                            <Font size="20.0"/>
+                        </font>
+                    </Label>
+                </AnchorPane>
+            </Tab>
+        </tabs>
+    </TabPane>
+    <Button onAction="#logout" layoutX="862.0" layoutY="3.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="Выход"/>
+    <ComboBox layoutX="700.0" layoutY="3.0" prefHeight="26.0" prefWidth="152.0"/>
+    <Button layoutX="32.0" layoutY="12.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="138.0"
+            text="Обновить таблицу">
+        <font>
+            <Font size="9.0"/>
+        </font>
+    </Button>
+    <Circle fill="WHITE" layoutX="21.0" layoutY="22.0" radius="7.0" stroke="BLACK" strokeType="INSIDE"/>
 </AnchorPane>

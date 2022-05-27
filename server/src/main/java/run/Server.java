@@ -1,5 +1,6 @@
 package run;
 
+import collection.CollectionManager;
 import commands.CommandManager;
 import database.AccountHandler;
 import exceptions.IncorrectLoginDataException;
@@ -40,6 +41,7 @@ public class Server implements Runnable {
 
 
     public void run() {
+        CollectionManager collectionManager = CollectionManager.getInstance();
         ExecutorService executor = Executors.newCachedThreadPool();
         try {
             while (true) {
@@ -55,7 +57,7 @@ public class Server implements Runnable {
 
                     try {
                         Account account = accountHandler.passAuth(request);
-                        response = new Response(ResponseStatus.AUTH_RESULT, account);
+                        response = new Response(ResponseStatus.AUTH_RESULT, account, collectionManager.getCollection());
                     } catch (IncorrectLoginDataException e) {
                         response = new Response(ResponseStatus.FAIL, e.getMessage());
                     } catch (SQLException e) {

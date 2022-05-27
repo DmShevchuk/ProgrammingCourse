@@ -1,6 +1,7 @@
 package gui;
 
 import account.Client;
+import collection.Dragon;
 import gui.controllers.LoginWindowConnector;
 import gui.controllers.LoginWindowController;
 import gui.controllers.MainWindowController;
@@ -10,10 +11,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class AppWorker {
-    private LoginWindowController loginController;
-    private MainWindowController mainWindowController;
     private final Stage stage;
     private final Client client;
 
@@ -26,7 +26,7 @@ public class AppWorker {
         FXMLLoader fxmlLoader = new FXMLLoader(MainWindowController.class.getResource("/login-view.fxml"));
         fxmlLoader.setLocation(getClass().getResource("/login-view.fxml"));
         Parent root = fxmlLoader.load();
-        loginController = fxmlLoader.getController();
+        LoginWindowController loginController = fxmlLoader.getController();
         LoginWindowConnector connector = new LoginWindowConnector(client, this);
         connector.setLoginWindowController(loginController);
         loginController.setConnector(connector);
@@ -38,11 +38,13 @@ public class AppWorker {
         stage.show();
     }
 
-    public void setMainWindow() throws IOException{
+    public void setMainWindow(LinkedList<Dragon> dragonLinkedList) throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader(MainWindowController.class.getResource("/main-window-view.fxml"));
         fxmlLoader.setLocation(getClass().getResource("/main-window-view.fxml"));
         Parent root = fxmlLoader.load();
-        mainWindowController = fxmlLoader.getController();
+        MainWindowController mainWindowController = fxmlLoader.getController();
+        mainWindowController.setDragons(dragonLinkedList);
+        mainWindowController.setAppWorker(this);
         Scene scene = new Scene(root);
         stage.setTitle("Dragons");
         stage.setScene(scene);

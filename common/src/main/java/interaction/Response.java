@@ -27,9 +27,10 @@ public class Response implements Serializable {
         this.dragonList = dragonList;
     }
 
-    public Response(ResponseStatus status, Account account) {
+    public Response(ResponseStatus status, Account account, LinkedList<Dragon> dragonList) {
         this.status = status;
         this.account = account;
+        this.dragonList = dragonList;
     }
 
     public ResponseStatus getStatus() {
