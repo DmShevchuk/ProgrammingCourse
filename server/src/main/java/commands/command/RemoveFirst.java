@@ -29,11 +29,12 @@ public class RemoveFirst extends Command {
         try {
             int firstId = collectionManager.getFirstId();
             int deletedLines = dbManager.removeFirst(firstId, userId);
-            if(deletedLines == 1){
+            if (deletedLines == 1) {
                 collectionManager.removeFirst();
-                return new Response(ResponseStatus.SUCCESS, "First element of collection has been removed!");
+                return new Response(ResponseStatus.SUCCESS, "First element of collection has been removed!"
+                        , collectionManager.getCollection());
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new Response(ResponseStatus.FAIL, "Cannot remove first element from collection!");

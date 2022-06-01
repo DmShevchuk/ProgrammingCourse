@@ -43,7 +43,7 @@ public class LoginWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         languageComboBox.getItems().removeAll(languageComboBox.getItems());
         languageComboBox.getItems().addAll("Русский", "Nederlands", "Lietuvių", "English");
-        languageComboBox.getSelectionModel().select("Русский");
+        languageComboBox.getSelectionModel().select(0);
 
         languageComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             //TODO: Смена языка

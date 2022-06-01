@@ -39,7 +39,7 @@ public class UpdateId extends Command {
                         .setId(dragonId)
                         .setOwnerId(userId)
                         .build());
-                return new Response(ResponseStatus.SUCCESS, "Item updated successfully!");
+                return new Response(ResponseStatus.SUCCESS, "Item updated successfully!", collectionManager.getCollection());
             }
         } catch (SQLException e) {
             e.printStackTrace();

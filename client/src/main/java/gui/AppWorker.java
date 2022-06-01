@@ -9,12 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class AppWorker {
     private final Stage stage;
+    @Getter
     private final Client client;
 
     public AppWorker(Stage stage, Client client) {
@@ -45,6 +47,7 @@ public class AppWorker {
         MainWindowController mainWindowController = fxmlLoader.getController();
         mainWindowController.setDragons(dragonLinkedList);
         mainWindowController.setAppWorker(this);
+        mainWindowController.setClient(client);
         Scene scene = new Scene(root);
         stage.setTitle("Dragons");
         stage.setScene(scene);

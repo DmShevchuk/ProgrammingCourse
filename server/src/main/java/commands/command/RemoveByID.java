@@ -32,7 +32,8 @@ public class RemoveByID extends Command {
             int deletedLines = dbManager.removeById(userId, dragonId);
             if(deletedLines > 0){
                 collectionManager.deleteElementByID(dragonId);
-                return new Response(ResponseStatus.SUCCESS, String.format("Element with id=%d removed!", dragonId));
+                return new Response(ResponseStatus.SUCCESS, String.format("Element with id=%d removed!", dragonId),
+                        collectionManager.getCollection());
             }
         } catch (SQLException e){
             e.printStackTrace();

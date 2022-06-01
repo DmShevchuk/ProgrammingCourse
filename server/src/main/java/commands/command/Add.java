@@ -25,7 +25,7 @@ public class Add extends Command {
             int dragonId = dbManager.add(request.getDragonBuild().build());
             if (dragonId != -1) {
                 collectionManager.addDragon(request.getDragonBuild().setId(dragonId).build());
-                return new Response(ResponseStatus.SUCCESS, "Dragon added to collection!");
+                return new Response(ResponseStatus.SUCCESS, "Dragon added to collection!", collectionManager.getCollection());
             }
         } catch (SQLException e) {
             e.printStackTrace();

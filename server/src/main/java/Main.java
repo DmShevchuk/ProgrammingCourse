@@ -70,6 +70,7 @@ public class Main {
 
         while (true) {
             Socket socket = serverSocket.accept();
+
             if (accountHandler.getConnectedAccounts() == MAX_CONNECTED_USERS) {
                 responseSender.send(new Response(ResponseStatus.FAIL,
                         "Too many clients on the server, please try again later!"), socket);

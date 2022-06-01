@@ -49,7 +49,7 @@ public class LoginWindowConnector {
             return;
         }
         try {
-            response.getDragonList().forEach(System.out::println);
+            client.setAccount(response.getAccount());
             appWorker.setMainWindow(response.getDragonList());
         } catch (IOException e) {
             System.out.println(e.getMessage());

@@ -19,7 +19,6 @@ public class App extends Application {
 
         AppStarter appStarter = new AppStarter(new InetSocketAddress(HOST, PORT));
         Client client = appStarter.run();
-
         AppWorker sceneConnector = new AppWorker(primaryStage, client);
         sceneConnector.setLoginWindow();
     }

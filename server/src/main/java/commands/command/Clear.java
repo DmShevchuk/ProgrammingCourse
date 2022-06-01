@@ -26,7 +26,7 @@ public class Clear extends Command {
             int deletedLines = dbManager.clearCollection(userId);
             if (deletedLines > 0) {
                 collectionManager.clearCollection(userId);
-                return new Response(ResponseStatus.SUCCESS, "Collection cleared!");
+                return new Response(ResponseStatus.SUCCESS, "Collection cleared!", collectionManager.getCollection());
             }
         } catch (SQLException e) {
             e.printStackTrace();

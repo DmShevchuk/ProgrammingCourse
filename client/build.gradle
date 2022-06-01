@@ -61,13 +61,10 @@ jlinkZip {
     group = 'distribution'
 }
 
-//apply plugin: 'application'
-//apply plugin: 'java'
-//
-//mainClassName = 'Main'
-//
-//jar {
-//    manifest {
-//        attributes 'Main-Class': 'Main'
-//    }
-//}
+mainClassName = 'App'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'App'
+    }
+}

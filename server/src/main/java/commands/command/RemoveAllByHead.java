@@ -28,11 +28,12 @@ public class RemoveAllByHead extends Command {
         }
         try {
             int deletedLines = dbManager.removeByHead(userId, Long.parseLong(request.getArgs()));
-            if (deletedLines > 0){
+            if (deletedLines > 0) {
                 collectionManager.removeByHead(userId, new DragonHead(Long.parseLong(request.getArgs())));
-                return new Response(ResponseStatus.SUCCESS, String.format("Dragons with head size=%s removed!", request.getArgs()));
+                return new Response(ResponseStatus.SUCCESS, String.format("Dragons with head size=%s removed!",
+                        request.getArgs()), collectionManager.getCollection());
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new Response(ResponseStatus.FAIL, String.format("Unable to remove dragons with head=%s!", request.getArgs()));

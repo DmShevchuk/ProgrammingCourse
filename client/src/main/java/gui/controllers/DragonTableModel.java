@@ -1,10 +1,6 @@
 package gui.controllers;
 
-import collection.Coordinates;
 import collection.Dragon;
-import collection.DragonHead;
-import collection.DragonType;
-import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,7 +38,9 @@ public class DragonTableModel implements Serializable {
     @Getter
     @Setter
     private Long headSize;
-
+    @Getter
+    @Setter
+    private Integer ownerId;
 
     public DragonTableModel(Dragon dragon) {
         this.id = dragon.getId();
@@ -55,5 +53,6 @@ public class DragonTableModel implements Serializable {
         this.speaking = dragon.getSpeaking();
         this.type = dragon.getType().toString();
         this.headSize = dragon.getHead().getSize();
+        this.ownerId = dragon.getOwnerId();
     }
 }
