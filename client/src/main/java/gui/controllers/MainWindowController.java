@@ -2,6 +2,7 @@ package gui.controllers;
 
 import account.Client;
 import collection.Dragon;
+import collection.DragonHead;
 import gui.AppWorker;
 import interaction.Request;
 import interaction.RequestType;
@@ -351,4 +352,34 @@ public class MainWindowController extends Window implements Initializable {
             showMessageBox(e.getMessage());
         }
     }
+
+    public void removeAllByHead() {
+        DragonTableModel selectedDragon = dragonTable.getSelectionModel().getSelectedItem();
+        if (selectedDragon == null) {
+            showMessageBox("Выберите элемент для удаления!");
+            return;
+        }
+        boolean confirm = getConfirm("Удаление", String.format("Вы уверены, что хотите удалить дракона" +
+                        " с размером головы %d?", selectedDragon.getHeadSize()));
+        if (confirm){
+            try {
+                client.send(new Request.Builder()
+                        .setCommandName("remove_all_by_head")
+                        .setArgs(selectedDragon.getHeadSize().toString())
+                        .setRequestType(RequestType.RUN_COMMAND)
+                        .setAccount(client.getAccount())
+                        .build());
+                Response response = client.receive();
+                if (response.getStatus() == ResponseStatus.FAIL) {
+                    showMessageBox(response.getResult());
+                } else {
+                    showMessageBox(response.getResult());
+                    setDragons(response.getDragonList());
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                showMessageBox(e.getMessage());
+            }
+        }
+    }
+
 }
