@@ -2,7 +2,7 @@ package gui;
 
 import account.Client;
 import collection.Dragon;
-import gui.controllers.LoginWindowConnector;
+import gui.connectors.LoginWindowConnector;
 import gui.controllers.LoginWindowController;
 import gui.controllers.MainWindowController;
 import javafx.fxml.FXMLLoader;
@@ -45,9 +45,9 @@ public class AppWorker {
         fxmlLoader.setLocation(getClass().getResource("/main-window-view.fxml"));
         Parent root = fxmlLoader.load();
         MainWindowController mainWindowController = fxmlLoader.getController();
+        mainWindowController.setClient(client);
         mainWindowController.setDragons(dragonLinkedList);
         mainWindowController.setAppWorker(this);
-        mainWindowController.setClient(client);
         Scene scene = new Scene(root);
         stage.setTitle("Dragons");
         stage.setScene(scene);

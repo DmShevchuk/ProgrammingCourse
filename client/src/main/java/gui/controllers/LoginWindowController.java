@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import gui.connectors.LoginWindowConnector;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;

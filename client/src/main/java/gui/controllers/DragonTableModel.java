@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DragonTableModel implements Serializable {
     @Getter
@@ -54,5 +56,21 @@ public class DragonTableModel implements Serializable {
         this.type = dragon.getType().toString();
         this.headSize = dragon.getHead().getSize();
         this.ownerId = dragon.getOwnerId();
+    }
+
+    public List<String> getDragonModelAsArray() {
+        return new ArrayList<>(List.of(
+                id.toString(),
+                name,
+                x.toString(),
+                y.toString(),
+                creationDate.toString(),
+                age.toString(),
+                type,
+                weight.toString(),
+                speaking.toString(),
+                headSize.toString(),
+                ownerId.toString()
+        ));
     }
 }

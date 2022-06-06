@@ -1,101 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="588.0"
-            prefWidth="980.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.controllers.MainWindowController">
-    <TabPane layoutX="16.0" layoutY="70.0" prefHeight="510.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="651.0" prefWidth="983.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
+    <TabPane fx:id="tabPane" layoutX="18.0" layoutY="97.0" prefHeight="525.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
             <Tab text="Таблица">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="458.0" prefWidth="948.0">
                         <children>
-                            <TableView fx:id="dragonTable" layoutX="3.0" layoutY="5.0" prefHeight="382.0"
-                                       prefWidth="941.0">
+                            <TableView fx:id="dragonTable" layoutX="3.0" layoutY="7.0" prefHeight="382.0" prefWidth="941.0">
                                 <columns>
-                                    <TableColumn fx:id="id" prefWidth="75.0" text="id"/>
-                                    <TableColumn fx:id="name" prefWidth="75.0" text="Имя"/>
+                                    <TableColumn fx:id="id" prefWidth="75.0" text="id" />
+                                    <TableColumn fx:id="name" prefWidth="75.0" text="Имя" />
                                     <TableColumn fx:id="coordinates" prefWidth="75.0" text="Координаты">
                                         <columns>
-                                            <TableColumn prefWidth="37.5" text="X" fx:id="x"/>
-                                            <TableColumn fx:id="y" minWidth="0.0" prefWidth="37.5" text="Y"/>
+                                            <TableColumn prefWidth="37.5" text="X" fx:id="x" />
+                                            <TableColumn fx:id="y" minWidth="0.0" prefWidth="37.5" text="Y" />
                                         </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="creationDate" prefWidth="144.0" text="Дата создания "/>
-                                    <TableColumn fx:id="age" prefWidth="84.0" text="Возраст"/>
-                                    <TableColumn fx:id="type" prefWidth="84.0" text="Тип"/>
-                                    <TableColumn fx:id="weight" prefWidth="88.800048828125" text="Вес"/>
-                                    <TableColumn fx:id="speaking" prefWidth="133.5999755859375" text="Говорит"/>
-                                    <TableColumn fx:id="headSize" prefWidth="180.800048828125" text="Размер головы"/>
-                                    <TableColumn fx:id="ownerId" prefWidth="180.800048828125" text="id владельца"/>
+                                    <TableColumn fx:id="creationDate" prefWidth="144.0" text="Дата создания " />
+                                    <TableColumn fx:id="age" prefWidth="84.0" text="Возраст" />
+                                    <TableColumn fx:id="type" prefWidth="84.0" text="Тип" />
+                                    <TableColumn fx:id="weight" prefWidth="88.800048828125" text="Вес" />
+                                    <TableColumn fx:id="speaking" prefWidth="133.5999755859375" text="Говорит" />
+                                    <TableColumn fx:id="headSize" prefWidth="180.800048828125" text="Размер головы" />
+                                    <TableColumn fx:id="ownerId" prefWidth="180.800048828125" text="id владельца" />
                                 </columns>
                             </TableView>
-                            <Button fx:id="deleteDragon" layoutX="661.0" layoutY="392.0" mnemonicParsing="false"
-                                    onAction="#deleteDragon" prefHeight="26.0" prefWidth="132.0" text="Удалить"/>
-                            <Button fx:id="addElemButton" layoutX="802.0" layoutY="392.0" mnemonicParsing="false"
-                                    onAction="#openAddEditor" prefHeight="18.0" prefWidth="132.0" text="Добавить"/>
-                            <Button layoutX="514.0" layoutY="393.0" mnemonicParsing="false" onAction="#clearCollection"
-                                    prefHeight="19.0" prefWidth="142.0" text="Очистить"/>
-                            <Button layoutX="193.0" layoutY="393.0" mnemonicParsing="false" prefHeight="19.0"
-                                    prefWidth="142.0" text="Показать"/>
-                            <Button fx:id="getInfo" layoutX="46.0" layoutY="392.0" mnemonicParsing="false"
-                                    onAction="#getInfo" prefHeight="26.0" prefWidth="138.0" text="Информация"/>
-                            <Button fx:id="addIfMaxButton" layoutX="345.0" layoutY="393.0" mnemonicParsing="false"
-                                    onAction="#openAddIfMaxEditor" prefHeight="26.0" prefWidth="160.0"
-                                    text="Добавить, если больше"/>
-                            <Button fx:id="removeByHead" layoutX="756.0" layoutY="427.0" mnemonicParsing="false"
-                                    onAction="#removeAllByHead" prefHeight="26.0" prefWidth="178.0"
-                                    text="Удалить по голове"/>
+                            <Button fx:id="deleteDragon" layoutX="663.0" layoutY="405.0" mnemonicParsing="false" onAction="#deleteDragon" prefHeight="26.0" prefWidth="132.0" text="Удалить" />
+                            <Button fx:id="addElemButton" layoutX="802.0" layoutY="406.0" mnemonicParsing="false" onAction="#openAddEditor" prefHeight="18.0" prefWidth="132.0" text="Добавить" />
+                            <Button layoutX="514.0" layoutY="405.0" mnemonicParsing="false" onAction="#clearCollection" prefHeight="19.0" prefWidth="142.0" text="Очистить" />
+                            <Button layoutX="195.0" layoutY="405.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="142.0" text="Показать" />
+                            <Button fx:id="getInfo" layoutX="48.0" layoutY="404.0" mnemonicParsing="false" onAction="#getInfo" prefHeight="26.0" prefWidth="138.0" text="Информация" />
+                            <Button fx:id="addIfMaxButton" layoutX="345.0" layoutY="405.0" mnemonicParsing="false" onAction="#openAddIfMaxEditor" prefHeight="26.0" prefWidth="160.0" text="Добавить, если больше" />
+                            <Button fx:id="removeByHead" layoutX="755.0" layoutY="441.0" mnemonicParsing="false" onAction="#removeAllByHead" prefHeight="26.0" prefWidth="178.0" text="Удалить по голове" />
                         </children>
                     </AnchorPane>
                 </content>
             </Tab>
             <Tab text="Визуализация">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                    <Canvas fx:id="axis" height="450.0" layoutX="14.0" layoutY="20.0" width="450.0"/>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="948.0">
+                    <Canvas fx:id="canvas" height="482.0" layoutX="14.0" layoutY="5.0" width="482.0" />
+                    <ColorPicker fx:id="headColorPicker" layoutX="733.0" layoutY="62.0" onAction="#changeDragonsColor" prefHeight="26.0" prefWidth="194.0">
+                        <value>
+                            <Color green="1.0" />
+                        </value>
+                    </ColorPicker>
+                    <Label alignment="CENTER" layoutX="666.0" layoutY="14.0" prefHeight="42.0" prefWidth="260.0" text="Ваши цвета">
+                        <font>
+                            <Font size="24.0" />
+                        </font>
+                    </Label>
+                    <Label alignment="CENTER_RIGHT" layoutX="611.0" layoutY="56.0" prefHeight="38.0" prefWidth="109.0" text="Голова">
+                        <font>
+                            <Font size="19.0" />
+                        </font>
+                    </Label>
+                    <Label alignment="CENTER_RIGHT" layoutX="611.0" layoutY="88.0" prefHeight="38.0" prefWidth="109.0" text="Тело">
+                        <font>
+                            <Font size="19.0" />
+                        </font>
+                    </Label>
+                    <ColorPicker fx:id="bodyColorPicker" layoutX="733.0" layoutY="94.0" onAction="#changeDragonsColor" prefHeight="26.0" prefWidth="194.0">
+                        <value>
+                            <Color blue="1.0" />
+                        </value>
+                    </ColorPicker>
+                    <Label alignment="CENTER_RIGHT" layoutX="611.0" layoutY="120.0" prefHeight="38.0" prefWidth="109.0" text="Крылья">
+                        <font>
+                            <Font size="19.0" />
+                        </font>
+                    </Label>
+                    <ColorPicker fx:id="wingsColorPicker" layoutX="733.0" layoutY="126.0" onAction="#changeDragonsColor" prefHeight="26.0" prefWidth="194.0">
+                        <value>
+                            <Color red="1.0" />
+                        </value>
+                    </ColorPicker>
+                    <Label alignment="CENTER_RIGHT" layoutX="611.0" layoutY="152.0" prefHeight="38.0" prefWidth="109.0" text="Лапы">
+                        <font>
+                            <Font size="19.0" />
+                        </font>
+                    </Label>
+                    <ColorPicker fx:id="pawsColorPicker" layoutX="733.0" layoutY="158.0" onAction="#changeDragonsColor" prefHeight="26.0" prefWidth="194.0">
+                        <value>
+                            <Color />
+                        </value>
+                    </ColorPicker>
+               <Button layoutX="646.0" layoutY="451.0" mnemonicParsing="false" onAction="#runGame" prefHeight="26.0" prefWidth="287.0" text="Запустить игру">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
                 </AnchorPane>
             </Tab>
             <Tab text="Скрипт">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                    <Button layoutX="721.0" layoutY="395.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="201.0"
-                            text="Выполнить скрипт"/>
+                    <Button layoutX="721.0" layoutY="395.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="201.0" text="Выполнить скрипт" />
                     <TextArea layoutX="25.0" layoutY="14.0" prefHeight="408.0" prefWidth="475.0">
                         <font>
-                            <Font size="20.0"/>
+                            <Font size="20.0" />
                         </font>
                     </TextArea>
-                    <Button layoutX="720.0" layoutY="307.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="203.0"
-                            text="Загрузить файл (*.txt)"/>
-                    <Button layoutX="721.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="201.0"
-                            text="Очистить поле"/>
-                    <Label alignment="CENTER" layoutX="537.0" layoutY="106.0" prefHeight="35.0" prefWidth="386.0"
-                           textFill="RED">
+                    <Button layoutX="720.0" layoutY="307.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="203.0" text="Загрузить файл (*.txt)" />
+                    <Button layoutX="721.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="201.0" text="Очистить поле" />
+                    <Label alignment="CENTER" layoutX="537.0" layoutY="106.0" prefHeight="35.0" prefWidth="386.0" textFill="RED">
                         <font>
-                            <Font size="20.0"/>
+                            <Font size="20.0" />
                         </font>
                     </Label>
                 </AnchorPane>
             </Tab>
         </tabs>
     </TabPane>
-    <Button layoutX="862.0" layoutY="3.0" mnemonicParsing="false" onAction="#logout" prefHeight="26.0" prefWidth="91.0"
-            text="Выход"/>
-    <ComboBox layoutX="700.0" layoutY="3.0" prefHeight="26.0" prefWidth="152.0"/>
-    <Button fx:id="updateTableButton" layoutX="32.0" layoutY="12.0" mnemonicParsing="false" onAction="#updateTable"
-            prefHeight="14.0" prefWidth="138.0" text="Обновить таблицу">
+    <Button layoutX="862.0" layoutY="3.0" mnemonicParsing="false" onAction="#logout" prefHeight="26.0" prefWidth="91.0" text="Выход" />
+    <ComboBox layoutX="700.0" layoutY="3.0" prefHeight="26.0" prefWidth="152.0" />
+    <Button fx:id="updateTableButton" layoutX="830.0" layoutY="66.0" mnemonicParsing="false" onAction="#updateTable" prefHeight="14.0" prefWidth="138.0" text="Обновить таблицу">
         <font>
-            <Font size="9.0"/>
+            <Font size="9.0" />
         </font>
     </Button>
-    <Circle fx:id="updateCircle" fill="WHITE" layoutX="21.0" layoutY="22.0" radius="7.0" stroke="BLACK"
-            strokeType="INSIDE"/>
-    <Label fx:id="errorLabel" layoutX="212.0" layoutY="29.0" prefHeight="26.0" prefWidth="474.0" textFill="RED">
+    <Circle fx:id="updateCircle" fill="WHITE" layoutX="818.0" layoutY="76.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+    <TextField fx:id="searchField" layoutX="348.0" layoutY="36.0" prefHeight="26.0" prefWidth="287.0" />
+    <ComboBox fx:id="searchComboBox" layoutX="195.0" layoutY="36.0" prefHeight="26.0" prefWidth="152.0" />
+    <CheckBox fx:id="concreteSearch" layoutX="348.0" layoutY="62.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="162.0" text="Строгое совпадение" />
+    <Label fx:id="loginLabel" layoutX="57.0" layoutY="1.0" prefHeight="36.0" prefWidth="132.0">
         <font>
-            <Font size="15.0"/>
+            <Font size="20.0" />
         </font>
     </Label>
 </AnchorPane>

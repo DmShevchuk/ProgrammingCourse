@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -19,7 +20,6 @@ public class InfoWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     public void setCreationDateBarChart(Map<String, Integer> data) {
@@ -52,6 +52,13 @@ public class InfoWindowController implements Initializable {
         for(String type: data.keySet()){
             pieData.add(new PieChart.Data(type, data.get(type)));
         }
+        pieData.forEach(unit ->
+                unit.nameProperty().bind(
+                        Bindings.concat(
+                                unit.getName(), " ", String.format("%.0f", unit.pieValueProperty().getValue())
+                        )
+                )
+        );
         typePieChart.setData(pieData);
         typePieChart.setTitle("Тип драконов");
 

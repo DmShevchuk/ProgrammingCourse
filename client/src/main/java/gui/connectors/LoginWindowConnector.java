@@ -1,8 +1,9 @@
-package gui.controllers;
+package gui.connectors;
 
 import account.Authorization;
 import account.Client;
 import gui.AppWorker;
+import gui.controllers.LoginWindowController;
 import interaction.Response;
 import interaction.ResponseStatus;
 
