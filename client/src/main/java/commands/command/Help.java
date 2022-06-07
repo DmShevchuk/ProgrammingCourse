@@ -1,23 +1,28 @@
 package commands.command;
 
 import commands.Command;
-import commands.CommandManager;
+import commands.CommandFactory;
+import interaction.Response;
+import interaction.ResponseStatus;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
 
 public class Help extends Command {
-    private final CommandManager commandManager;
+    private final CommandFactory commandFactory;
 
-    public Help(CommandManager commandManager) {
+    public Help(CommandFactory commandFactory) {
         super("help", "|| displaying information on all available commands", 0);
-        this.commandManager = commandManager;
-
+        this.commandFactory = commandFactory;
     }
 
+
     @Override
-    public void execute() {
+    public <T> Response execute(T args) throws IOException {
         // Получение HasMap<Команда, Описание>
-        Map<String, String> commandsInfo = commandManager.getCommandsInfo();
+        Map<String, String> commandsInfo = commandFactory.getCommandsInfo();
 
         // Получение названия самой длинной команды
         Optional<String> maxLength = commandsInfo.keySet().stream().max(Comparator.comparing(String::length));
@@ -33,7 +38,6 @@ public class Help extends Command {
             string.append(String.format(settings, key));
             string.append(commandsInfo.get(key)).append("\n");
         }
-        //commandLine.outLn(String.valueOf(string).strip());
+        return new Response(ResponseStatus.SUCCESS, String.valueOf(string));
     }
-
 }

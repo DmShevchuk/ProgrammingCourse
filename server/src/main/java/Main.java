@@ -4,8 +4,7 @@ import database.AccountHandler;
 import database.CollectionLoader;
 import database.DbConnector;
 import database.DbManager;
-import interaction.Response;
-import interaction.ResponseStatus;
+import run.ClientNotifier;
 import run.ResponseSender;
 import run.Server;
 import run.ServerStarter;
@@ -67,19 +66,14 @@ public class Main {
         AccountHandler accountHandler = new AccountHandler(connection);
         CommandManager commandManager = new CommandManager(collectionManager, dbManager);
         ResponseSender responseSender = new ResponseSender();
-
+        ClientNotifier notifier = new ClientNotifier();
         while (true) {
             Socket socket = serverSocket.accept();
+            notifier.addSocket(socket);
+            logger.log(Level.INFO, "Client connected");
+            new Thread(() -> new Server(socket, logger, accountHandler, commandManager, responseSender, notifier)).start();
+            accountHandler.setConnectedAccounts(+1);
 
-            if (accountHandler.getConnectedAccounts() == MAX_CONNECTED_USERS) {
-                responseSender.send(new Response(ResponseStatus.FAIL,
-                        "Too many clients on the server, please try again later!"), socket);
-                socket.close();
-            } else {
-                logger.log(Level.INFO, "Client connected");
-                new Thread(() -> new Server(socket, logger, accountHandler, commandManager, responseSender)).start();
-                accountHandler.setConnectedAccounts(+1);
-            }
         }
     }
 }

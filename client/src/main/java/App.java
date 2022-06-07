@@ -6,6 +6,9 @@ import utils.AppStarter;
 
 import java.net.InetSocketAddress;
 
+/**
+ * Основной класс приложения
+ **/
 public class App extends Application {
 
     public static void main(String[] args) {

@@ -1,5 +1,9 @@
 package commands;
 
+import interaction.Response;
+
+import java.io.IOException;
+
 public abstract class Command {
     private final String name;
     private final String info;
@@ -12,7 +16,8 @@ public abstract class Command {
         this.argQuantity = argQuantity;
     }
 
-    public abstract void execute();
+    public abstract <T> Response execute(T args) throws IOException;
+    public <T> void setAdditionalArgs(T args){};
 
     public String getName() {
         return name;

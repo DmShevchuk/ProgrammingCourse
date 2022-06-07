@@ -1,6 +1,7 @@
 package gui.game;
 
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -10,9 +11,13 @@ import java.io.File;
 public class DragonSprite extends Pane {
     public Point2D velocity;
     ImageView rectangle;
+    private final String[] images = new String[]{"d1.png", "d2.png", "d3.png", "d4.png", "d5.png"};
+    private int sprite = 0;
+    private int tick = 10;
+    private final String gameResourcesPath = "C:\\Users\\dmitr\\IdeaProjects\\lab_prog\\client\\src\\main\\resources\\game\\";
 
     public DragonSprite() {
-        rectangle = new ImageView("C:\\Users\\dmitr\\IdeaProjects\\lab_prog\\client\\src\\main\\resources\\game\\dragon.png");
+        rectangle = new ImageView(gameResourcesPath + images[sprite]);
         velocity = new Point2D(0, 0);
         setTranslateY(300);
         setTranslateX(100);
@@ -75,5 +80,13 @@ public class DragonSprite extends Pane {
         Media sound = new Media(new File(musicFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
+    }
+
+    public void changeSprite(){
+        tick--;
+        if (tick == 0){
+        rectangle.setImage(new Image(gameResourcesPath + images[sprite++ % 5]));
+            tick = 10;
+        }
     }
 }

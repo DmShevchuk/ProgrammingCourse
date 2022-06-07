@@ -1,4 +1,4 @@
-package gui.controllers;
+package gui;
 
 import collection.Dragon;
 import lombok.Getter;

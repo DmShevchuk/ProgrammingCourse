@@ -17,6 +17,7 @@ public class ResponseSender {
     }
 
     public synchronized Runnable send(Response response, Socket socket) throws IOException {
+        System.out.println(response.getStatus());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
         objectOutputStream.writeObject(response);

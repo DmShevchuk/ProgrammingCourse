@@ -3,13 +3,14 @@ package gui.connectors;
 import account.Authorization;
 import account.Client;
 import gui.AppWorker;
+import gui.controllers.Controller;
 import gui.controllers.LoginWindowController;
 import interaction.Response;
 import interaction.ResponseStatus;
 
 import java.io.IOException;
 
-public class LoginWindowConnector {
+public class LoginWindowConnector implements Connector {
     private final Client client;
     private LoginWindowController loginWindowController;
     private final AppWorker appWorker;
@@ -32,10 +33,6 @@ public class LoginWindowConnector {
         }
     }
 
-    public void setLoginWindowController(LoginWindowController loginWindowController) {
-        this.loginWindowController = loginWindowController;
-    }
-
     private boolean validateData(String login, String password) {
         if (login.length() >= 3 && password.length() >= 3) {
             return true;
@@ -55,5 +52,10 @@ public class LoginWindowConnector {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void bindController(Controller loginWindowController) {
+        this.loginWindowController = (LoginWindowController) loginWindowController;
     }
 }

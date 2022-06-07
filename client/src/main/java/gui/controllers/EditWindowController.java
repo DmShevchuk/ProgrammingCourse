@@ -4,6 +4,8 @@ import collection.Coordinates;
 import collection.Dragon;
 import collection.DragonHead;
 import collection.DragonType;
+import gui.DragonTableModel;
+import gui.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -44,6 +46,14 @@ public class EditWindowController implements Initializable {
     public Label valueY;
     @FXML
     public Button cancelButton;
+    public Label nameLabel;
+    public Label coordinatesLabel;
+    public Label ageLabel;
+    public Label weightLabel;
+    public Label headSizeLabel;
+    public Label typeLabel;
+
+    private I18N i18n;
 
     @Getter
     private Dragon.Builder dragonBuilder;
@@ -61,6 +71,8 @@ public class EditWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.i18n = I18N.getInstance();
+        changeLanguage();
         NumberFormat format = NumberFormat.getIntegerInstance();
         UnaryOperator<TextFormatter.Change> filter = c -> {
             if (c.isContentChange()) {
@@ -122,5 +134,17 @@ public class EditWindowController implements Initializable {
     public void closeEditor() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
+    }
+
+    private void changeLanguage(){
+        nameLabel.setText(i18n.getText("name"));
+        coordinatesLabel.setText(i18n.getText("coords"));
+        ageLabel.setText(i18n.getText("age"));
+        weightLabel.setText(i18n.getText("weight"));
+        speakingCheckBox.setText(i18n.getText("speak"));
+        typeLabel.setText(i18n.getText("type"));
+        headSizeLabel.setText(i18n.getText("headSize"));
+        readyButton.setText(i18n.getText("ready"));
+        cancelButton.setText(i18n.getText("cancel"));
     }
 }

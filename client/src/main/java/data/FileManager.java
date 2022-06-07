@@ -1,13 +1,10 @@
 package data;
-import utils.CommandLine;
 
 import java.io.*;
 
 public class FileManager {
-    private final CommandLine commandLine;
 
-    public FileManager(CommandLine commandLine) {
-        this.commandLine = commandLine;
+    public FileManager() {
     }
 
     public boolean canRead(String fileName) {
@@ -15,26 +12,22 @@ public class FileManager {
         return file.canRead();
     }
 
-    public String read(String fileName) {
+    public String read(String fileName) throws IOException {
         StringBuilder fileContent = new StringBuilder();
-        try {
-            InputStream inputStream = new FileInputStream(fileName);
-            Reader inputStreamReader = new InputStreamReader(inputStream);
+        InputStream inputStream = new FileInputStream(fileName);
+        Reader inputStreamReader = new InputStreamReader(inputStream);
 
-            int data = inputStreamReader.read();
+        int data = inputStreamReader.read();
 
-            while (data != -1) {
-                char theChar = (char) data;
-                fileContent.append(theChar);
-                data = inputStreamReader.read();
-            }
-
-            inputStreamReader.close();
-            return fileContent.toString();
-        } catch (IOException e) {
-            commandLine.errorOut(String.format("Problems reading the file %s!", fileName));
-            return null;
+        while (data != -1) {
+            char theChar = (char) data;
+            fileContent.append(theChar);
+            data = inputStreamReader.read();
         }
+
+        inputStreamReader.close();
+        return fileContent.toString();
+
     }
 
 

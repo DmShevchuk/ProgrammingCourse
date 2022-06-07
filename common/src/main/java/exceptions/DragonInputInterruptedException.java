@@ -1,6 +1,9 @@
 package exceptions;
 
-public class DragonInputInterruptedException extends Exception {
-    public DragonInputInterruptedException() {
+import java.io.IOException;
+
+public class DragonInputInterruptedException extends IOException {
+    public DragonInputInterruptedException(String message) {
+        super(message);
     }
 }

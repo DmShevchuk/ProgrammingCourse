@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import gui.I18N;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,9 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TitledPane;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -17,9 +18,15 @@ public class InfoWindowController implements Initializable {
     public PieChart typePieChart;
     public BarChart<String, Integer> creationDateBarChart;
     public BarChart<String, Integer> ownerBarChart;
+    public TitledPane typePane;
+    public TitledPane datePane;
+    public TitledPane ownerPane;
+    private I18N i18n;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.i18n = I18N.getInstance();
+        changeLanguage();
     }
 
     public void setCreationDateBarChart(Map<String, Integer> data) {
@@ -29,7 +36,7 @@ public class InfoWindowController implements Initializable {
         }
         XYChart.Series<String, Integer> dataSeries = new XYChart.Series<>(dateInfo);
         ObservableList<XYChart.Series<String, Integer>> series = FXCollections.observableArrayList();
-        dataSeries.setName("Количество драконов по месяцам");
+        dataSeries.setName(i18n.getText("dragonsByMonth"));
         series.add(dataSeries);
         creationDateBarChart.setData(series);
     }
@@ -41,7 +48,7 @@ public class InfoWindowController implements Initializable {
         }
         XYChart.Series<String, Integer> dataSeries = new XYChart.Series<>(dateInfo);
         ObservableList<XYChart.Series<String, Integer>> series = FXCollections.observableArrayList();
-        dataSeries.setName("Количество драконов у владельцев");
+        dataSeries.setName(i18n.getText("dragonsByOwner"));
         series.add(dataSeries);
         ownerBarChart.setData(series);
     }
@@ -60,7 +67,13 @@ public class InfoWindowController implements Initializable {
                 )
         );
         typePieChart.setData(pieData);
-        typePieChart.setTitle("Тип драконов");
+        typePieChart.setTitle(i18n.getText("typeOfDragon"));
 
+    }
+
+    private void changeLanguage(){
+        typePane.setText(i18n.getText("type"));
+        datePane.setText(i18n.getText("creationDate"));
+        ownerPane.setText(i18n.getText("ownerId"));
     }
 }

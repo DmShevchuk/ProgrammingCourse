@@ -3,31 +3,31 @@ package commands.command;
 
 import commands.Command;
 import account.Client;
-import run.ServerErrorHandler;
+import interaction.Request;
+import interaction.RequestType;
+import interaction.Response;
+import run.RequestSender;
+import run.ResponseReceiver;
+
+import java.io.IOException;
 
 public class RemoveFirst extends Command {
-    private final ServerErrorHandler errorHandler;
-    private final Client client;
+    private final RequestSender sender;
+    private final ResponseReceiver receiver;
 
-    public RemoveFirst(Client client, ServerErrorHandler errorHandler) {
+    public RemoveFirst(RequestSender sender, ResponseReceiver receiver) {
         super("remove_first",
                 "|| remove the first element from the collection",
                 0);
-        this.errorHandler = errorHandler;
-        this.client = client;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     @Override
-    public void execute() {
-//        try {
-//            client.send(new Request.Builder()
-//                    .setCommandName(this.getName())
-//                    .setRequestType(RequestType.RUN_COMMAND)
-//                    .setAccount(client.getAccount())
-//                    .build());
-//            new ResponseReceiver().getResponse(client, commandLine);
-//        } catch (IOException e) {
-//            errorHandler.handleServerError();
-//        }
+    public <T> Response execute(T args) throws IOException {
+        sender.send(new Request.Builder()
+                .setCommandName("remove_first")
+                .setRequestType(RequestType.RUN_COMMAND));
+        return receiver.getResponse();
     }
 }

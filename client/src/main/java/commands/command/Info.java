@@ -2,35 +2,31 @@ package commands.command;
 
 import commands.Command;
 import account.Client;
-import run.ServerErrorHandler;
+import interaction.Request;
+import interaction.RequestType;
+import interaction.Response;
+import run.RequestSender;
+import run.ResponseReceiver;
+
+import java.io.IOException;
 
 public class Info extends Command {
-    private final ServerErrorHandler errorHandler;
-    private final Client client;
+    private final RequestSender sender;
+    private final ResponseReceiver receiver;
 
-    public Info(Client client, ServerErrorHandler errorHandler) {
+    public Info(RequestSender sender, ResponseReceiver receiver) {
         super("info",
                 "|| display information about the collection (type, initialization date, number of elements)",
                 0);
-        this.errorHandler = errorHandler;
-        this.client = client;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     @Override
-    public void execute() {
-//        try {
-//            client.send(new Request.Builder()
-//                    .setCommandName(this.getName())
-//                    .setRequestType(RequestType.RUN_COMMAND)
-//                    .build());
-//
-//            Response response = new ResponseReceiver().getResponse(client, commandLine);
-//            if (response != null) {
-//                commandLine.outLn(response.getResult());
-//            }
-//        } catch (IOException e) {
-//            errorHandler.handleServerError();
-//        }
+    public <T> Response execute(T args) throws IOException {
+        sender.send(new Request.Builder()
+                .setCommandName(this.getName())
+                .setRequestType(RequestType.RUN_COMMAND));
+        return receiver.getResponse();
     }
-
 }

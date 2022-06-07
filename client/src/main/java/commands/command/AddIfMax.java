@@ -3,49 +3,32 @@ package commands.command;
 import collection.Dragon;
 import commands.Command;
 import account.Client;
-import run.ServerErrorHandler;
+import interaction.Request;
+import interaction.RequestType;
+import interaction.Response;
+import run.RequestSender;
+import run.ResponseReceiver;
+
+import java.io.IOException;
 
 
 public class AddIfMax extends Command {
-    private final Client client;
-    private final ServerErrorHandler errorHandler;
+    private final RequestSender sender;
+    private final ResponseReceiver receiver;
 
-    public AddIfMax(Client client, ServerErrorHandler errorHandler) {
+    public AddIfMax(RequestSender sender, ResponseReceiver receiver) {
         super("add_if_max", "|| add a new element to the collection if its value" +
                 " exceeds the value of the largest element of this collection", 0);
-        this.errorHandler = errorHandler;
-        this.client = client;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     @Override
-    public void execute() {
-
-//        commandLine.outLn("Adding a dragon to compare\n(empty string = null, '_quit_' to exit)");
-//
-//        DragonCreator dragonCreator = new DragonCreator(commandLine);
-//        Dragon.Builder newDragon;
-//        try {
-//            newDragon = dragonCreator.getNewDragon();
-//        } catch (DragonInputInterruptedException e) {
-//            return;
-//        }
-//        newDragon.setOwnerId(client.getAccount().getId());
-//        compare(newDragon);
+    public <T> Response execute(T args) throws IOException {
+        sender.send(new Request.Builder()
+                .setCommandName("add_if_max")
+                .setDragonBuild((Dragon.Builder) args)
+                .setRequestType(RequestType.RUN_COMMAND));
+        return receiver.getResponse();
     }
-
-    public void compare(Dragon.Builder newDragon) {
-//        try {
-//            client.send(new Request.Builder()
-//                    .setCommandName(this.getName())
-//                    .setDragonBuild(newDragon)
-//                    .setRequestType(RequestType.RUN_COMMAND)
-//                    .setAccount(client.getAccount())
-//                    .build());
-//            new ResponseReceiver().getResponse(client, commandLine);
-//        } catch (IOException e) {
-//            errorHandler.handleServerError();
-//        }
-    }
-
-
 }

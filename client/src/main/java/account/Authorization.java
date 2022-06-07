@@ -1,5 +1,6 @@
 package account;
 
+import gui.I18N;
 import interaction.*;
 
 import java.io.IOException;
@@ -10,9 +11,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class Authorization {
     private final Client client;
+    private I18N i18n;
 
     public Authorization(Client client) {
         this.client = client;
+        this.i18n = I18N.getInstance();
     }
 
 
@@ -44,7 +47,7 @@ public class Authorization {
             client.send(new Request.Builder().setRequestType(requestType).setAccount(account).build());
             return client.receive();
         } catch (IOException | ClassNotFoundException e) {
-            return new Response(ResponseStatus.FAIL, "Проблемы с подключением к серверу!");
+            return new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer"));
         }
     }
 }

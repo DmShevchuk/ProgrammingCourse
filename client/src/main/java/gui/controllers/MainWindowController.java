@@ -2,11 +2,14 @@ package gui.controllers;
 
 import account.Client;
 import collection.Dragon;
-import gui.AppWorker;
-import interaction.Request;
-import interaction.RequestType;
+import data.FileManager;
+import gui.DragonTableModel;
+import gui.I18N;
+import gui.connectors.Connector;
+import gui.connectors.MainWindowConnector;
+import gui.connectors.ScriptRunner;
+import gui.game.FlappyDragon;
 import interaction.Response;
-import interaction.ResponseStatus;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,12 +22,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import lombok.Getter;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormatSymbols;
@@ -32,13 +37,12 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class MainWindowController extends Window implements Initializable {
+public class MainWindowController extends Window implements Initializable, Controller {
     @FXML
     public Button addElemButton;
     @FXML
     public TableColumn<DragonTableModel, Integer> ownerId;
     public Circle updateCircle;
-    public Label errorLabel;
     public Button getInfo;
     public Button deleteDragon;
     public Button addIfMaxButton;
@@ -52,6 +56,24 @@ public class MainWindowController extends Window implements Initializable {
     public TabPane tabPane;
     public ColorPicker wingsColorPicker;
     public ColorPicker pawsColorPicker;
+    public TextField headSizeField;
+    public TextArea showScriptField;
+    public TextArea showScriptResultField;
+    public Label currentUser;
+    public ComboBox<String> languageComboBox;
+    public Button logoutButton;
+    public Button removeFirst;
+    public Button removeByHead;
+    public Button clearCollectionButton;
+    public Label yourColorsLabel;
+    public Label headColorLabel;
+    public Label bodyColorLabel;
+    public Label wingsColorsLabel;
+    public Label pawsColorsLabel;
+    public Button runGameButton;
+    public Button runScriptButton;
+    public Button uploadFileButton;
+    public Button clearFieldButton;
     @FXML
     private TableView<DragonTableModel> dragonTable;
     @FXML
@@ -77,14 +99,23 @@ public class MainWindowController extends Window implements Initializable {
     @Getter
     private ObservableList<DragonTableModel> dragonsObservable;
     private final ObservableList<DragonTableModel> dragonsSearchResult = FXCollections.observableArrayList();
-    private final ArrayList<ArrayList<Integer>> coordinatesList = new ArrayList<>();
-    private AppWorker appWorker;
+    private List<ArrayList<Integer>> coordinatesList = new ArrayList<>();
     private Client client;
+    private MainWindowConnector connector;
     @FXML
     public Button updateTableButton;
+    private I18N i18n;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        i18n = I18N.getInstance();
+        languageComboBox.getItems().removeAll(languageComboBox.getItems());
+        languageComboBox.getItems().addAll("Русский", "Nederlands", "Lietuvių", "English");
+        languageComboBox.getSelectionModel().select(i18n.getLanguage());
+        languageComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            changeLanguage(newValue);
+        });
+        changeLanguage(i18n.getLanguage());
         // Определение таблицы для драконов
         dragonTable.setEditable(true);
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -100,140 +131,79 @@ public class MainWindowController extends Window implements Initializable {
         ownerId.setCellValueFactory(new PropertyValueFactory<>("ownerId"));
         // Отключение кнопки "Обновить таблицу"
         updateTableButton.setDisable(true);
-        // Указание полей для поиска
-        searchComboBox.getItems().removeAll(searchComboBox.getItems());
-        searchComboBox.getItems().addAll("id", "Имя", "X", "Y", "Дата создания", "Возраст", "Тип", "Вес", "Говорит",
-                "Размер головы", "id владельца");
-        searchComboBox.getSelectionModel().select(0);
 
-        searchField.textProperty().addListener((observable, oldVal, newVal) ->{
+        searchField.textProperty().addListener((observable, oldVal, newVal) -> {
             search(newVal);
         });
 
+        // При вводе в поле для поиска сразу идет поиск по указанному полю
         searchComboBox.getSelectionModel().selectedItemProperty().addListener(
                 (options, oldVal, newVal) -> search(searchField.getText())
         );
+
+        // При клике мышкой по координатному полю показывается объект в таблице
         canvas.setOnMouseClicked(event -> selectDragonOnCanvas(event.getX(), event.getY()));
     }
 
-    private void fillCanvas(){
+    /**
+     * Метод для отрисовки драконов исключительно с помощью ГРАФИЧЕСКИХ ПРИМИТИВОВ
+     * При этом есть возможность изменять цвет головы, туловища, лап и крыльев дракона
+     */
+    private void fillCanvas() {
         coordinatesList.clear();
         GraphicsContext gContext = canvas.getGraphicsContext2D();
         gContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gContext.setLineWidth(2);
-        gContext.setStroke(Color.BLACK);
-        // Левая граница
-        gContext.strokeLine(0, 0, 0, 482);
-        // Правая граница
-        gContext.strokeLine(482, 0, 482, 482);
-        // Верхняя граница
-        gContext.strokeLine(0, 0, 482, 0);
-        // Нижняя граница
-        gContext.strokeLine(0, 482, 482, 482);
-        // oX
-        gContext.strokeLine(241, 482, 241, 0);
-        // oY
-        gContext.strokeLine(0, 241, 482, 241);
 
-        gContext.setLineWidth(1);
-        int headW = 20;
-        int headH = 20;
-        int startAngle = 45;
-        int headExtent = 320;
-        int bodyW = 10;
-        int bodyH = 30;
-        int bodyX;
-        int bodyY;
-        double[] rightWingX = new double[3];
-        double[] leftWingX = new double[3];
-        double[] rightAndLeftWingY = new double[3];
+        CanvasDrawer canvasDrawer = new CanvasDrawer(dragonsObservable, gContext);
+        canvasDrawer.drawBorders();
+        canvasDrawer.drawAxis();
 
-        for(DragonTableModel dragon: dragonsObservable){
-            int xRelative = (int) (((dragon.getX() * 460) / 100) + 241);
-            int yRelative = (int) (-((dragon.getY() * 460) / 100) + 241);
-
-            coordinatesList.add(new ArrayList<>(List.of(xRelative, yRelative)));
-
-            bodyX = xRelative + 5;
-            bodyY = yRelative + 15;
-            rightWingX[0] = xRelative + 15;
-            rightWingX[1] = xRelative + 25;
-            rightWingX[2] = xRelative + 35;
-
-            leftWingX[0] = xRelative + 5;
-            leftWingX[1] = xRelative - 5;
-            leftWingX[2] = xRelative - 15;
-
-            rightAndLeftWingY[0] = yRelative + 20;
-            rightAndLeftWingY[1] = yRelative + 10;
-            rightAndLeftWingY[2] = yRelative + 40;
-
-            if(dragon.getOwnerId().equals(client.getAccount().getId())) {
-                Color color = bodyColorPicker.getValue();
-                gContext.setFill(color);
-            }else{
-                gContext.setFill(new Color(0.48, 0.67, 0.67, 1));
-            }
-            gContext.fillRoundRect(bodyX, bodyY, bodyW, bodyH, 1, 1);
-
-            if(dragon.getOwnerId().equals(client.getAccount().getId())){
-                Color color = headColorPicker.getValue();
-                gContext.setFill(color);
-            }else{
-                gContext.setFill(new Color(0.48, 0.67, 0.67, 1));
-            }
-            gContext.fillArc(xRelative, yRelative, headW, headH, startAngle, headExtent, ArcType.ROUND);
-
-            if(dragon.getOwnerId().equals(client.getAccount().getId())){
-                Color color = wingsColorPicker.getValue();
-                gContext.setFill(color);
-            }else{
-                gContext.setFill(new Color(0.48, 0.67, 0.67, 1));
-            }
-
-            gContext.fillPolygon(rightWingX, rightAndLeftWingY, 3);
-            gContext.fillPolygon(leftWingX, rightAndLeftWingY, 3);
-
-            if(dragon.getOwnerId().equals(client.getAccount().getId())){
-                Color color = pawsColorPicker.getValue();
-                gContext.setStroke(color);
-            }else{
-                gContext.setStroke(new Color(0.48, 0.67, 0.67, 1));
-            }
-
-            gContext.strokeLine(xRelative + 8, yRelative + 45, xRelative - 2, yRelative + 55);
-
-            gContext.strokeLine(xRelative + 12, yRelative + 45, xRelative + 22, yRelative + 55);
-
-        }
-
+        coordinatesList = canvasDrawer.drawDragons(client.getAccount().getId(),
+                bodyColorPicker.getValue(),
+                headColorPicker.getValue(),
+                wingsColorPicker.getValue(),
+                pawsColorPicker.getValue());
     }
 
-    public void selectDragonOnCanvas(double x, double y){
-        System.out.println(x + " " + y);
-        if(coordinatesList.size() == 0){
+    /**
+     * Метод для поиска ближайшего дракона по клику мыши
+     * Как только такой дракон найден, происходит переход к таблице
+     * Расстояние от точки клика до координат дракона вычисляется по стандартной формуле расстояния между точками
+     * |AB| = sqrt((x1 - x0)^2 + (y1 - y0)^2)
+     * При этом, если клик произошел слишком далеко от драконов, перехода не происходит
+     */
+    public void selectDragonOnCanvas(double x, double y) {
+        if (coordinatesList.size() == 0) {
             return;
         }
-        double hypotenuse = Math.pow(x, 2) + Math.pow(y, 2);
         DragonTableModel closestDragon = dragonsObservable.get(0);
         double closeX = coordinatesList.get(0).get(0);
         double closeY = coordinatesList.get(0).get(1);
         int idx = 0;
-        for(ArrayList<Integer> coordinates: coordinatesList){
+        for (ArrayList<Integer> coordinates : coordinatesList) {
             double currX = coordinates.get(0);
             double currY = coordinates.get(1);
-            if(Math.abs(hypotenuse - Math.pow(closeX, 2) - Math.pow(closeY, 2)) >=
-                    Math.abs(hypotenuse - Math.pow(currX, 2) - Math.pow(currY, 2))){
+            if (Math.sqrt(Math.pow(x - closeX, 2) + Math.pow(y - closeY, 2)) >=
+                    Math.sqrt(Math.pow(x - currX, 2) + Math.pow(y - currY, 2))) {
                 closestDragon = dragonsObservable.get(idx);
                 closeX = currX;
                 closeY = currY;
             }
             idx++;
         }
+        if (Math.sqrt(Math.pow(x - closeX, 2) + Math.pow(y - closeY, 2)) >= 30) {
+            return;
+        }
+        setDragons(dragonsObservable);
         tabPane.getSelectionModel().select(0);
         dragonTable.getSelectionModel().select(closestDragon);
     }
 
+    /**
+     * Метод для установки полей драконов в таблицу
+     *
+     * @param dragonLinkedList: LinkedList<Dragon>
+     */
     public void setDragons(LinkedList<Dragon> dragonLinkedList) {
         dragonTable.getItems().clear();
         List<DragonTableModel> dtm = new LinkedList<>();
@@ -243,22 +213,33 @@ public class MainWindowController extends Window implements Initializable {
         dragonsObservable = FXCollections.observableList(dtm);
         dragonTable.setItems(dragonsObservable);
         setRowFactory();
+        updateTableButton.setDisable(true);
+        updateCircle.setFill(Color.WHITE);
         fillCanvas();
     }
 
-    public void setDragons(ObservableList<DragonTableModel> dragons){
+    /**
+     * Метод для установки полей драконов в таблицу
+     *
+     * @param dragons: ObservableList<DragonTableModel>
+     */
+    public void setDragons(ObservableList<DragonTableModel> dragons) {
         dragonTable.setItems(dragons);
         setRowFactory();
     }
 
-    private void setRowFactory(){
+
+    /**
+     * При двойном клике мышью по строке таблицы происходит переход на редактирование
+     */
+    private void setRowFactory() {
         dragonTable.setRowFactory(tableView -> {
             TableRow<DragonTableModel> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     DragonTableModel rowData = row.getItem();
                     try {
-                        openChangeEditor(rowData);
+                        openUpdateEditor(rowData);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -268,12 +249,8 @@ public class MainWindowController extends Window implements Initializable {
         });
     }
 
-    public void setAppWorker(AppWorker aW) {
-        this.appWorker = aW;
-    }
-
     public void logout() throws IOException {
-        appWorker.setLoginWindow();
+        connector.setLoginWindow();
     }
 
     public void setClient(Client client) {
@@ -282,85 +259,67 @@ public class MainWindowController extends Window implements Initializable {
         loginLabel.setText(this.client.getAccount().getLogin());
     }
 
-    private void openChangeEditor(DragonTableModel rowData) throws IOException {
-        if (appWorker.getClient().getAccount().getId() != rowData.getOwnerId()) {
-            showMessageBox("Невозможно редактировать дракона,\nпотому что он принадлежит не вам!", Alert.AlertType.WARNING);
-            return;
-        }
 
+    /**
+     * Открыть окно для редактирования драконов
+     * Если rowData == null, открывается окно с пустыми полями для добавления дракона
+     * Иначе открывается окно для редактирования с заполненными полями
+     */
+    private Dragon.Builder openEditor(DragonTableModel rowData) throws IOException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainWindowController.class.getResource("/editor-view.fxml"));
         fxmlLoader.setLocation(getClass().getResource("/editor-view.fxml"));
         Parent root = fxmlLoader.load();
         EditWindowController editWindowController = fxmlLoader.getController();
-        editWindowController.setFields(rowData);
+
+        if (rowData != null) {
+            editWindowController.setFields(rowData);
+        }
         stage.setScene(new Scene(root));
         stage.setTitle("Editor");
         stage.initOwner(this);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
-        if (editWindowController.getDragonBuilder() != null) {
-            Dragon.Builder dragonBuilder = editWindowController.getDragonBuilder();
-            dragonBuilder.setId(rowData.getId())
-                    .setOwnerId(appWorker.getClient().getAccount().getId())
-                    .setCreationDate(rowData.getCreationDate());
-            try {
-                client.send(new Request.Builder()
-                        .setCommandName("update")
-                        .setArgs(rowData.getId().toString())
-                        .setDragonBuild(dragonBuilder)
-                        .setRequestType(RequestType.RUN_COMMAND)
-                        .setAccount(client.getAccount())
-                        .build());
-                Response response = client.receive();
-                if (response.getStatus() == ResponseStatus.FAIL) {
-                    showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-                } else {
-                    System.out.println(response.getResult());
-                    showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                    setDragons(response.getDragonList());
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                errorLabel.setText(e.getMessage());
-            }
+
+        return editWindowController.getDragonBuilder();
+    }
+
+    /**
+     * Открытие окна для редактирования дракона из таблицы
+     */
+    private void openUpdateEditor(DragonTableModel rowData) throws IOException {
+        if (client.getAccount().getId() != rowData.getOwnerId()) {
+            showMessageBox(i18n.getText("unableToEditDragon"),
+                    Alert.AlertType.WARNING);
+            return;
+        }
+
+        Dragon.Builder dragonBuilder = openEditor(rowData);
+
+        if (dragonBuilder != null) {
+            dragonBuilder.setCreationDate(rowData.getCreationDate());
+            connector.updateDragon(dragonBuilder, rowData.getId());
         }
     }
 
     public void openAddEditor() throws IOException {
-        Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(MainWindowController.class.getResource("/editor-view.fxml"));
-        fxmlLoader.setLocation(getClass().getResource("/editor-view.fxml"));
-        Parent root = fxmlLoader.load();
-        EditWindowController editWindowController = fxmlLoader.getController();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Editor");
-        stage.initOwner(this);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        if (editWindowController.getDragonBuilder() != null) {
-            Dragon.Builder dragonBuilder = editWindowController.getDragonBuilder();
-            dragonBuilder.setOwnerId(appWorker.getClient().getAccount().getId());
-            try {
-                client.send(new Request.Builder()
-                        .setCommandName("add")
-                        .setDragonBuild(dragonBuilder)
-                        .setRequestType(RequestType.RUN_COMMAND)
-                        .setAccount(client.getAccount())
-                        .build());
-                Response response = client.receive();
-                if (response.getStatus() == ResponseStatus.FAIL) {
-                    showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-                } else {
-                    showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                    setDragons(response.getDragonList());
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                errorLabel.setText(e.getMessage());
-            }
+        Dragon.Builder dragonBuilder = openEditor(null);
+
+        if (dragonBuilder != null) {
+            dragonBuilder.setOwnerId(client.getAccount().getId());
+            connector.addDragon(dragonBuilder);
         }
     }
 
     public void updateTable() {
+        LinkedList<Dragon> dragons = connector.getNewCollection();
+        if (dragons == null) {
+            showMessageBox(i18n.getText("unableToUpdateCollection"), Alert.AlertType.WARNING);
+            return;
+        }
+        setDragons(dragons);
+        updateTableButton.setDisable(true);
+        updateCircle.setFill(Color.WHITE);
     }
 
     private boolean getConfirm(String action, String question) {
@@ -370,12 +329,14 @@ public class MainWindowController extends Window implements Initializable {
 
         Optional<ButtonType> option = alert.showAndWait();
 
-        if (option.get() == null || option.get() == ButtonType.CANCEL) {
+        if (option == null || option.get() == ButtonType.CANCEL) {
             return false;
-        } else return option.get() == ButtonType.OK;
+        } else {
+            return option.get() == ButtonType.OK;
+        }
     }
 
-    private void showMessageBox(String message, Alert.AlertType alertType) {
+    public void showMessageBox(String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle("Message");
         alert.setHeaderText(message);
@@ -415,7 +376,7 @@ public class MainWindowController extends Window implements Initializable {
         infoViewController.setOwnerBarChart(ownerMap);
         infoViewController.setTypePieChart(dragonTypeMap);
         stage.setScene(new Scene(root));
-        stage.setTitle("Информация");
+        stage.setTitle(i18n.getText("info"));
         stage.initOwner(this);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -425,123 +386,59 @@ public class MainWindowController extends Window implements Initializable {
     public void deleteDragon() {
         DragonTableModel selectedDragon = dragonTable.getSelectionModel().getSelectedItem();
         if (selectedDragon == null) {
-            showMessageBox("Выберите элемент для удаления!", Alert.AlertType.WARNING);
+            showMessageBox(i18n.getText("chooseElementToDelete"), Alert.AlertType.WARNING);
             return;
         }
         if (!selectedDragon.getOwnerId().equals(client.getAccount().getId())) {
-            showMessageBox("Невозможно удалить элемент,\nпотому что он принадлежит не вам!", Alert.AlertType.WARNING);
+            showMessageBox(i18n.getText("unableToDeleteElem"), Alert.AlertType.WARNING);
             return;
         }
-        boolean confirm = getConfirm("Удаление", String.format("Вы уверены, что хотите удалить дракона %s?",
-                selectedDragon.getName()));
+        boolean confirm = getConfirm(i18n.getText("delete"), i18n.getText("deleteConfirm") +
+                selectedDragon.getName() + "?");
         if (!confirm) {
             return;
         }
-        try {
-            client.send(new Request.Builder()
-                    .setCommandName("remove_by_id")
-                    .setArgs(selectedDragon.getId().toString())
-                    .setRequestType(RequestType.RUN_COMMAND)
-                    .setAccount(client.getAccount())
-                    .build());
-            Response response = client.receive();
-            if (response.getStatus() == ResponseStatus.FAIL) {
-                showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-            } else {
-                showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                setDragons(response.getDragonList());
-            }
-        } catch (ClassCastException | IOException | ClassNotFoundException e) {
-            showMessageBox(e.getMessage(), Alert.AlertType.WARNING);
-        }
+        connector.removeById(selectedDragon.getId());
     }
 
     public void openAddIfMaxEditor() throws IOException {
-        Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(MainWindowController.class.getResource("/editor-view.fxml"));
-        fxmlLoader.setLocation(getClass().getResource("/editor-view.fxml"));
-        Parent root = fxmlLoader.load();
-        EditWindowController editWindowController = fxmlLoader.getController();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Editor");
-        stage.initOwner(this);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        if (editWindowController.getDragonBuilder() != null) {
-            Dragon.Builder dragonBuilder = editWindowController.getDragonBuilder();
+        Dragon.Builder dragonBuilder = openEditor(null);
+
+        if (dragonBuilder != null) {
             dragonBuilder.setOwnerId(client.getAccount().getId());
-            dragonBuilder.setOwnerId(appWorker.getClient().getAccount().getId());
-            try {
-                client.send(new Request.Builder()
-                        .setCommandName("add_if_max")
-                        .setDragonBuild(dragonBuilder)
-                        .setRequestType(RequestType.RUN_COMMAND)
-                        .setAccount(client.getAccount())
-                        .build());
-                Response response = client.receive();
-                if (response.getStatus() == ResponseStatus.FAIL) {
-                    showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-                } else {
-                    showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                    setDragons(response.getDragonList());
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                errorLabel.setText(e.getMessage());
-            }
+            connector.addIfMaxDragon(dragonBuilder);
         }
 
     }
 
     public void clearCollection() {
-        boolean confirm = getConfirm("Очистка коллекции", "Вы уверены, что хотите удалить" +
-                " все элементы коллекции?");
+        boolean confirm = getConfirm(i18n.getText("clear"), i18n.getText("deleteAllElemConfirm"));
         if (!confirm) {
             return;
         }
-        try {
-            client.send(new Request.Builder()
-                    .setCommandName("clear")
-                    .setRequestType(RequestType.RUN_COMMAND)
-                    .setAccount(client.getAccount())
-                    .build());
-            Response response = client.receive();
-            if (response.getStatus() == ResponseStatus.FAIL) {
-                showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-            } else {
-                showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                setDragons(response.getDragonList());
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            showMessageBox(e.getMessage(), Alert.AlertType.WARNING);
+        connector.clearCollection();
+    }
+
+    public void removeFirstInCollection() {
+        boolean confirm = getConfirm(i18n.getText("clear"), i18n.getText("deleteFirstElemConfirm"));
+        if (!confirm) {
+            return;
         }
+        connector.removeFirstInCollection();
     }
 
     public void removeAllByHead() {
-        DragonTableModel selectedDragon = dragonTable.getSelectionModel().getSelectedItem();
-        if (selectedDragon == null) {
-            showMessageBox("Выберите элемент для удаления!", Alert.AlertType.WARNING);
+        Long headSizeValue = 0L;
+        try {
+            headSizeValue = Long.parseLong(headSizeField.getText().trim());
+        } catch (NumberFormatException e) {
+            showMessageBox(i18n.getText("enterCorrectHeadSize"), Alert.AlertType.WARNING);
             return;
         }
-        boolean confirm = getConfirm("Удаление", String.format("Вы уверены, что хотите удалить дракона" +
-                " с размером головы %d?", selectedDragon.getHeadSize()));
+        boolean confirm = getConfirm(i18n.getText("delete"),
+                i18n.getText("deleteByHeadConfirm") + " " + headSizeValue + "?");
         if (confirm) {
-            try {
-                client.send(new Request.Builder()
-                        .setCommandName("remove_all_by_head")
-                        .setArgs(selectedDragon.getHeadSize().toString())
-                        .setRequestType(RequestType.RUN_COMMAND)
-                        .setAccount(client.getAccount())
-                        .build());
-                Response response = client.receive();
-                if (response.getStatus() == ResponseStatus.FAIL) {
-                    showMessageBox(response.getResult(), Alert.AlertType.WARNING);
-                } else {
-                    showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
-                    setDragons(response.getDragonList());
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                showMessageBox(e.getMessage(), Alert.AlertType.WARNING);
-            }
+            connector.removeAllByHead(headSizeValue);
         }
     }
 
@@ -553,7 +450,7 @@ public class MainWindowController extends Window implements Initializable {
         dragonsSearchResult.clear();
         Pattern pattern;
         query = query.trim();
-        if("".equals(query)){
+        if ("".equals(query)) {
             clearSearch();
         }
 
@@ -563,7 +460,9 @@ public class MainWindowController extends Window implements Initializable {
             pattern = Pattern.compile(query.trim());
         }
         int queryIdx = searchComboBox.getSelectionModel().getSelectedIndex();
-        System.out.println(dragonsObservable.size());
+        if (queryIdx < 0) {
+            return;
+        }
         for (DragonTableModel dragon : dragonsObservable) {
             List<String> fields = dragon.getDragonModelAsArray();
             if (pattern.matcher(fields.get(queryIdx).toString()).find()) {
@@ -580,5 +479,131 @@ public class MainWindowController extends Window implements Initializable {
     }
 
     public void runGame() {
+        try {
+            Stage stage = new Stage();
+            FlappyDragon game = new FlappyDragon();
+            game.start(stage);
+            stage.showAndWait();
+        } catch (RuntimeException ignored) {
+        }
     }
+
+    @Override
+    public void bindConnector(Connector connector) {
+        this.connector = (MainWindowConnector) connector;
+    }
+
+    /**
+     * Метод дял открытия файла со скриптом
+     */
+    public void openScriptFile() throws IOException {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters()
+                .addAll(new FileChooser.ExtensionFilter("Text", "*.txt"));
+        fileChooser.setTitle("Open Script FIle");
+        File file = fileChooser.showOpenDialog(stage);
+        if (file == null) {
+            return;
+        }
+        FileManager fileManager = new FileManager();
+        if (!fileManager.canRead(file.getAbsolutePath())) {
+            showMessageBox(i18n.getText("cannotReadFile"), Alert.AlertType.WARNING);
+        }
+        String script = fileManager.read(file.getAbsolutePath());
+        showScriptField.setText(script);
+    }
+
+    public void runScript() {
+        String[] lines = showScriptField.getText().split("\\n");
+        showScriptField.clear();
+        showScriptResultField.clear();
+        String newLines = "";
+        for (String line : lines) {
+            // Запрет на выполнение команд
+            if (!line.startsWith("update") && !line.startsWith("add") && !line.startsWith("history")
+                    && !line.startsWith("execute_script") && !"".equals(line.trim())) {
+                newLines += line + "\n";
+            }
+        }
+        showScriptField.setText(newLines);
+
+        ScriptRunner scriptRunner = new ScriptRunner(newLines, connector.getCommandFactory());
+        scriptRunner.bindController(this);
+
+        try {
+            Response response = scriptRunner.start();
+            showScriptResultField.setText(response.getResult());
+        } catch (IOException e) {
+            showMessageBox(e.getMessage(), Alert.AlertType.WARNING);
+        }
+    }
+
+    public void clearScriptField() {
+        showScriptField.clear();
+        showScriptResultField.clear();
+    }
+
+    public void waitForNewCollection() {
+        updateTableButton.setDisable(false);
+        updateCircle.setFill(javafx.scene.paint.Color.RED);
+    }
+
+    private void changeLanguage(String newValue) {
+        i18n.changeLocale(newValue);
+        currentUser.setText(i18n.getText("currentUser"));
+        logoutButton.setText(i18n.getText("logout"));
+
+        searchComboBox.getItems().removeAll(searchComboBox.getItems());
+        searchComboBox.getItems().addAll("id",
+                i18n.getText("name"),
+                "X", "Y",
+                i18n.getText("creationDate"),
+                i18n.getText("age"),
+                i18n.getText("type"),
+                i18n.getText("weight"),
+                i18n.getText("speak"),
+                i18n.getText("headSize"),
+                i18n.getText("ownerId"));
+        searchComboBox.getSelectionModel().select(0);
+
+        updateTableButton.setText(i18n.getText("updateTable"));
+        ObservableList<Tab> tabs = tabPane.getTabs();
+        tabs.get(0).setText(i18n.getText("table"));
+        tabs.get(1).setText(i18n.getText("visual"));
+        tabs.get(2).setText(i18n.getText("script"));
+        ObservableList<TableColumn<DragonTableModel, ?>> columns = dragonTable.getColumns();
+        columns.get(1).setText(i18n.getText("name"));
+        columns.get(2).setText(i18n.getText("coords"));
+        columns.get(3).setText(i18n.getText("creationDate"));
+        columns.get(4).setText(i18n.getText("age"));
+        columns.get(5).setText(i18n.getText("type"));
+        columns.get(6).setText(i18n.getText("weight"));
+        columns.get(7).setText(i18n.getText("speak"));
+        columns.get(8).setText(i18n.getText("headSize"));
+        columns.get(9).setText(i18n.getText("ownerId"));
+
+        getInfo.setText(i18n.getText("info"));
+        removeFirst.setText(i18n.getText("removeFirst"));
+        addIfMaxButton.setText(i18n.getText("addIfMax"));
+        clearCollectionButton.setText(i18n.getText("clear"));
+        deleteDragon.setText(i18n.getText("delete"));
+        addElemButton.setText(i18n.getText("add"));
+        removeByHead.setText(i18n.getText("removeByHead"));
+
+        concreteSearch.setText(i18n.getText("strongSearch"));
+
+        yourColorsLabel.setText(i18n.getText("yoursColor"));
+        headColorLabel.setText(i18n.getText("headColor"));
+        bodyColorLabel.setText(i18n.getText("bodyColor"));
+        wingsColorsLabel.setText(i18n.getText("wingsColor"));
+        pawsColorsLabel.setText(i18n.getText("pawsColor"));
+        runGameButton.setText(i18n.getText("runGame"));
+
+        uploadFileButton.setText(i18n.getText("uploadFile"));
+        clearFieldButton.setText(i18n.getText("clearFields"));
+        runScriptButton.setText(i18n.getText("runScript"));
+
+    }
+
 }

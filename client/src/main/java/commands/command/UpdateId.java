@@ -2,57 +2,41 @@ package commands.command;
 
 import collection.Dragon;
 import commands.Command;
-import commands.CommandManager;
-import account.Client;
-import run.ServerErrorHandler;
+import interaction.Request;
+import interaction.RequestType;
+import interaction.Response;
+import run.RequestSender;
+import run.ResponseReceiver;
+
+import java.io.IOException;
 
 
 public class UpdateId extends Command {
-    private Integer currentId;
-    private final CommandManager commandManager;
-    private final ServerErrorHandler errorHandler;
-    private final Client client;
+    private final RequestSender sender;
+    private final ResponseReceiver receiver;
+    private Integer id;
 
-    public UpdateId(Client client, CommandManager commandManager, ServerErrorHandler errorHandler) {
+
+    public UpdateId(RequestSender sender, ResponseReceiver receiver) {
         super("update",
                 "||{id}  update the value of the collection element whose id is equal to the given one",
                 1);
-        this.commandManager = commandManager;
-        this.errorHandler = errorHandler;
-        this.client = client;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     @Override
-    public void execute() {
-//        try {
-//            currentId = Integer.parseInt(commandManager.getArg());
-//            DragonCreator dragonCreator = new DragonCreator(commandLine);
-//            Dragon.Builder newDragon;
-//            try {
-//                newDragon = dragonCreator.getNewDragon();
-//            }catch (DragonInputInterruptedException e){
-//                return;
-//            }
-//
-//            update(newDragon);
-//
-//        } catch (ClassCastException e) {
-//            commandLine.errorOut("Impossible to get id=" + commandManager.getArg());
-//        }
+    public <T> Response execute(T args) throws IOException {
+        sender.send(new Request.Builder()
+                .setCommandName("update")
+                .setArgs(id.toString())
+                .setDragonBuild((Dragon.Builder) args)
+                .setRequestType(RequestType.RUN_COMMAND));
+        return receiver.getResponse();
     }
 
-    public void update(Dragon.Builder dragon) {
-//        try {
-//            client.send(new Request.Builder().
-//                    setCommandName(this.getName())
-//                    .setArgs(currentId.toString())
-//                    .setDragonBuild(dragon)
-//                    .setRequestType(RequestType.RUN_COMMAND)
-//                    .setAccount(client.getAccount())
-//                    .build());
-//            new ResponseReceiver().getResponse(client, commandLine);
-//        } catch (IOException e) {
-//            errorHandler.handleServerError();
-//        }
+    @Override
+    public <T> void setAdditionalArgs(T args){
+        this.id = (Integer) args;
     }
 }
