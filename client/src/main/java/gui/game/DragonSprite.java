@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
 import java.io.File;
 
 public class DragonSprite extends Pane {
@@ -14,10 +15,9 @@ public class DragonSprite extends Pane {
     private final String[] images = new String[]{"d1.png", "d2.png", "d3.png", "d4.png", "d5.png"};
     private int sprite = 0;
     private int tick = 10;
-    private final String gameResourcesPath = "C:\\Users\\dmitr\\IdeaProjects\\lab_prog\\client\\src\\main\\resources\\game\\";
 
     public DragonSprite() {
-        rectangle = new ImageView(gameResourcesPath + images[sprite]);
+        rectangle = new ImageView(getFilePath(images[sprite]).getAbsolutePath());
         velocity = new Point2D(0, 0);
         setTranslateY(300);
         setTranslateX(100);
@@ -61,11 +61,10 @@ public class DragonSprite extends Pane {
                         return;
                     }
                 }
-                if (getTranslateX() == w.getTranslateX()){
+                if (getTranslateX() == w.getTranslateX()) {
                     FlappyDragon.score++;
-                    String musicFile = "C:\\Users\\dmitr\\IdeaProjects\\lab_prog\\client\\src\\main\\resources\\game\\sfx_point.mp3";
 
-                    Media sound = new Media(new File(musicFile).toURI().toString());
+                    Media sound = new Media(getFilePath("sfx_point.mp3").toURI().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(sound);
                     mediaPlayer.play();
                 }
@@ -73,20 +72,23 @@ public class DragonSprite extends Pane {
         }
     }
 
-    public void jump(){
+    public void jump() {
         velocity = new Point2D(3, -15);
-        String musicFile = "C:\\Users\\dmitr\\IdeaProjects\\lab_prog\\client\\src\\main\\resources\\game\\sfx_wing.mp3";
 
-        Media sound = new Media(new File(musicFile).toURI().toString());
+        Media sound = new Media(getFilePath("sfx_wing.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
     }
 
-    public void changeSprite(){
+    public void changeSprite() {
         tick--;
-        if (tick == 0){
-        rectangle.setImage(new Image(gameResourcesPath + images[sprite++ % 5]));
+        if (tick == 0) {
+            rectangle.setImage(new Image(getFilePath(images[sprite++ % 5]).getAbsolutePath()));
             tick = 10;
         }
+    }
+
+    private File getFilePath(String fileName) {
+        return new File("client\\src\\main\\resources\\game\\" + fileName);
     }
 }
