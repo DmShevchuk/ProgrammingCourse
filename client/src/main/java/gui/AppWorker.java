@@ -9,8 +9,10 @@ import gui.connectors.MainWindowConnector;
 import gui.controllers.LoginWindowController;
 import gui.controllers.MainWindowController;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
 import run.RequestSender;
@@ -53,7 +55,7 @@ public class AppWorker {
         Scene scene = new Scene(root, 500, 330);
         stage.setTitle("Dragons");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.centerOnScreen();
         stage.show();
     }
@@ -79,9 +81,10 @@ public class AppWorker {
         MainWindowConnector connector = new MainWindowConnector(client, commandFactory,this);
         mainWindowController.bindConnector(connector);
         connector.bindController(mainWindowController);
-        responseReceiver.setConnector(connector);
         Scene scene = new Scene(root);
+
         stage.setTitle("Dragons");
+        stage.setMaxWidth(990.0);
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();

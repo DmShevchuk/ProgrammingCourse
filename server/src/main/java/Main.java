@@ -4,10 +4,9 @@ import database.AccountHandler;
 import database.CollectionLoader;
 import database.DbConnector;
 import database.DbManager;
-import run.ClientNotifier;
-import run.ResponseSender;
-import run.Server;
-import run.ServerStarter;
+import database.run.ResponseSender;
+import database.run.Server;
+import database.run.ServerStarter;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,12 +65,10 @@ public class Main {
         AccountHandler accountHandler = new AccountHandler(connection);
         CommandManager commandManager = new CommandManager(collectionManager, dbManager);
         ResponseSender responseSender = new ResponseSender();
-        ClientNotifier notifier = new ClientNotifier();
         while (true) {
             Socket socket = serverSocket.accept();
-            notifier.addSocket(socket);
             logger.log(Level.INFO, "Client connected");
-            new Thread(() -> new Server(socket, logger, accountHandler, commandManager, responseSender, notifier)).start();
+            new Thread(() -> new Server(socket, logger, accountHandler, commandManager, responseSender)).start();
             accountHandler.setConnectedAccounts(+1);
 
         }

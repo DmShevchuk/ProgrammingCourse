@@ -48,6 +48,7 @@ public class CommandFactory {
         commandHashMap.put("info", new Info(sender, receiver));
         commandHashMap.put("min_by_id", new MinByID(sender, receiver));
         commandHashMap.put("print_field_descending_weight", new PrintFieldDescendingWeight(sender, receiver));
+        commandHashMap.put("update_collection", new UpdateCollection(sender, receiver));
     }
 
     public Map<String, String> getCommandsInfo() {

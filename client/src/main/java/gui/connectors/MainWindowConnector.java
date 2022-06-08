@@ -5,6 +5,7 @@ import collection.Dragon;
 import commands.Command;
 import commands.CommandFactory;
 import gui.AppWorker;
+import gui.I18N;
 import gui.controllers.Controller;
 import gui.controllers.MainWindowController;
 import interaction.Request;
@@ -23,15 +24,18 @@ public class MainWindowConnector implements Connector {
     private final AppWorker appWorker;
     @Getter
     private final CommandFactory commandFactory;
+    private I18N i18n;
 
     public MainWindowConnector(Client client, CommandFactory commandFactory, AppWorker appWorker) {
         this.client = client;
         this.commandFactory = commandFactory;
         this.appWorker = appWorker;
+        this.i18n = I18N.getInstance();
     }
 
     @Override
     public void bindController(Controller controller) {
+
         this.controller = (MainWindowController) controller;
     }
 
@@ -47,7 +51,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(dragonBuilder));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -56,7 +60,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(dragonBuilder));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -65,7 +69,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(id));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -74,7 +78,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(dragonBuilder));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -83,7 +87,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(client.getAccount().getId()));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -92,7 +96,7 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(client.getAccount().getId()));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
     }
 
@@ -101,8 +105,13 @@ public class MainWindowConnector implements Connector {
         try {
             showRequestResult(command.execute(headSize));
         } catch (IOException e) {
-            showRequestResult(new Response(ResponseStatus.FAIL, "Невозможно подключиться к серверу, попробуйте позже!"));
+            showRequestResult(new Response(ResponseStatus.FAIL, i18n.getText("problemsWithServer")));
         }
+    }
+
+    public LinkedList<Dragon> updateCollection() throws IOException, ClassNotFoundException {
+        Command command = commandFactory.getCommand("update_collection");
+        return command.execute("").getDragonList();
     }
 
     private void showRequestResult(Response response) {
@@ -111,23 +120,6 @@ public class MainWindowConnector implements Connector {
         } else {
             controller.showMessageBox(response.getResult(), Alert.AlertType.INFORMATION);
             controller.setDragons(response.getDragonList());
-        }
-    }
-
-    public void notifyNewCollection() {
-        controller.waitForNewCollection();
-
-    }
-
-    public LinkedList<Dragon> getNewCollection() {
-        try {
-            client.send(new Request.Builder()
-                    .setRequestType(RequestType.GET_COLLECTION)
-                    .setAccount(client.getAccount()).build());
-            Response response = client.receive();
-            return response.getDragonList();
-        } catch (IOException | ClassNotFoundException ignore) {
-            return null;
         }
     }
 }

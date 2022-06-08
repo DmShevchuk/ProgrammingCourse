@@ -1,4 +1,4 @@
-package run;
+package database.run;
 
 import collection.CollectionManager;
 import commands.CommandManager;
@@ -25,20 +25,17 @@ public class Server implements Runnable {
     private final Logger logger;
     private final CommandManager commandManager;
     private final ResponseSender responseSender;
-    private final ClientNotifier notifier;
 
     public Server(Socket socket,
                   Logger logger,
                   AccountHandler accountHandler,
                   CommandManager commandManager,
-                  ResponseSender responseSender,
-                  ClientNotifier notifier) {
+                  ResponseSender responseSender) {
         this.socket = socket;
         this.logger = logger;
         this.accountHandler = accountHandler;
         this.commandManager = commandManager;
         this.responseSender = responseSender;
-        this.notifier = notifier;
         run();
     }
 
@@ -55,8 +52,6 @@ public class Server implements Runnable {
                 if (request.getRequestType() == RequestType.RUN_COMMAND) {
                     logger.log(Level.INFO, "New request to run command " + request.getCommandName());
                     response = commandManager.runCommand(request);
-                } else if (request.getRequestType() == RequestType.GET_COLLECTION) {
-                    response = new Response(ResponseStatus.UPDATE_COLLECTION, collectionManager.getCollection());
                 } else {
                     logger.log(Level.INFO, "New request to login");
 
@@ -66,17 +61,13 @@ public class Server implements Runnable {
                     } catch (IncorrectLoginDataException e) {
                         response = new Response(ResponseStatus.FAIL, e.getMessage());
                     } catch (SQLException e) {
-                        response = new Response(ResponseStatus.FAIL, "Unable to login!");
+                        response = new Response(ResponseStatus.FAIL, "unableToLogin");
                     }
 
                 }
                 try {
-
                     executor.execute(responseSender.send(response, socket));
                 } catch (NullPointerException ignored) {
-                }
-                if (response.getStatus() == ResponseStatus.SUCCESS) {
-                    notifier.notifyClients();
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

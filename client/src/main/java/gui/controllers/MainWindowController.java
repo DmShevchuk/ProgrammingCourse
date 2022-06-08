@@ -21,8 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -42,7 +40,6 @@ public class MainWindowController extends Window implements Initializable, Contr
     public Button addElemButton;
     @FXML
     public TableColumn<DragonTableModel, Integer> ownerId;
-    public Circle updateCircle;
     public Button getInfo;
     public Button deleteDragon;
     public Button addIfMaxButton;
@@ -74,6 +71,7 @@ public class MainWindowController extends Window implements Initializable, Contr
     public Button runScriptButton;
     public Button uploadFileButton;
     public Button clearFieldButton;
+    public ProgressIndicator updateTableProgressIndicator;
     @FXML
     private TableView<DragonTableModel> dragonTable;
     @FXML
@@ -129,8 +127,7 @@ public class MainWindowController extends Window implements Initializable, Contr
         speaking.setCellValueFactory(new PropertyValueFactory<>("speaking"));
         headSize.setCellValueFactory(new PropertyValueFactory<>("headSize"));
         ownerId.setCellValueFactory(new PropertyValueFactory<>("ownerId"));
-        // Отключение кнопки "Обновить таблицу"
-        updateTableButton.setDisable(true);
+
 
         searchField.textProperty().addListener((observable, oldVal, newVal) -> {
             search(newVal);
@@ -213,8 +210,6 @@ public class MainWindowController extends Window implements Initializable, Contr
         dragonsObservable = FXCollections.observableList(dtm);
         dragonTable.setItems(dragonsObservable);
         setRowFactory();
-        updateTableButton.setDisable(true);
-        updateCircle.setFill(Color.WHITE);
         fillCanvas();
     }
 
@@ -312,14 +307,13 @@ public class MainWindowController extends Window implements Initializable, Contr
     }
 
     public void updateTable() {
-        LinkedList<Dragon> dragons = connector.getNewCollection();
-        if (dragons == null) {
+        LinkedList<Dragon> dragons = new LinkedList<>();
+        try {
+            dragons = connector.updateCollection();
+        }catch (IOException | ClassNotFoundException e){
             showMessageBox(i18n.getText("unableToUpdateCollection"), Alert.AlertType.WARNING);
-            return;
         }
         setDragons(dragons);
-        updateTableButton.setDisable(true);
-        updateCircle.setFill(Color.WHITE);
     }
 
     private boolean getConfirm(String action, String question) {
@@ -542,11 +536,6 @@ public class MainWindowController extends Window implements Initializable, Contr
     public void clearScriptField() {
         showScriptField.clear();
         showScriptResultField.clear();
-    }
-
-    public void waitForNewCollection() {
-        updateTableButton.setDisable(false);
-        updateCircle.setFill(javafx.scene.paint.Color.RED);
     }
 
     private void changeLanguage(String newValue) {

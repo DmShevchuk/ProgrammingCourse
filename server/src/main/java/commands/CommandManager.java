@@ -36,6 +36,7 @@ public class CommandManager {
         commandHashMap.put("remove_first", new RemoveFirst(collectionManager, dbManager));
         commandHashMap.put("show", new Show(collectionManager));
         commandHashMap.put("update", new UpdateId(collectionManager, dbManager));
+        commandHashMap.put("update_collection", new UpdateCollection(collectionManager));
     }
 
 }
