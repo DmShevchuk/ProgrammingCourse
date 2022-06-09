@@ -90,7 +90,7 @@ public class AccountHandler {
             }
             throw new SQLException();
         } catch (SQLException e) {
-            throw new IncorrectLoginDataException(String.format("Login '%s' is not unique!", login));
+            throw new IncorrectLoginDataException("loginNotUnique");
         }
     }
 
@@ -115,7 +115,7 @@ public class AccountHandler {
             }
         }
 
-        throw new IncorrectLoginDataException(String.format("Account with login '%s' doesn't exist!", login));
+        throw new IncorrectLoginDataException("accountWithThisLoginDoesNotExist");
     }
 
     public synchronized void setConnectedAccounts(int val) {

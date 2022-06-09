@@ -251,7 +251,7 @@ public class MainWindowController extends Window implements Initializable, Contr
     public void setClient(Client client) {
         this.client = client;
         // Установка логина пользователя
-        loginLabel.setText(this.client.getAccount().getLogin());
+        loginLabel.setText(this.client.getAccount().getLogin() + "- id@" + this.client.getAccount().getId());
     }
 
 

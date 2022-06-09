@@ -3,6 +3,7 @@ package gui.connectors;
 import account.Authorization;
 import account.Client;
 import gui.AppWorker;
+import gui.I18N;
 import gui.controllers.Controller;
 import gui.controllers.LoginWindowController;
 import interaction.Response;
@@ -14,10 +15,12 @@ public class LoginWindowConnector implements Connector {
     private final Client client;
     private LoginWindowController loginWindowController;
     private final AppWorker appWorker;
+    private final I18N i18n;
 
     public LoginWindowConnector(Client client, AppWorker appWorker) {
         this.client = client;
         this.appWorker = appWorker;
+        this.i18n = I18N.getInstance();
     }
 
     public void login(String login, String password) {
@@ -37,13 +40,13 @@ public class LoginWindowConnector implements Connector {
         if (login.length() >= 3 && password.length() >= 3) {
             return true;
         }
-        loginWindowController.setErrorInfoLabel("Очень короткий логин/пароль!");
+        loginWindowController.setErrorInfoLabel(i18n.getText("tooShortLoginPassword"));
         return false;
     }
 
     private void handleResponse(Response response) {
         if (response.getStatus() == ResponseStatus.FAIL) {
-            loginWindowController.setErrorInfoLabel(response.getResult());
+            loginWindowController.setErrorInfoLabel(i18n.getText(response.getResult()));
             return;
         }
         try {

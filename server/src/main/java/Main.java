@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 
 public class Main {
-    private final static int MAX_CONNECTED_USERS = 2;
 
     public static void main(String[] ar) throws IOException {
         ServerSocket serverSocket;
