@@ -1,6 +1,6 @@
 # Programming project for second semester
 
-4 laboratory work for second semester at ITMO as one project
+4 laboratory works for second semester at ITMO as one project
 
 ### Window for login/registration:
 
