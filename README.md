@@ -1,4 +1,4 @@
-#Programming project for second semester
+# Programming project for second semester
 
 4 laboratory work for second semester at ITMO as one project
 
